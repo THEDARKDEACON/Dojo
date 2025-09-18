@@ -58,7 +58,7 @@ source install/setup.bash
 ### 1. Run the Inference Node
 
 ```bash
-ros2 run rdj2025_potato_disease_detection inference_node
+ros2 run rdj2025_potato_disease_detection potato_disease_detection_node
 ```
 
 This will start the potato disease detection node. It will wait for images on `/image`.

@@ -26,6 +26,12 @@ If you see `_ARRAY_API not found` errors, downgrade NumPy:
 pip install "numpy<2" --force-reinstall
 ```
 
+Also, install PyTorch (Used for Inference)
+
+```bash
+pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+```
+
 ## Build Instructions
 
 Clone into your ROS 2 workspace:

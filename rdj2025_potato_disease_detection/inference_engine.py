@@ -9,7 +9,7 @@ class PotatoDiseaseModel:
         self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         
         # Load ResNet18 and modify final layer
-        self.model = models.resnet18(pretrained=False) ##
+        self.model = models.resnet18(pretrained=False) ## Should also test with pretrained=True
         num_ftrs = self.model.fc.in_features
         self.model.fc = nn.Linear(num_ftrs, 3)  # 3 classes
         model_path = './src/rdj2025_potato_disease_detection/models/model_ft_gpu.pth'

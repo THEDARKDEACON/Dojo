@@ -4,7 +4,13 @@ from sensor_msgs.msg import Image
 from std_msgs.msg import String
 from cv_bridge import CvBridge
 import numpy as np
+from .inference_engine import PotatoDiseaseModel
+from PIL import Image as PILImage
+import cv2
 
+
+
+model = PotatoDiseaseModel()
 
 class PotatoDiseaseDetection(Node):
     def __init__(self):
@@ -25,8 +31,11 @@ class PotatoDiseaseDetection(Node):
         # Convert ROS Image to OpenCV format
         cv_image = self.bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')
 
-        # Run inference (placeholder ML model)
-        result = self.run_inference(cv_image)
+        # Convert OpenCV image (BGR) to PIL image (RGB)
+        pil_image = PILImage.fromarray(cv2.cvtColor(cv_image, cv2.COLOR_BGR2RGB))
+
+        # Run inference
+        result = run_inference(pil_image)
 
         # Publish inference result
         result_msg = String()
@@ -36,7 +45,7 @@ class PotatoDiseaseDetection(Node):
         self.get_logger().info(f'Published result: {result}')
 
 
-    def run_inference(self, image: np.ndarray) -> str:
+    def run_dummy_inference(self, image: np.ndarray) -> str:
         """
         Placeholder ML inference for testing flow.
         """
@@ -46,6 +55,17 @@ class PotatoDiseaseDetection(Node):
             return "Healthy Potato"
         else:
             return "Diseased Potato"
+
+def run_inference(pil_image) -> str:
+        """
+        Run actual ML inference using the PotatoDiseaseModel.
+        """
+
+        result = model.predict(pil_image)
+
+        print(f"Inference result: {result}")
+        return result
+
 
 
 def main(args=None):

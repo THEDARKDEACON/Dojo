@@ -13,11 +13,10 @@ class TestImagePublisher(Node):
         self.timer = self.create_timer(timer_period, self.timer_callback)
         self.bridge = CvBridge()
 
-
     def timer_callback(self):
         # Test Image
         cv_image = cv2.imread(
-            './src/rdj2025_potato_disease_detection/rdj2025_potato_disease_detection/sample3.jpeg')
+            './src/rdj2025_potato_disease_detection/rdj2025_potato_disease_detection/healthy.jpg')
         if cv_image is None:
             self.get_logger().error("Could not read image")
             return

@@ -1,0 +1,13 @@
+/root/Dojo/build/camera_ros/CMakeFiles/uninstall.dir
+/root/Dojo/build/camera_ros/CMakeFiles/camera_ros_uninstall.dir
+/root/Dojo/build/camera_ros/CMakeFiles/utils.dir
+/root/Dojo/build/camera_ros/CMakeFiles/param.dir
+/root/Dojo/build/camera_ros/CMakeFiles/camera_component.dir
+/root/Dojo/build/camera_ros/CMakeFiles/camera_node.dir
+/root/Dojo/build/camera_ros/CMakeFiles/test.dir
+/root/Dojo/build/camera_ros/CMakeFiles/edit_cache.dir
+/root/Dojo/build/camera_ros/CMakeFiles/rebuild_cache.dir
+/root/Dojo/build/camera_ros/CMakeFiles/list_install_components.dir
+/root/Dojo/build/camera_ros/CMakeFiles/install.dir
+/root/Dojo/build/camera_ros/CMakeFiles/install/local.dir
+/root/Dojo/build/camera_ros/CMakeFiles/install/strip.dir

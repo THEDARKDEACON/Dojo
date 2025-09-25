@@ -1,0 +1,18 @@
+running develop
+running egg_info
+writing robot_hardware.egg-info/PKG-INFO
+writing dependency_links to robot_hardware.egg-info/dependency_links.txt
+writing entry points to robot_hardware.egg-info/entry_points.txt
+writing requirements to robot_hardware.egg-info/requires.txt
+writing top-level names to robot_hardware.egg-info/top_level.txt
+reading manifest file 'robot_hardware.egg-info/SOURCES.txt'
+writing manifest file 'robot_hardware.egg-info/SOURCES.txt'
+running build_ext
+Creating /root/Dojo/install/robot_hardware/lib/python3.10/site-packages/robot-hardware.egg-link (link to .)
+Installing arduino_driver script to /root/Dojo/install/robot_hardware/lib/robot_hardware
+Installing camera_driver script to /root/Dojo/install/robot_hardware/lib/robot_hardware
+Installing hardware_manager script to /root/Dojo/install/robot_hardware/lib/robot_hardware
+Installing lidar_driver script to /root/Dojo/install/robot_hardware/lib/robot_hardware
+
+Installed /root/Dojo/build/robot_hardware
+running symlink_data

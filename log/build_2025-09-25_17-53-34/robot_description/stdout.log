@@ -1,0 +1,61 @@
+Built target ament_cmake_python_symlink_robot_description
+running egg_info
+writing robot_description.egg-info/PKG-INFO
+writing dependency_links to robot_description.egg-info/dependency_links.txt
+writing top-level names to robot_description.egg-info/top_level.txt
+reading manifest file 'robot_description.egg-info/SOURCES.txt'
+writing manifest file 'robot_description.egg-info/SOURCES.txt'
+Built target ament_cmake_python_build_robot_description_egg
+-- Install configuration: ""
+-- Execute custom install script
+-- Up-to-date symlink: /root/Dojo/install/robot_description/share/robot_description/launch/display.launch.py
+-- Up-to-date symlink: /root/Dojo/install/robot_description/share/robot_description/launch/robot_state_publisher.launch.py
+-- Up-to-date symlink: /root/Dojo/install/robot_description/share/robot_description/urdf/common_properties.xacro
+-- Up-to-date symlink: /root/Dojo/install/robot_description/share/robot_description/urdf/dojo_robot.gazebo
+-- Up-to-date symlink: /root/Dojo/install/robot_description/share/robot_description/urdf/dojo_robot.urdf.xacro
+-- Up-to-date symlink: /root/Dojo/install/robot_description/share/robot_description/urdf/robot.urdf
+-- Up-to-date symlink: /root/Dojo/install/robot_description/share/robot_description/urdf/robot.urdf.xacro
+-- Up-to-date symlink: /root/Dojo/install/robot_description/share/robot_description/urdf/sensors/rplidar.urdf.xacro
+-- Up-to-date symlink: /root/Dojo/install/robot_description/share/robot_description/rviz/display.rviz
+-- Up-to-date symlink: /root/Dojo/install/robot_description/share/robot_description/rviz/robot.rviz
+-- Up-to-date symlink: /root/Dojo/install/robot_description/share/robot_description/environment/pythonpath.sh
+-- Up-to-date symlink: /root/Dojo/install/robot_description/share/robot_description/environment/pythonpath.dsv
+-- Up-to-date symlink: /root/Dojo/install/robot_description/local/lib/python3.10/dist-packages/robot_description-0.0.1-py3.10.egg-info/PKG-INFO
+-- Up-to-date symlink: /root/Dojo/install/robot_description/local/lib/python3.10/dist-packages/robot_description-0.0.1-py3.10.egg-info/SOURCES.txt
+-- Up-to-date symlink: /root/Dojo/install/robot_description/local/lib/python3.10/dist-packages/robot_description-0.0.1-py3.10.egg-info/dependency_links.txt
+-- Up-to-date symlink: /root/Dojo/install/robot_description/local/lib/python3.10/dist-packages/robot_description-0.0.1-py3.10.egg-info/top_level.txt
+-- Up-to-date symlink: /root/Dojo/install/robot_description/local/lib/python3.10/dist-packages/robot_description/__init__.py
+-- Up-to-date symlink: /root/Dojo/install/robot_description/lib/robot_description/display_robot.py
+-- Up-to-date symlink: /root/Dojo/install/robot_description/share/ament_index/resource_index/package_run_dependencies/robot_description
+-- Up-to-date symlink: /root/Dojo/install/robot_description/share/ament_index/resource_index/parent_prefix_path/robot_description
+-- Up-to-date symlink: /root/Dojo/install/robot_description/share/robot_description/environment/ament_prefix_path.sh
+-- Up-to-date symlink: /root/Dojo/install/robot_description/share/robot_description/environment/ament_prefix_path.dsv
+-- Up-to-date symlink: /root/Dojo/install/robot_description/share/robot_description/environment/path.sh
+-- Up-to-date symlink: /root/Dojo/install/robot_description/share/robot_description/environment/path.dsv
+-- Up-to-date symlink: /root/Dojo/install/robot_description/share/robot_description/local_setup.bash
+-- Up-to-date symlink: /root/Dojo/install/robot_description/share/robot_description/local_setup.sh
+-- Up-to-date symlink: /root/Dojo/install/robot_description/share/robot_description/local_setup.zsh
+-- Up-to-date symlink: /root/Dojo/install/robot_description/share/robot_description/local_setup.dsv
+-- Symlinking: /root/Dojo/install/robot_description/share/robot_description/package.dsv
+-- Up-to-date symlink: /root/Dojo/install/robot_description/share/ament_index/resource_index/packages/robot_description
+-- Up-to-date symlink: /root/Dojo/install/robot_description/share/robot_description/cmake/robot_descriptionConfig.cmake
+-- Up-to-date symlink: /root/Dojo/install/robot_description/share/robot_description/cmake/robot_descriptionConfig-version.cmake
+-- Up-to-date symlink: /root/Dojo/install/robot_description/share/robot_description/package.xml
+-- Up-to-date: /root/Dojo/install/robot_description/share/robot_description
+-- Up-to-date: /root/Dojo/install/robot_description/share/robot_description/urdf
+-- Up-to-date: /root/Dojo/install/robot_description/share/robot_description/urdf/sensors
+-- Up-to-date: /root/Dojo/install/robot_description/share/robot_description/include
+-- Up-to-date: /root/Dojo/install/robot_description/share/robot_description/include/robot_description
+-- Up-to-date: /root/Dojo/install/robot_description/share/robot_description/rviz
+-- Up-to-date: /root/Dojo/install/robot_description/share/robot_description/src
+-- Up-to-date: /root/Dojo/install/robot_description/share/robot_description/src/robot_description
+-- Up-to-date: /root/Dojo/install/robot_description/share/robot_description/meshes
+-- Up-to-date: /root/Dojo/install/robot_description/share/robot_description/robot_description
+-- Up-to-date: /root/Dojo/install/robot_description/share/robot_description/robot_description/robot_description
+-- Up-to-date: /root/Dojo/install/robot_description/share/robot_description/scripts
+-- Up-to-date: /root/Dojo/install/robot_description/share/robot_description/resource
+-- Up-to-date: /root/Dojo/install/robot_description/share/robot_description/launch
+-- Up-to-date: /root/Dojo/install/robot_description/share/robot_description/config
+-- Up-to-date: /root/Dojo/install/robot_description/lib/robot_description/robot_description
+-- Up-to-date: /root/Dojo/install/robot_description/lib/robot_description/robot_description/__init__.py
+Listing '/root/Dojo/install/robot_description/local/lib/python3.10/dist-packages/robot_description'...

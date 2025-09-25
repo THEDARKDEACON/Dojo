@@ -1,0 +1,92 @@
+[0.016s] Invoking command in '/root/Dojo/build/robot_gazebo': AMENT_PREFIX_PATH=/root/Dojo/install/robot_description:/root/Dojo/install/robot_control:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/root/Dojo/install/robot_description:/opt/ros/humble PYTHONPATH=/root/Dojo/install/robot_description/local/lib/python3.10/dist-packages:/root/Dojo/build/robot_control:/root/Dojo/install/robot_control/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/cmake --build /root/Dojo/build/robot_gazebo -- -j16 -l16
+[0.085s] Invoked command in '/root/Dojo/build/robot_gazebo' returned '0': AMENT_PREFIX_PATH=/root/Dojo/install/robot_description:/root/Dojo/install/robot_control:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/root/Dojo/install/robot_description:/opt/ros/humble PYTHONPATH=/root/Dojo/install/robot_description/local/lib/python3.10/dist-packages:/root/Dojo/build/robot_control:/root/Dojo/install/robot_control/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/cmake --build /root/Dojo/build/robot_gazebo -- -j16 -l16
+[0.087s] Invoking command in '/root/Dojo/build/robot_gazebo': AMENT_PREFIX_PATH=/root/Dojo/install/robot_description:/root/Dojo/install/robot_control:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/root/Dojo/install/robot_description:/opt/ros/humble PYTHONPATH=/root/Dojo/install/robot_description/local/lib/python3.10/dist-packages:/root/Dojo/build/robot_control:/root/Dojo/install/robot_control/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/cmake --install /root/Dojo/build/robot_gazebo
+[0.098s] -- Install configuration: ""
+[0.098s] -- Execute custom install script
+[0.099s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/launch/complete_simulation.launch.py
+[0.099s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/launch/docker_simulation.launch.py
+[0.099s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/launch/full_simulation.launch.py
+[0.100s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/launch/gazebo.launch.py
+[0.100s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/launch/perception_wrapper.launch.py
+[0.100s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/launch/robot_simulation.launch.py
+[0.100s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/launch/simple_simulation.launch.py
+[0.100s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/launch/simulation.launch.py
+[0.101s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/config/diff_drive_controller.yaml
+[0.101s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/config/ekf_config.yaml
+[0.101s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/config/ros2_control.yaml
+[0.101s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/config/slam_config.yaml
+[0.101s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/rviz/complete_simulation.rviz
+[0.102s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/rviz/full_simulation.rviz
+[0.102s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/rviz/robot_simulation.rviz
+[0.102s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/rviz/simulation.rviz
+[0.102s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/agriculture.world
+[0.103s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/azcar.world
+[0.103s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/barrels.world
+[0.103s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/canyonview_field.world
+[0.103s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/city_osm_roundabout.world
+[0.103s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/city_osm_roundabout_combined.world
+[0.103s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/cyberzoo.world
+[0.104s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/cyberzoo2019_orange_poles.world
+[0.104s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/cyberzoo2019_orange_poles_panels.world
+[0.104s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/cyberzoo2019_orange_poles_panels_mats.world
+[0.104s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/cyberzoo2019_ralphthesis2020.world
+[0.105s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/cyberzoo_4_panels.world
+[0.105s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/cyberzoo_orange_poles.world
+[0.105s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/cyberzoo_panel.world
+[0.105s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/demo_world.world
+[0.106s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/dojo_world.world
+[0.106s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/drone_race_track_2018_actual.world
+[0.106s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/drone_race_track_2018_actual_with_gatepapers.world
+[0.107s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/empty.world
+[0.107s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/empty_aerial_manipulation.world
+[0.108s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/fetchit_challenge_arena_montreal2019.world
+[0.108s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/fetchit_challenge_arena_montreal2019_highlights.world
+[0.109s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/fetchit_challenge_arena_montreal2019_onlylights.world
+[0.109s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/fetchit_challenge_assembly.world
+[0.109s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/fetchit_challenge_atrezzo.world
+[0.109s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/fetchit_challenge_simple.world
+[0.109s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/fetchit_challenge_simple_highlights.world
+[0.110s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/fetchit_challenge_tests.world
+[0.110s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/fetchit_challenge_tests_lowlights.world
+[0.110s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/hemicyl.world
+[0.110s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/house.world
+[0.110s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/inspection.world
+[0.111s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/neighborhood.world
+[0.111s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/office_cpr.world
+[0.111s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/office_cpr_construction.world
+[0.111s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/office_earthquake.world
+[0.111s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/office_env_large.world
+[0.112s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/office_small.world
+[0.112s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/outdoor.world
+[0.112s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/powerplant.world
+[0.112s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/rubble.world
+[0.112s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/simple_env_1.world
+[0.112s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/simple_env_2.world
+[0.112s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/simple_env_3.world
+[0.113s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/skidpan.world
+[0.113s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/small_city.world
+[0.113s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/test_city.world
+[0.113s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/test_zone.world
+[0.113s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/wall_aerial_manipulation.world
+[0.113s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/warehouse.world
+[0.113s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/waypoint.world
+[0.114s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/workshop_example.world
+[0.114s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/worlds/yosemite.world
+[0.114s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/ament_index/resource_index/package_run_dependencies/robot_gazebo
+[0.114s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/ament_index/resource_index/parent_prefix_path/robot_gazebo
+[0.114s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/environment/ament_prefix_path.sh
+[0.114s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/environment/ament_prefix_path.dsv
+[0.115s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/environment/path.sh
+[0.115s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/environment/path.dsv
+[0.116s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/local_setup.bash
+[0.116s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/local_setup.sh
+[0.116s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/local_setup.zsh
+[0.118s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/local_setup.dsv
+[0.118s] -- Symlinking: /root/Dojo/install/robot_gazebo/share/robot_gazebo/package.dsv
+[0.128s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/ament_index/resource_index/packages/robot_gazebo
+[0.128s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/cmake/robot_gazeboConfig.cmake
+[0.128s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/cmake/robot_gazeboConfig-version.cmake
+[0.129s] -- Up-to-date symlink: /root/Dojo/install/robot_gazebo/share/robot_gazebo/package.xml
+[0.129s] -- Up-to-date: /root/Dojo/install/robot_gazebo/lib/robot_gazebo
+[0.129s] -- Up-to-date: /root/Dojo/install/robot_gazebo/lib/robot_gazebo/spawn_robot.py
+[0.132s] Invoked command in '/root/Dojo/build/robot_gazebo' returned '0': AMENT_PREFIX_PATH=/root/Dojo/install/robot_description:/root/Dojo/install/robot_control:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/root/Dojo/install/robot_description:/opt/ros/humble PYTHONPATH=/root/Dojo/install/robot_description/local/lib/python3.10/dist-packages:/root/Dojo/build/robot_control:/root/Dojo/install/robot_control/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/cmake --install /root/Dojo/build/robot_gazebo

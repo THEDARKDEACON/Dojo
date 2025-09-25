@@ -1,0 +1,4 @@
+Invoking command in '/root/Dojo/build/robot_interfaces': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /root/Dojo/build/robot_interfaces -- -j16 -l16
+Invoked command in '/root/Dojo/build/robot_interfaces' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /root/Dojo/build/robot_interfaces -- -j16 -l16
+Invoking command in '/root/Dojo/build/robot_interfaces': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /root/Dojo/build/robot_interfaces
+Invoked command in '/root/Dojo/build/robot_interfaces' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /root/Dojo/build/robot_interfaces

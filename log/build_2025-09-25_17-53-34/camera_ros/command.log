@@ -1,0 +1,6 @@
+Invoking command in '/root/Dojo/build/camera_ros': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /root/Dojo/backup_packages/camera_ws/src/camera_ros -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/root/Dojo/install/camera_ros
+Invoked command in '/root/Dojo/build/camera_ros' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /root/Dojo/backup_packages/camera_ws/src/camera_ros -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/root/Dojo/install/camera_ros
+Invoking command in '/root/Dojo/build/camera_ros': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /root/Dojo/build/camera_ros -- -j16 -l16
+Invoked command in '/root/Dojo/build/camera_ros' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /root/Dojo/build/camera_ros -- -j16 -l16
+Invoking command in '/root/Dojo/build/camera_ros': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /root/Dojo/build/camera_ros
+Invoked command in '/root/Dojo/build/camera_ros' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /root/Dojo/build/camera_ros

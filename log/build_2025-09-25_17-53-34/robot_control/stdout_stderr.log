@@ -1,0 +1,17 @@
+running develop
+running egg_info
+writing robot_control.egg-info/PKG-INFO
+writing dependency_links to robot_control.egg-info/dependency_links.txt
+writing entry points to robot_control.egg-info/entry_points.txt
+writing requirements to robot_control.egg-info/requires.txt
+writing top-level names to robot_control.egg-info/top_level.txt
+reading manifest file 'robot_control.egg-info/SOURCES.txt'
+writing manifest file 'robot_control.egg-info/SOURCES.txt'
+running build_ext
+Creating /root/Dojo/install/robot_control/lib/python3.10/site-packages/robot-control.egg-link (link to .)
+Installing arduino_bridge script to /root/Dojo/install/robot_control/lib/robot_control
+Installing cmd_vel_to_motors script to /root/Dojo/install/robot_control/lib/robot_control
+Installing control_manager script to /root/Dojo/install/robot_control/lib/robot_control
+
+Installed /root/Dojo/build/robot_control
+running symlink_data

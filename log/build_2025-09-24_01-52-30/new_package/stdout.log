@@ -1,0 +1,39 @@
+running egg_info
+creating ../../build/new_package/new_package.egg-info
+writing ../../build/new_package/new_package.egg-info/PKG-INFO
+writing dependency_links to ../../build/new_package/new_package.egg-info/dependency_links.txt
+writing entry points to ../../build/new_package/new_package.egg-info/entry_points.txt
+writing requirements to ../../build/new_package/new_package.egg-info/requires.txt
+writing top-level names to ../../build/new_package/new_package.egg-info/top_level.txt
+writing manifest file '../../build/new_package/new_package.egg-info/SOURCES.txt'
+reading manifest file '../../build/new_package/new_package.egg-info/SOURCES.txt'
+writing manifest file '../../build/new_package/new_package.egg-info/SOURCES.txt'
+running build
+running build_py
+creating /home/annette-robosync/new_ws/build/new_package/build
+creating /home/annette-robosync/new_ws/build/new_package/build/lib
+creating /home/annette-robosync/new_ws/build/new_package/build/lib/new_package
+copying new_package/__init__.py -> /home/annette-robosync/new_ws/build/new_package/build/lib/new_package
+running install
+running install_lib
+creating /home/annette-robosync/new_ws/install/new_package/lib/python3.10/site-packages/new_package
+copying /home/annette-robosync/new_ws/build/new_package/build/lib/new_package/__init__.py -> /home/annette-robosync/new_ws/install/new_package/lib/python3.10/site-packages/new_package
+byte-compiling /home/annette-robosync/new_ws/install/new_package/lib/python3.10/site-packages/new_package/__init__.py to __init__.cpython-310.pyc
+running install_data
+creating /home/annette-robosync/new_ws/install/new_package/share/ament_index
+creating /home/annette-robosync/new_ws/install/new_package/share/ament_index/resource_index
+creating /home/annette-robosync/new_ws/install/new_package/share/ament_index/resource_index/packages
+copying resource/new_package -> /home/annette-robosync/new_ws/install/new_package/share/ament_index/resource_index/packages
+copying package.xml -> /home/annette-robosync/new_ws/install/new_package/share/new_package
+creating /home/annette-robosync/new_ws/install/new_package/share/new_package/launch
+copying launch/simulate.launch.py -> /home/annette-robosync/new_ws/install/new_package/share/new_package/launch
+copying launch/robot.launch.py -> /home/annette-robosync/new_ws/install/new_package/share/new_package/launch
+creating /home/annette-robosync/new_ws/install/new_package/share/new_package/urdf
+creating /home/annette-robosync/new_ws/install/new_package/share/new_package/meshes
+creating /home/annette-robosync/new_ws/install/new_package/share/new_package/config
+copying config/zeta.rviz -> /home/annette-robosync/new_ws/install/new_package/share/new_package/config
+copying config/diff_drive_controllers.yaml -> /home/annette-robosync/new_ws/install/new_package/share/new_package/config
+running install_egg_info
+Copying ../../build/new_package/new_package.egg-info to /home/annette-robosync/new_ws/install/new_package/lib/python3.10/site-packages/new_package-0.0.0-py3.10.egg-info
+running install_scripts
+writing list of installed files to '/home/annette-robosync/new_ws/build/new_package/install.log'

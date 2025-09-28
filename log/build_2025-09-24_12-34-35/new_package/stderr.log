@@ -1,0 +1,18 @@
+[31mCMake Error at CMakeLists.txt:19 (find_package):
+  By not providing "Findros_ign_gazebo.cmake" in CMAKE_MODULE_PATH this
+  project has asked CMake to find a package configuration file provided by
+  "ros_ign_gazebo", but CMake did not find one.
+
+  Could not find a package configuration file provided by "ros_ign_gazebo"
+  with any of the following names:
+
+    ros_ign_gazeboConfig.cmake
+    ros_ign_gazebo-config.cmake
+
+  Add the installation prefix of "ros_ign_gazebo" to CMAKE_PREFIX_PATH or set
+  "ros_ign_gazebo_DIR" to a directory containing one of the above files.  If
+  "ros_ign_gazebo" provides a separate development package or SDK, be sure it
+  has been installed.
+
+[0m
+gmake: *** [Makefile:226: cmake_check_build_system] Error 1

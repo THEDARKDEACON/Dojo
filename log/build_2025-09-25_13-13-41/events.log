@@ -1,0 +1,287 @@
+[0.000000] (-) TimerEvent: {}
+[0.001828] (new_package) JobQueued: {'identifier': 'new_package', 'dependencies': OrderedDict()}
+[0.004038] (new_package) JobStarted: {'identifier': 'new_package'}
+[0.048952] (new_package) JobProgress: {'identifier': 'new_package', 'progress': 'cmake'}
+[0.056935] (new_package) JobProgress: {'identifier': 'new_package', 'progress': 'build'}
+[0.059665] (new_package) Command: {'cmd': ['/usr/bin/cmake', '--build', '/home/annette-robosync/new_ws/build/new_package', '--', '-j4', '-l4'], 'cwd': '/home/annette-robosync/new_ws/build/new_package', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('USER', 'annette-robosync'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib'), ('MOTD_SHOWN', 'update-motd'), ('HOME', '/home/annette-robosync'), ('OLDPWD', '/home/annette-robosync'), ('ROS_PYTHON_VERSION', '3'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('WSL_DISTRO_NAME', 'Ubuntu-22.04'), ('WAYLAND_DISPLAY', 'wayland-0'), ('COLCON_PREFIX_PATH', '/home/annette-robosync/new_ws/install:/home/annette-robosync/polo/install:/home/annette-robosync/polo_ws/install'), ('ROS_DISTRO', 'humble'), ('LOGNAME', 'annette-robosync'), ('NAME', 'DESKTOP-KM754MJ'), ('WSL_INTEROP', '/run/WSL/358416_interop'), ('PULSE_SERVER', 'unix:/mnt/wslg/PulseServer'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('TERM', 'xterm-256color'), ('ROS_LOCALHOST_ONLY', '0'), ('PATH', '/opt/ros/humble/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/Program Files/dotnet/:/mnt/c/Program Files/MATLAB/R2023b/runtime/win64:/mnt/c/Program Files/MATLAB/R2023b/bin:/mnt/c/Users/USER/AppData/Local/Programs/Python/Launcher/:/mnt/c/Users/USER/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/USER/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/MinGW/bin:/snap/bin'), ('XDG_RUNTIME_DIR', '/run/user/1000/'), ('DISPLAY', ':0'), ('LANG', 'en_US.UTF-8'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('AMENT_PREFIX_PATH', '/home/annette-robosync/new_ws/install/new_package:/opt/ros/humble'), ('SHELL', '/bin/bash'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('PWD', '/home/annette-robosync/new_ws/build/new_package'), ('XDG_DATA_DIRS', '/usr/local/share:/usr/share:/var/lib/snapd/desktop'), ('PYTHONPATH', '/home/annette-robosync/new_ws/install/new_package/lib/python3.10/site-packages:/home/annette-robosync/polo/install/zeta_package/lib/python3.10/site-packages:/home/annette-robosync/polo_ws/install/zeta_package/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('COLCON', '1'), ('WSL2_GUI_APPS_ENABLED', '1'), ('HOSTTYPE', 'x86_64'), ('CMAKE_PREFIX_PATH', '/home/annette-robosync/new_ws/install/new_package::/opt/ros/humble'), ('WSLENV', '')]), 'shell': False}
+[0.098861] (-) TimerEvent: {}
+[0.201140] (-) TimerEvent: {}
+[0.301970] (-) TimerEvent: {}
+[0.403536] (-) TimerEvent: {}
+[0.504510] (-) TimerEvent: {}
+[0.556452] (new_package) StdoutLine: {'line': b'-- Found ament_cmake: 1.3.12 (/opt/ros/humble/share/ament_cmake/cmake)\n'}
+[0.606163] (-) TimerEvent: {}
+[0.708353] (-) TimerEvent: {}
+[0.809970] (-) TimerEvent: {}
+[0.911919] (-) TimerEvent: {}
+[1.014517] (-) TimerEvent: {}
+[1.116849] (-) TimerEvent: {}
+[1.218516] (-) TimerEvent: {}
+[1.301241] (new_package) StdoutLine: {'line': b'-- Found rclcpp: 16.0.14 (/opt/ros/humble/share/rclcpp/cmake)\n'}
+[1.319273] (-) TimerEvent: {}
+[1.420745] (-) TimerEvent: {}
+[1.522492] (-) TimerEvent: {}
+[1.624646] (-) TimerEvent: {}
+[1.726535] (-) TimerEvent: {}
+[1.830132] (-) TimerEvent: {}
+[1.891704] (new_package) StdoutLine: {'line': b'-- Found rosidl_generator_c: 3.1.7 (/opt/ros/humble/share/rosidl_generator_c/cmake)\n'}
+[1.908266] (new_package) StdoutLine: {'line': b'-- Found rosidl_adapter: 3.1.7 (/opt/ros/humble/share/rosidl_adapter/cmake)\n'}
+[1.930613] (-) TimerEvent: {}
+[1.953982] (new_package) StdoutLine: {'line': b'-- Found rosidl_generator_cpp: 3.1.7 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)\n'}
+[2.020139] (new_package) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c\n'}
+[2.030898] (-) TimerEvent: {}
+[2.112185] (new_package) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp\n'}
+[2.131388] (-) TimerEvent: {}
+[2.233436] (-) TimerEvent: {}
+[2.335326] (-) TimerEvent: {}
+[2.350945] (new_package) StdoutLine: {'line': b'-- Found rmw_implementation_cmake: 6.1.2 (/opt/ros/humble/share/rmw_implementation_cmake/cmake)\n'}
+[2.363298] (new_package) StdoutLine: {'line': b'-- Found rmw_fastrtps_cpp: 6.2.8 (/opt/ros/humble/share/rmw_fastrtps_cpp/cmake)\n'}
+[2.436511] (-) TimerEvent: {}
+[2.537756] (-) TimerEvent: {}
+[2.641124] (-) TimerEvent: {}
+[2.742635] (-) TimerEvent: {}
+[2.844320] (-) TimerEvent: {}
+[2.945720] (-) TimerEvent: {}
+[3.046667] (-) TimerEvent: {}
+[3.147896] (-) TimerEvent: {}
+[3.249624] (-) TimerEvent: {}
+[3.351150] (-) TimerEvent: {}
+[3.453089] (-) TimerEvent: {}
+[3.554596] (-) TimerEvent: {}
+[3.655712] (-) TimerEvent: {}
+[3.756761] (-) TimerEvent: {}
+[3.858440] (-) TimerEvent: {}
+[3.959637] (-) TimerEvent: {}
+[4.061252] (-) TimerEvent: {}
+[4.162288] (-) TimerEvent: {}
+[4.263867] (-) TimerEvent: {}
+[4.365219] (-) TimerEvent: {}
+[4.466390] (-) TimerEvent: {}
+[4.567439] (-) TimerEvent: {}
+[4.668563] (-) TimerEvent: {}
+[4.769731] (-) TimerEvent: {}
+[4.870880] (-) TimerEvent: {}
+[4.972060] (-) TimerEvent: {}
+[5.073126] (-) TimerEvent: {}
+[5.175309] (-) TimerEvent: {}
+[5.276372] (-) TimerEvent: {}
+[5.377658] (-) TimerEvent: {}
+[5.478559] (-) TimerEvent: {}
+[5.579721] (-) TimerEvent: {}
+[5.681492] (-) TimerEvent: {}
+[5.782391] (-) TimerEvent: {}
+[5.884179] (-) TimerEvent: {}
+[5.985388] (-) TimerEvent: {}
+[6.087318] (-) TimerEvent: {}
+[6.188183] (-) TimerEvent: {}
+[6.289358] (-) TimerEvent: {}
+[6.390477] (-) TimerEvent: {}
+[6.491678] (-) TimerEvent: {}
+[6.592870] (-) TimerEvent: {}
+[6.693997] (-) TimerEvent: {}
+[6.795026] (-) TimerEvent: {}
+[6.896341] (-) TimerEvent: {}
+[6.997501] (-) TimerEvent: {}
+[7.099192] (-) TimerEvent: {}
+[7.200115] (-) TimerEvent: {}
+[7.301356] (-) TimerEvent: {}
+[7.402439] (-) TimerEvent: {}
+[7.503864] (-) TimerEvent: {}
+[7.605265] (-) TimerEvent: {}
+[7.706410] (-) TimerEvent: {}
+[7.807543] (-) TimerEvent: {}
+[7.909395] (-) TimerEvent: {}
+[8.011338] (-) TimerEvent: {}
+[8.113251] (-) TimerEvent: {}
+[8.214358] (-) TimerEvent: {}
+[8.315351] (-) TimerEvent: {}
+[8.416564] (-) TimerEvent: {}
+[8.517715] (-) TimerEvent: {}
+[8.619504] (-) TimerEvent: {}
+[8.720630] (-) TimerEvent: {}
+[8.821868] (-) TimerEvent: {}
+[8.922948] (-) TimerEvent: {}
+[9.024129] (-) TimerEvent: {}
+[9.125357] (-) TimerEvent: {}
+[9.226740] (-) TimerEvent: {}
+[9.328105] (-) TimerEvent: {}
+[9.429572] (-) TimerEvent: {}
+[9.530743] (-) TimerEvent: {}
+[9.631867] (-) TimerEvent: {}
+[9.733036] (-) TimerEvent: {}
+[9.834063] (-) TimerEvent: {}
+[9.935013] (-) TimerEvent: {}
+[10.036350] (-) TimerEvent: {}
+[10.137352] (-) TimerEvent: {}
+[10.238320] (-) TimerEvent: {}
+[10.339319] (-) TimerEvent: {}
+[10.440303] (-) TimerEvent: {}
+[10.541809] (-) TimerEvent: {}
+[10.643263] (-) TimerEvent: {}
+[10.744676] (-) TimerEvent: {}
+[10.845786] (-) TimerEvent: {}
+[10.946784] (-) TimerEvent: {}
+[11.047834] (-) TimerEvent: {}
+[11.148799] (-) TimerEvent: {}
+[11.249972] (-) TimerEvent: {}
+[11.350977] (-) TimerEvent: {}
+[11.451996] (-) TimerEvent: {}
+[11.553111] (-) TimerEvent: {}
+[11.654862] (-) TimerEvent: {}
+[11.756748] (-) TimerEvent: {}
+[11.858622] (-) TimerEvent: {}
+[11.959577] (-) TimerEvent: {}
+[12.060527] (-) TimerEvent: {}
+[12.066948] (new_package) StdoutLine: {'line': b"-- Using RMW implementation 'rmw_fastrtps_cpp' as default\n"}
+[12.161008] (-) TimerEvent: {}
+[12.261934] (-) TimerEvent: {}
+[12.321302] (new_package) StdoutLine: {'line': b'-- Found xacro: 2.0.13 (/opt/ros/humble/share/xacro/cmake)\n'}
+[12.324029] (new_package) StdoutLine: {'line': b'-- Found robot_state_publisher: 3.0.3 (/opt/ros/humble/share/robot_state_publisher/cmake)\n'}
+[12.363009] (-) TimerEvent: {}
+[12.415536] (new_package) StdoutLine: {'line': b'-- Found eigen3_cmake_module: 0.1.1 (/opt/ros/humble/share/eigen3_cmake_module/cmake)\n'}
+[12.422359] (new_package) StdoutLine: {'line': b'-- Ensuring Eigen3 include directory is part of orocos-kdl CMake target\n'}
+[12.464276] (-) TimerEvent: {}
+[12.565716] (-) TimerEvent: {}
+[12.667327] (-) TimerEvent: {}
+[12.768922] (-) TimerEvent: {}
+[12.869962] (-) TimerEvent: {}
+[12.971526] (-) TimerEvent: {}
+[13.072578] (-) TimerEvent: {}
+[13.173681] (-) TimerEvent: {}
+[13.274678] (-) TimerEvent: {}
+[13.376472] (-) TimerEvent: {}
+[13.477552] (-) TimerEvent: {}
+[13.578465] (-) TimerEvent: {}
+[13.679441] (-) TimerEvent: {}
+[13.780393] (-) TimerEvent: {}
+[13.881650] (-) TimerEvent: {}
+[13.982710] (-) TimerEvent: {}
+[14.083632] (-) TimerEvent: {}
+[14.184585] (-) TimerEvent: {}
+[14.286160] (-) TimerEvent: {}
+[14.387107] (-) TimerEvent: {}
+[14.488413] (-) TimerEvent: {}
+[14.589797] (-) TimerEvent: {}
+[14.691721] (-) TimerEvent: {}
+[14.792694] (-) TimerEvent: {}
+[14.892092] (new_package) StdoutLine: {'line': b'-- Found ros_gz_sim: 0.244.20 (/opt/ros/humble/share/ros_gz_sim/cmake)\n'}
+[14.892744] (-) TimerEvent: {}
+[14.906155] (new_package) StdoutLine: {'line': b'-- Found ros_gz_bridge: 0.244.20 (/opt/ros/humble/share/ros_gz_bridge/cmake)\n'}
+[14.993117] (-) TimerEvent: {}
+[15.094193] (-) TimerEvent: {}
+[15.195524] (-) TimerEvent: {}
+[15.297694] (-) TimerEvent: {}
+[15.398520] (-) TimerEvent: {}
+[15.500709] (-) TimerEvent: {}
+[15.601853] (-) TimerEvent: {}
+[15.702730] (-) TimerEvent: {}
+[15.804059] (-) TimerEvent: {}
+[15.905136] (-) TimerEvent: {}
+[16.006555] (-) TimerEvent: {}
+[16.107475] (-) TimerEvent: {}
+[16.208624] (-) TimerEvent: {}
+[16.309710] (-) TimerEvent: {}
+[16.410670] (-) TimerEvent: {}
+[16.511762] (-) TimerEvent: {}
+[16.612879] (-) TimerEvent: {}
+[16.714046] (-) TimerEvent: {}
+[16.815221] (-) TimerEvent: {}
+[16.916254] (-) TimerEvent: {}
+[17.017318] (-) TimerEvent: {}
+[17.118287] (-) TimerEvent: {}
+[17.143298] (new_package) StdoutLine: {'line': b'-- Found Protobuf: /usr/lib/x86_64-linux-gnu/libprotobuf.so (found suitable version "3.12.4", minimum required is "3") \n'}
+[17.218680] (-) TimerEvent: {}
+[17.319628] (-) TimerEvent: {}
+[17.420857] (-) TimerEvent: {}
+[17.522051] (-) TimerEvent: {}
+[17.623040] (-) TimerEvent: {}
+[17.724031] (-) TimerEvent: {}
+[17.824971] (-) TimerEvent: {}
+[17.926026] (-) TimerEvent: {}
+[18.026880] (-) TimerEvent: {}
+[18.127960] (-) TimerEvent: {}
+[18.228970] (-) TimerEvent: {}
+[18.330011] (-) TimerEvent: {}
+[18.431110] (-) TimerEvent: {}
+[18.532298] (-) TimerEvent: {}
+[18.633381] (-) TimerEvent: {}
+[18.734471] (-) TimerEvent: {}
+[18.835554] (-) TimerEvent: {}
+[18.936639] (-) TimerEvent: {}
+[19.037840] (-) TimerEvent: {}
+[19.138794] (-) TimerEvent: {}
+[19.239929] (-) TimerEvent: {}
+[19.305138] (new_package) StdoutLine: {'line': b'-- Found Protobuf: /usr/lib/x86_64-linux-gnu/libprotobuf.so (found version "3.12.4") \n'}
+[19.340259] (-) TimerEvent: {}
+[19.441556] (-) TimerEvent: {}
+[19.542511] (-) TimerEvent: {}
+[19.643894] (-) TimerEvent: {}
+[19.744897] (-) TimerEvent: {}
+[19.845957] (-) TimerEvent: {}
+[19.947179] (-) TimerEvent: {}
+[20.048574] (-) TimerEvent: {}
+[20.149680] (-) TimerEvent: {}
+[20.250653] (-) TimerEvent: {}
+[20.352405] (-) TimerEvent: {}
+[20.454002] (-) TimerEvent: {}
+[20.555641] (-) TimerEvent: {}
+[20.657054] (-) TimerEvent: {}
+[20.758647] (-) TimerEvent: {}
+[20.860180] (-) TimerEvent: {}
+[20.961264] (-) TimerEvent: {}
+[21.062308] (-) TimerEvent: {}
+[21.163441] (-) TimerEvent: {}
+[21.264510] (-) TimerEvent: {}
+[21.365757] (-) TimerEvent: {}
+[21.466673] (-) TimerEvent: {}
+[21.567613] (-) TimerEvent: {}
+[21.668538] (-) TimerEvent: {}
+[21.769427] (-) TimerEvent: {}
+[21.870489] (-) TimerEvent: {}
+[21.971895] (-) TimerEvent: {}
+[22.072768] (-) TimerEvent: {}
+[22.173992] (-) TimerEvent: {}
+[22.275229] (-) TimerEvent: {}
+[22.376187] (-) TimerEvent: {}
+[22.477498] (-) TimerEvent: {}
+[22.578266] (-) TimerEvent: {}
+[22.629947] (new_package) StdoutLine: {'line': b'-- Configuring done\n'}
+[22.678654] (-) TimerEvent: {}
+[22.704663] (new_package) StdoutLine: {'line': b'-- Generating done\n'}
+[22.744257] (new_package) StdoutLine: {'line': b'-- Build files have been written to: /home/annette-robosync/new_ws/build/new_package\n'}
+[22.779029] (-) TimerEvent: {}
+[22.879907] (-) TimerEvent: {}
+[22.893266] (new_package) CommandEnded: {'returncode': 0}
+[22.902716] (new_package) JobProgress: {'identifier': 'new_package', 'progress': 'install'}
+[22.940804] (new_package) Command: {'cmd': ['/usr/bin/cmake', '--install', '/home/annette-robosync/new_ws/build/new_package'], 'cwd': '/home/annette-robosync/new_ws/build/new_package', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('USER', 'annette-robosync'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib'), ('MOTD_SHOWN', 'update-motd'), ('HOME', '/home/annette-robosync'), ('OLDPWD', '/home/annette-robosync'), ('ROS_PYTHON_VERSION', '3'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('WSL_DISTRO_NAME', 'Ubuntu-22.04'), ('WAYLAND_DISPLAY', 'wayland-0'), ('COLCON_PREFIX_PATH', '/home/annette-robosync/new_ws/install:/home/annette-robosync/polo/install:/home/annette-robosync/polo_ws/install'), ('ROS_DISTRO', 'humble'), ('LOGNAME', 'annette-robosync'), ('NAME', 'DESKTOP-KM754MJ'), ('WSL_INTEROP', '/run/WSL/358416_interop'), ('PULSE_SERVER', 'unix:/mnt/wslg/PulseServer'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('TERM', 'xterm-256color'), ('ROS_LOCALHOST_ONLY', '0'), ('PATH', '/opt/ros/humble/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/Program Files/dotnet/:/mnt/c/Program Files/MATLAB/R2023b/runtime/win64:/mnt/c/Program Files/MATLAB/R2023b/bin:/mnt/c/Users/USER/AppData/Local/Programs/Python/Launcher/:/mnt/c/Users/USER/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/USER/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/MinGW/bin:/snap/bin'), ('XDG_RUNTIME_DIR', '/run/user/1000/'), ('DISPLAY', ':0'), ('LANG', 'en_US.UTF-8'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('AMENT_PREFIX_PATH', '/home/annette-robosync/new_ws/install/new_package:/opt/ros/humble'), ('SHELL', '/bin/bash'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('PWD', '/home/annette-robosync/new_ws/build/new_package'), ('XDG_DATA_DIRS', '/usr/local/share:/usr/share:/var/lib/snapd/desktop'), ('PYTHONPATH', '/home/annette-robosync/new_ws/install/new_package/lib/python3.10/site-packages:/home/annette-robosync/polo/install/zeta_package/lib/python3.10/site-packages:/home/annette-robosync/polo_ws/install/zeta_package/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('COLCON', '1'), ('WSL2_GUI_APPS_ENABLED', '1'), ('HOSTTYPE', 'x86_64'), ('CMAKE_PREFIX_PATH', '/home/annette-robosync/new_ws/install/new_package::/opt/ros/humble'), ('WSLENV', '')]), 'shell': False}
+[22.970352] (new_package) StdoutLine: {'line': b'-- Install configuration: ""\n'}
+[22.972644] (new_package) StdoutLine: {'line': b'-- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/urdf\n'}
+[22.973191] (new_package) StdoutLine: {'line': b'-- Installing: /home/annette-robosync/new_ws/install/new_package/share/new_package/urdf/zeta.urdf.xacro\n'}
+[22.975787] (new_package) StdoutLine: {'line': b'-- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/launch\n'}
+[22.976399] (new_package) StdoutLine: {'line': b'-- Installing: /home/annette-robosync/new_ws/install/new_package/share/new_package/launch/simulate.launch.py\n'}
+[22.980413] (-) TimerEvent: {}
+[22.981592] (new_package) StdoutLine: {'line': b'-- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/launch/robot.launch.py\n'}
+[22.982008] (new_package) StdoutLine: {'line': b'-- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/config\n'}
+[22.982247] (new_package) StdoutLine: {'line': b'-- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/config/zeta.rviz\n'}
+[22.982741] (new_package) StdoutLine: {'line': b'-- Installing: /home/annette-robosync/new_ws/install/new_package/share/new_package/config/diff_drive_controllers.yaml\n'}
+[22.983028] (new_package) StdoutLine: {'line': b'-- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/meshes\n'}
+[22.984742] (new_package) StdoutLine: {'line': b'-- Installing: /home/annette-robosync/new_ws/install/new_package/share/ament_index/resource_index/package_run_dependencies/new_package\n'}
+[22.989937] (new_package) StdoutLine: {'line': b'-- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/ament_index/resource_index/parent_prefix_path/new_package\n'}
+[22.990474] (new_package) StdoutLine: {'line': b'-- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/environment/ament_prefix_path.sh\n'}
+[22.990750] (new_package) StdoutLine: {'line': b'-- Installing: /home/annette-robosync/new_ws/install/new_package/share/new_package/environment/ament_prefix_path.dsv\n'}
+[22.991214] (new_package) StdoutLine: {'line': b'-- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/environment/path.sh\n'}
+[22.991489] (new_package) StdoutLine: {'line': b'-- Installing: /home/annette-robosync/new_ws/install/new_package/share/new_package/environment/path.dsv\n'}
+[22.992512] (new_package) StdoutLine: {'line': b'-- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/local_setup.bash\n'}
+[22.993131] (new_package) StdoutLine: {'line': b'-- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/local_setup.sh\n'}
+[22.993398] (new_package) StdoutLine: {'line': b'-- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/local_setup.zsh\n'}
+[22.994604] (new_package) StdoutLine: {'line': b'-- Installing: /home/annette-robosync/new_ws/install/new_package/share/new_package/local_setup.dsv\n'}
+[22.997491] (new_package) StdoutLine: {'line': b'-- Installing: /home/annette-robosync/new_ws/install/new_package/share/new_package/package.dsv\n'}
+[23.002514] (new_package) StdoutLine: {'line': b'-- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/ament_index/resource_index/packages/new_package\n'}
+[23.002972] (new_package) StdoutLine: {'line': b'-- Installing: /home/annette-robosync/new_ws/install/new_package/share/new_package/cmake/ament_cmake_export_dependencies-extras.cmake\n'}
+[23.003510] (new_package) StdoutLine: {'line': b'-- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/cmake/new_packageConfig.cmake\n'}
+[23.006031] (new_package) StdoutLine: {'line': b'-- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/cmake/new_packageConfig-version.cmake\n'}
+[23.006819] (new_package) StdoutLine: {'line': b'-- Installing: /home/annette-robosync/new_ws/install/new_package/share/new_package/package.xml\n'}
+[23.014476] (new_package) CommandEnded: {'returncode': 0}
+[23.081219] (-) TimerEvent: {}
+[23.128499] (new_package) JobEnded: {'identifier': 'new_package', 'rc': 0}
+[23.134920] (-) EventReactorShutdown: {}

@@ -1,0 +1,62 @@
+[0.000000] (-) TimerEvent: {}
+[0.001740] (new_package) JobQueued: {'identifier': 'new_package', 'dependencies': OrderedDict()}
+[0.001970] (new_package) JobStarted: {'identifier': 'new_package'}
+[0.096355] (-) TimerEvent: {}
+[0.197108] (-) TimerEvent: {}
+[0.297808] (-) TimerEvent: {}
+[0.398660] (-) TimerEvent: {}
+[0.499251] (-) TimerEvent: {}
+[0.600314] (-) TimerEvent: {}
+[0.701142] (-) TimerEvent: {}
+[0.804715] (-) TimerEvent: {}
+[0.906828] (-) TimerEvent: {}
+[1.007822] (-) TimerEvent: {}
+[1.108518] (-) TimerEvent: {}
+[1.209461] (-) TimerEvent: {}
+[1.310335] (-) TimerEvent: {}
+[1.410907] (-) TimerEvent: {}
+[1.511599] (-) TimerEvent: {}
+[1.612334] (-) TimerEvent: {}
+[1.713121] (-) TimerEvent: {}
+[1.813958] (-) TimerEvent: {}
+[1.914565] (-) TimerEvent: {}
+[2.015282] (-) TimerEvent: {}
+[2.115945] (-) TimerEvent: {}
+[2.217445] (-) TimerEvent: {}
+[2.318410] (-) TimerEvent: {}
+[2.419090] (-) TimerEvent: {}
+[2.519691] (-) TimerEvent: {}
+[2.620353] (-) TimerEvent: {}
+[2.721781] (-) TimerEvent: {}
+[2.735682] (new_package) Command: {'cmd': ['/usr/bin/python3', '-W', 'ignore:setup.py install is deprecated', '-W', 'ignore:easy_install command is deprecated', 'setup.py', 'egg_info', '--egg-base', '../../build/new_package', 'build', '--build-base', '/home/annette-robosync/new_ws/build/new_package/build', 'install', '--record', '/home/annette-robosync/new_ws/build/new_package/install.log', '--single-version-externally-managed', 'install_data'], 'cwd': '/home/annette-robosync/new_ws/src/new_package', 'env': {'LESSOPEN': '| /usr/bin/lesspipe %s', 'USER': 'annette-robosync', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib', 'MOTD_SHOWN': 'update-motd', 'HOME': '/home/annette-robosync', 'OLDPWD': '/home/annette-robosync', 'ROS_PYTHON_VERSION': '3', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus', 'WSL_DISTRO_NAME': 'Ubuntu-22.04', 'WAYLAND_DISPLAY': 'wayland-0', 'COLCON_PREFIX_PATH': '/home/annette-robosync/new_ws/install:/home/annette-robosync/polo/install:/home/annette-robosync/polo_ws/install', 'ROS_DISTRO': 'humble', 'LOGNAME': 'annette-robosync', 'NAME': 'DESKTOP-KM754MJ', 'WSL_INTEROP': '/run/WSL/358416_interop', 'PULSE_SERVER': 'unix:/mnt/wslg/PulseServer', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'TERM': 'xterm-256color', 'ROS_LOCALHOST_ONLY': '0', 'PATH': '/opt/ros/humble/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/Program Files/dotnet/:/mnt/c/Program Files/MATLAB/R2023b/runtime/win64:/mnt/c/Program Files/MATLAB/R2023b/bin:/mnt/c/Users/USER/AppData/Local/Programs/Python/Launcher/:/mnt/c/Users/USER/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/USER/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/MinGW/bin:/snap/bin', 'XDG_RUNTIME_DIR': '/run/user/1000/', 'DISPLAY': ':0', 'LANG': 'en_US.UTF-8', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:', 'AMENT_PREFIX_PATH': '/home/annette-robosync/new_ws/install/new_package:/opt/ros/humble', 'SHELL': '/bin/bash', 'LESSCLOSE': '/usr/bin/lesspipe %s %s', 'PWD': '/home/annette-robosync/new_ws/build/new_package', 'XDG_DATA_DIRS': '/usr/local/share:/usr/share:/var/lib/snapd/desktop', 'PYTHONPATH': '/home/annette-robosync/new_ws/build/new_package/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/annette-robosync/new_ws/install/new_package/lib/python3.10/site-packages:/home/annette-robosync/new_ws/install/new_package/lib/python3.10/site-packages:/home/annette-robosync/polo/install/zeta_package/lib/python3.10/site-packages:/home/annette-robosync/polo_ws/install/zeta_package/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages', 'COLCON': '1', 'WSL2_GUI_APPS_ENABLED': '1', 'HOSTTYPE': 'x86_64', 'WSLENV': ''}, 'shell': False}
+[2.822006] (-) TimerEvent: {}
+[2.922750] (-) TimerEvent: {}
+[3.023664] (-) TimerEvent: {}
+[3.124377] (-) TimerEvent: {}
+[3.225483] (-) TimerEvent: {}
+[3.326248] (-) TimerEvent: {}
+[3.427171] (-) TimerEvent: {}
+[3.451925] (new_package) StdoutLine: {'line': b'running egg_info\n'}
+[3.454312] (new_package) StdoutLine: {'line': b'writing ../../build/new_package/new_package.egg-info/PKG-INFO\n'}
+[3.457938] (new_package) StdoutLine: {'line': b'writing dependency_links to ../../build/new_package/new_package.egg-info/dependency_links.txt\n'}
+[3.458737] (new_package) StdoutLine: {'line': b'writing entry points to ../../build/new_package/new_package.egg-info/entry_points.txt\n'}
+[3.459348] (new_package) StdoutLine: {'line': b'writing requirements to ../../build/new_package/new_package.egg-info/requires.txt\n'}
+[3.459847] (new_package) StdoutLine: {'line': b'writing top-level names to ../../build/new_package/new_package.egg-info/top_level.txt\n'}
+[3.467009] (new_package) StdoutLine: {'line': b"reading manifest file '../../build/new_package/new_package.egg-info/SOURCES.txt'\n"}
+[3.470422] (new_package) StdoutLine: {'line': b"writing manifest file '../../build/new_package/new_package.egg-info/SOURCES.txt'\n"}
+[3.471055] (new_package) StdoutLine: {'line': b'running build\n'}
+[3.471276] (new_package) StdoutLine: {'line': b'running build_py\n'}
+[3.472012] (new_package) StdoutLine: {'line': b'running install\n'}
+[3.473256] (new_package) StdoutLine: {'line': b'running install_lib\n'}
+[3.477589] (new_package) StdoutLine: {'line': b'running install_data\n'}
+[3.479416] (new_package) StdoutLine: {'line': b'running install_egg_info\n'}
+[3.483453] (new_package) StdoutLine: {'line': b"removing '/home/annette-robosync/new_ws/install/new_package/lib/python3.10/site-packages/new_package-0.0.0-py3.10.egg-info' (and everything under it)\n"}
+[3.487029] (new_package) StdoutLine: {'line': b'Copying ../../build/new_package/new_package.egg-info to /home/annette-robosync/new_ws/install/new_package/lib/python3.10/site-packages/new_package-0.0.0-py3.10.egg-info\n'}
+[3.492023] (new_package) StdoutLine: {'line': b'running install_scripts\n'}
+[3.527695] (-) TimerEvent: {}
+[3.549679] (new_package) StdoutLine: {'line': b"writing list of installed files to '/home/annette-robosync/new_ws/build/new_package/install.log'\n"}
+[3.627970] (-) TimerEvent: {}
+[3.650357] (new_package) CommandEnded: {'returncode': 0}
+[3.730673] (-) TimerEvent: {}
+[3.736883] (new_package) JobEnded: {'identifier': 'new_package', 'rc': 0}
+[3.739408] (-) EventReactorShutdown: {}

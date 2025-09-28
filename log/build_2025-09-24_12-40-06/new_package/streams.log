@@ -1,0 +1,53 @@
+[0.046s] Invoking command in '/home/annette-robosync/new_ws/build/new_package': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/annette-robosync/new_ws/install/new_package /usr/bin/cmake --build /home/annette-robosync/new_ws/build/new_package -- -j4 -l4
+[0.211s] -- Found ament_cmake: 1.3.12 (/opt/ros/humble/share/ament_cmake/cmake)
+[0.693s] -- Found rclcpp: 16.0.14 (/opt/ros/humble/share/rclcpp/cmake)
+[1.154s] -- Found rosidl_generator_c: 3.1.7 (/opt/ros/humble/share/rosidl_generator_c/cmake)
+[1.166s] -- Found rosidl_adapter: 3.1.7 (/opt/ros/humble/share/rosidl_adapter/cmake)
+[1.195s] -- Found rosidl_generator_cpp: 3.1.7 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)
+[1.244s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[1.307s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[1.473s] -- Found rmw_implementation_cmake: 6.1.2 (/opt/ros/humble/share/rmw_implementation_cmake/cmake)
+[1.481s] -- Found rmw_fastrtps_cpp: 6.2.8 (/opt/ros/humble/share/rmw_fastrtps_cpp/cmake)
+[11.457s] -- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[11.706s] -- Found xacro: 2.0.13 (/opt/ros/humble/share/xacro/cmake)
+[11.708s] -- Found controller_manager: 2.52.0 (/opt/ros/humble/share/controller_manager/cmake)
+[14.538s] -- Found diff_drive_controller: 2.50.0 (/opt/ros/humble/share/diff_drive_controller/cmake)
+[14.754s] -- Found joint_state_broadcaster: 2.50.0 (/opt/ros/humble/share/joint_state_broadcaster/cmake)
+[14.793s] -- Found robot_state_publisher: 3.0.3 (/opt/ros/humble/share/robot_state_publisher/cmake)
+[14.809s] -- Found eigen3_cmake_module: 0.1.1 (/opt/ros/humble/share/eigen3_cmake_module/cmake)
+[14.814s] -- Ensuring Eigen3 include directory is part of orocos-kdl CMake target
+[14.933s] -- Found ros_ign_bridge: 0.244.20 (/opt/ros/humble/share/ros_ign_bridge/cmake)
+[17.464s] -- Found Protobuf: /usr/lib/x86_64-linux-gnu/libprotobuf.so (found suitable version "3.12.4", minimum required is "3") 
+[20.637s] -- Found Protobuf: /usr/lib/x86_64-linux-gnu/libprotobuf.so (found version "3.12.4") 
+[24.571s] -- Configuring done
+[24.668s] -- Generating done
+[24.732s] -- Build files have been written to: /home/annette-robosync/new_ws/build/new_package
+[24.893s] Invoked command in '/home/annette-robosync/new_ws/build/new_package' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/annette-robosync/new_ws/install/new_package /usr/bin/cmake --build /home/annette-robosync/new_ws/build/new_package -- -j4 -l4
+[24.953s] Invoking command in '/home/annette-robosync/new_ws/build/new_package': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/annette-robosync/new_ws/install/new_package /usr/bin/cmake --install /home/annette-robosync/new_ws/build/new_package
+[24.998s] -- Install configuration: ""
+[24.999s] -- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/urdf
+[25.008s] -- Installing: /home/annette-robosync/new_ws/install/new_package/share/new_package/urdf/zeta.urdf.xacro
+[25.011s] -- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/launch
+[25.013s] -- Installing: /home/annette-robosync/new_ws/install/new_package/share/new_package/launch/simulate.launch.py
+[25.014s] -- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/launch/robot.launch.py
+[25.028s] -- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/config
+[25.034s] -- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/config/zeta.rviz
+[25.034s] -- Installing: /home/annette-robosync/new_ws/install/new_package/share/new_package/config/diff_drive_controllers.yaml
+[25.034s] -- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/meshes
+[25.037s] -- Installing: /home/annette-robosync/new_ws/install/new_package/share/ament_index/resource_index/package_run_dependencies/new_package
+[25.045s] -- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/ament_index/resource_index/parent_prefix_path/new_package
+[25.046s] -- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/environment/ament_prefix_path.sh
+[25.046s] -- Installing: /home/annette-robosync/new_ws/install/new_package/share/new_package/environment/ament_prefix_path.dsv
+[25.046s] -- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/environment/path.sh
+[25.047s] -- Installing: /home/annette-robosync/new_ws/install/new_package/share/new_package/environment/path.dsv
+[25.047s] -- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/local_setup.bash
+[25.047s] -- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/local_setup.sh
+[25.047s] -- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/local_setup.zsh
+[25.048s] -- Installing: /home/annette-robosync/new_ws/install/new_package/share/new_package/local_setup.dsv
+[25.048s] -- Installing: /home/annette-robosync/new_ws/install/new_package/share/new_package/package.dsv
+[25.050s] -- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/ament_index/resource_index/packages/new_package
+[25.050s] -- Installing: /home/annette-robosync/new_ws/install/new_package/share/new_package/cmake/ament_cmake_export_dependencies-extras.cmake
+[25.050s] -- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/cmake/new_packageConfig.cmake
+[25.050s] -- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/cmake/new_packageConfig-version.cmake
+[25.051s] -- Installing: /home/annette-robosync/new_ws/install/new_package/share/new_package/package.xml
+[25.061s] Invoked command in '/home/annette-robosync/new_ws/build/new_package' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/annette-robosync/new_ws/install/new_package /usr/bin/cmake --install /home/annette-robosync/new_ws/build/new_package

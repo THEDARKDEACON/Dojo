@@ -1,0 +1,44 @@
+[0.054s] Invoking command in '/home/annette-robosync/new_ws/build/new_package': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/annette-robosync/new_ws/build/new_package -- -j4 -l4
+[0.198s] -- Found ament_cmake: 1.3.12 (/opt/ros/humble/share/ament_cmake/cmake)
+[0.879s] -- Found xacro: 2.0.13 (/opt/ros/humble/share/xacro/cmake)
+[0.883s] -- Found robot_state_publisher: 3.0.3 (/opt/ros/humble/share/robot_state_publisher/cmake)
+[1.277s] -- Found rosidl_generator_c: 3.1.7 (/opt/ros/humble/share/rosidl_generator_c/cmake)
+[1.290s] -- Found rosidl_adapter: 3.1.7 (/opt/ros/humble/share/rosidl_adapter/cmake)
+[1.315s] -- Found rosidl_generator_cpp: 3.1.7 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)
+[1.365s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[1.420s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[1.611s] -- Found eigen3_cmake_module: 0.1.1 (/opt/ros/humble/share/eigen3_cmake_module/cmake)
+[1.618s] -- Ensuring Eigen3 include directory is part of orocos-kdl CMake target
+[1.764s] -- Found rmw_implementation_cmake: 6.1.2 (/opt/ros/humble/share/rmw_implementation_cmake/cmake)
+[1.771s] -- Found rmw_fastrtps_cpp: 6.2.8 (/opt/ros/humble/share/rmw_fastrtps_cpp/cmake)
+[12.799s] -- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[15.901s] -- Found gazebo_ros: 3.9.0 (/opt/ros/humble/share/gazebo_ros/cmake)
+[15.931s] -- Found PkgConfig: /usr/bin/pkg-config (found version "0.29.2") 
+[15.934s] -- Checking for module 'bullet>=2.82'
+[15.992s] --   Found bullet, version 3.05
+[16.407s] -- Found fcl: /usr/include (found suitable version "0.7.0", minimum required is "0.5.0") 
+[16.580s] -- Found assimp: /usr/include (found version "5.2.0") 
+[16.636s] -- Found DART: /usr/include (Required is at least version "6.6") found components: dart 
+[16.898s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found suitable version "1.74.0", minimum required is "1.40.0") found components: thread system filesystem program_options regex iostreams date_time 
+[17.089s] -- Looking for ignition-math6 -- found version 6.15.1
+[17.122s] -- Searching for dependencies of ignition-math6
+[17.150s] -- Looking for OGRE...
+[17.151s] -- OGRE_PREFIX_WATCH changed.
+[17.176s] -- Checking for module 'OGRE'
+[17.223s] --   Found OGRE, version 1.9.0
+[17.340s] -- Found Ogre Ghadamon (1.9.0)
+[18.116s] -- Found OGRE: optimized;/usr/lib/x86_64-linux-gnu/libOgreMain.so;debug;/usr/lib/x86_64-linux-gnu/libOgreMain.so
+[18.144s] -- Looking for OGRE_Paging...
+[18.817s] -- Found OGRE_Paging: optimized;/usr/lib/x86_64-linux-gnu/libOgrePaging.so;debug;/usr/lib/x86_64-linux-gnu/libOgrePaging.so
+[18.818s] -- Looking for OGRE_Terrain...
+[19.442s] -- Found OGRE_Terrain: optimized;/usr/lib/x86_64-linux-gnu/libOgreTerrain.so;debug;/usr/lib/x86_64-linux-gnu/libOgreTerrain.so
+[19.443s] -- Looking for OGRE_Property...
+[20.180s] -- Found OGRE_Property: optimized;/usr/lib/x86_64-linux-gnu/libOgreProperty.so;debug;/usr/lib/x86_64-linux-gnu/libOgreProperty.so
+[20.180s] -- Looking for OGRE_RTShaderSystem...
+[20.832s] -- Found OGRE_RTShaderSystem: optimized;/usr/lib/x86_64-linux-gnu/libOgreRTShaderSystem.so;debug;/usr/lib/x86_64-linux-gnu/libOgreRTShaderSystem.so
+[20.833s] -- Looking for OGRE_Volume...
+[21.551s] -- Found OGRE_Volume: optimized;/usr/lib/x86_64-linux-gnu/libOgreVolume.so;debug;/usr/lib/x86_64-linux-gnu/libOgreVolume.so
+[21.551s] -- Looking for OGRE_Overlay...
+[22.259s] -- Found OGRE_Overlay: optimized;/usr/lib/x86_64-linux-gnu/libOgreOverlay.so;debug;/usr/lib/x86_64-linux-gnu/libOgreOverlay.so
+[56.798s] gmake: *** [Makefile:226: cmake_check_build_system] Interrupt
+[56.811s] Invoked command in '/home/annette-robosync/new_ws/build/new_package' returned '-2': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/annette-robosync/new_ws/build/new_package -- -j4 -l4

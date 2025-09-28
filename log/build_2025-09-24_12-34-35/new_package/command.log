@@ -1,0 +1,2 @@
+Invoking command in '/home/annette-robosync/new_ws/build/new_package': CMAKE_PREFIX_PATH=/home/annette-robosync/new_ws/install/new_package:/opt/ros/humble /usr/bin/cmake --build /home/annette-robosync/new_ws/build/new_package -- -j4 -l4
+Invoked command in '/home/annette-robosync/new_ws/build/new_package' returned '2': CMAKE_PREFIX_PATH=/home/annette-robosync/new_ws/install/new_package:/opt/ros/humble /usr/bin/cmake --build /home/annette-robosync/new_ws/build/new_package -- -j4 -l4

@@ -1,0 +1,19 @@
+[0.078s] Invoking command in '/home/annette-robosync/new_ws/build/new_package': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/annette-robosync/new_ws/build/new_package -- -j4 -l4
+[1.020s] [31mCMake Error at CMakeLists.txt:1 (ccmake_minimum_required):
+[1.020s]   Unknown CMake command "ccmake_minimum_required".
+[1.021s] 
+[1.021s] [0m
+[1.021s] [33mCMake Warning (dev) in CMakeLists.txt:
+[1.021s]   No cmake_minimum_required command is present.  A line of code such as
+[1.021s] 
+[1.021s]     cmake_minimum_required(VERSION 3.22)
+[1.021s] 
+[1.022s]   should be added at the top of the file.  The version specified may be lower
+[1.022s]   if you wish to support older CMake versions for this project.  For more
+[1.022s]   information run "cmake --help-policy CMP0000".
+[1.022s] This warning is for project developers.  Use -Wno-dev to suppress it.
+[1.022s] [0m
+[1.024s] -- Configuring incomplete, errors occurred!
+[1.025s] See also "/home/annette-robosync/new_ws/build/new_package/CMakeFiles/CMakeOutput.log".
+[1.048s] gmake: *** [Makefile:226: cmake_check_build_system] Error 1
+[1.061s] Invoked command in '/home/annette-robosync/new_ws/build/new_package' returned '2': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/annette-robosync/new_ws/build/new_package -- -j4 -l4

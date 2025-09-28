@@ -1,0 +1,223 @@
+[0.000000] (-) TimerEvent: {}
+[0.007160] (new_package) JobQueued: {'identifier': 'new_package', 'dependencies': OrderedDict()}
+[0.008496] (new_package) JobStarted: {'identifier': 'new_package'}
+[0.085346] (new_package) JobProgress: {'identifier': 'new_package', 'progress': 'cmake'}
+[0.097554] (new_package) JobProgress: {'identifier': 'new_package', 'progress': 'build'}
+[0.102461] (-) TimerEvent: {}
+[0.106778] (new_package) Command: {'cmd': ['/usr/bin/cmake', '--build', '/home/annette-robosync/new_ws/build/new_package', '--', '-j4', '-l4'], 'cwd': '/home/annette-robosync/new_ws/build/new_package', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('USER', 'annette-robosync'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib'), ('MOTD_SHOWN', 'update-motd'), ('HOME', '/home/annette-robosync'), ('OLDPWD', '/home/annette-robosync'), ('ROS_PYTHON_VERSION', '3'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('WSL_DISTRO_NAME', 'Ubuntu-22.04'), ('WAYLAND_DISPLAY', 'wayland-0'), ('COLCON_PREFIX_PATH', '/home/annette-robosync/new_ws/install:/home/annette-robosync/polo/install:/home/annette-robosync/polo_ws/install'), ('ROS_DISTRO', 'humble'), ('LOGNAME', 'annette-robosync'), ('NAME', 'DESKTOP-KM754MJ'), ('WSL_INTEROP', '/run/WSL/358416_interop'), ('PULSE_SERVER', 'unix:/mnt/wslg/PulseServer'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('TERM', 'xterm-256color'), ('ROS_LOCALHOST_ONLY', '0'), ('PATH', '/opt/ros/humble/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/Program Files/dotnet/:/mnt/c/Program Files/MATLAB/R2023b/runtime/win64:/mnt/c/Program Files/MATLAB/R2023b/bin:/mnt/c/Users/USER/AppData/Local/Programs/Python/Launcher/:/mnt/c/Users/USER/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/USER/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/MinGW/bin:/snap/bin'), ('XDG_RUNTIME_DIR', '/run/user/1000/'), ('DISPLAY', ':0'), ('LANG', 'en_US.UTF-8'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('AMENT_PREFIX_PATH', '/home/annette-robosync/new_ws/install/new_package:/opt/ros/humble'), ('SHELL', '/bin/bash'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('PWD', '/home/annette-robosync/new_ws/build/new_package'), ('XDG_DATA_DIRS', '/usr/local/share:/usr/share:/var/lib/snapd/desktop'), ('PYTHONPATH', '/home/annette-robosync/new_ws/install/new_package/lib/python3.10/site-packages:/home/annette-robosync/polo/install/zeta_package/lib/python3.10/site-packages:/home/annette-robosync/polo_ws/install/zeta_package/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('COLCON', '1'), ('WSL2_GUI_APPS_ENABLED', '1'), ('HOSTTYPE', 'x86_64'), ('WSLENV', ''), ('CMAKE_PREFIX_PATH', '/home/annette-robosync/new_ws/install/new_package:/opt/ros/humble')]), 'shell': False}
+[0.202896] (-) TimerEvent: {}
+[0.303951] (-) TimerEvent: {}
+[0.404826] (-) TimerEvent: {}
+[0.505602] (-) TimerEvent: {}
+[0.606367] (-) TimerEvent: {}
+[0.650590] (new_package) StdoutLine: {'line': b'-- Found ament_cmake: 1.3.12 (/opt/ros/humble/share/ament_cmake/cmake)\n'}
+[0.706581] (-) TimerEvent: {}
+[0.807469] (-) TimerEvent: {}
+[0.908549] (-) TimerEvent: {}
+[1.009775] (-) TimerEvent: {}
+[1.111149] (-) TimerEvent: {}
+[1.212337] (-) TimerEvent: {}
+[1.313470] (-) TimerEvent: {}
+[1.414941] (-) TimerEvent: {}
+[1.434812] (new_package) StdoutLine: {'line': b'-- Found rclcpp: 16.0.14 (/opt/ros/humble/share/rclcpp/cmake)\n'}
+[1.515301] (-) TimerEvent: {}
+[1.616518] (-) TimerEvent: {}
+[1.717713] (-) TimerEvent: {}
+[1.818927] (-) TimerEvent: {}
+[1.920069] (-) TimerEvent: {}
+[2.021339] (-) TimerEvent: {}
+[2.047853] (new_package) StdoutLine: {'line': b'-- Found rosidl_generator_c: 3.1.7 (/opt/ros/humble/share/rosidl_generator_c/cmake)\n'}
+[2.073040] (new_package) StdoutLine: {'line': b'-- Found rosidl_adapter: 3.1.7 (/opt/ros/humble/share/rosidl_adapter/cmake)\n'}
+[2.115543] (new_package) StdoutLine: {'line': b'-- Found rosidl_generator_cpp: 3.1.7 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)\n'}
+[2.121638] (-) TimerEvent: {}
+[2.167848] (new_package) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c\n'}
+[2.221934] (-) TimerEvent: {}
+[2.238904] (new_package) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp\n'}
+[2.322368] (-) TimerEvent: {}
+[2.406078] (new_package) StdoutLine: {'line': b'-- Found rmw_implementation_cmake: 6.1.2 (/opt/ros/humble/share/rmw_implementation_cmake/cmake)\n'}
+[2.421796] (new_package) StdoutLine: {'line': b'-- Found rmw_fastrtps_cpp: 6.2.8 (/opt/ros/humble/share/rmw_fastrtps_cpp/cmake)\n'}
+[2.422503] (-) TimerEvent: {}
+[2.523024] (-) TimerEvent: {}
+[2.623781] (-) TimerEvent: {}
+[2.724540] (-) TimerEvent: {}
+[2.825235] (-) TimerEvent: {}
+[2.926023] (-) TimerEvent: {}
+[3.026792] (-) TimerEvent: {}
+[3.127505] (-) TimerEvent: {}
+[3.228266] (-) TimerEvent: {}
+[3.329021] (-) TimerEvent: {}
+[3.429825] (-) TimerEvent: {}
+[3.530577] (-) TimerEvent: {}
+[3.631393] (-) TimerEvent: {}
+[3.732123] (-) TimerEvent: {}
+[3.832863] (-) TimerEvent: {}
+[3.933590] (-) TimerEvent: {}
+[4.034635] (-) TimerEvent: {}
+[4.135718] (-) TimerEvent: {}
+[4.237186] (-) TimerEvent: {}
+[4.338433] (-) TimerEvent: {}
+[4.439627] (-) TimerEvent: {}
+[4.540833] (-) TimerEvent: {}
+[4.642335] (-) TimerEvent: {}
+[4.743557] (-) TimerEvent: {}
+[4.844770] (-) TimerEvent: {}
+[4.946011] (-) TimerEvent: {}
+[5.047485] (-) TimerEvent: {}
+[5.148739] (-) TimerEvent: {}
+[5.249981] (-) TimerEvent: {}
+[5.351152] (-) TimerEvent: {}
+[5.452422] (-) TimerEvent: {}
+[5.553785] (-) TimerEvent: {}
+[5.655093] (-) TimerEvent: {}
+[5.756739] (-) TimerEvent: {}
+[5.857916] (-) TimerEvent: {}
+[5.959805] (-) TimerEvent: {}
+[6.060863] (-) TimerEvent: {}
+[6.162284] (-) TimerEvent: {}
+[6.263433] (-) TimerEvent: {}
+[6.364672] (-) TimerEvent: {}
+[6.465968] (-) TimerEvent: {}
+[6.567132] (-) TimerEvent: {}
+[6.667900] (-) TimerEvent: {}
+[6.769072] (-) TimerEvent: {}
+[6.870255] (-) TimerEvent: {}
+[6.970930] (-) TimerEvent: {}
+[7.072301] (-) TimerEvent: {}
+[7.173499] (-) TimerEvent: {}
+[7.274814] (-) TimerEvent: {}
+[7.376007] (-) TimerEvent: {}
+[7.477019] (-) TimerEvent: {}
+[7.578189] (-) TimerEvent: {}
+[7.679293] (-) TimerEvent: {}
+[7.780581] (-) TimerEvent: {}
+[7.881763] (-) TimerEvent: {}
+[7.982987] (-) TimerEvent: {}
+[8.084209] (-) TimerEvent: {}
+[8.185427] (-) TimerEvent: {}
+[8.286768] (-) TimerEvent: {}
+[8.388099] (-) TimerEvent: {}
+[8.489571] (-) TimerEvent: {}
+[8.590611] (-) TimerEvent: {}
+[8.691314] (-) TimerEvent: {}
+[8.792066] (-) TimerEvent: {}
+[8.892879] (-) TimerEvent: {}
+[8.993933] (-) TimerEvent: {}
+[9.094720] (-) TimerEvent: {}
+[9.195566] (-) TimerEvent: {}
+[9.296547] (-) TimerEvent: {}
+[9.397391] (-) TimerEvent: {}
+[9.498374] (-) TimerEvent: {}
+[9.599156] (-) TimerEvent: {}
+[9.700109] (-) TimerEvent: {}
+[9.800924] (-) TimerEvent: {}
+[9.901634] (-) TimerEvent: {}
+[10.002372] (-) TimerEvent: {}
+[10.103123] (-) TimerEvent: {}
+[10.203842] (-) TimerEvent: {}
+[10.304604] (-) TimerEvent: {}
+[10.405427] (-) TimerEvent: {}
+[10.506302] (-) TimerEvent: {}
+[10.607129] (-) TimerEvent: {}
+[10.708039] (-) TimerEvent: {}
+[10.808682] (-) TimerEvent: {}
+[10.909476] (-) TimerEvent: {}
+[10.960081] (new_package) StdoutLine: {'line': b"-- Using RMW implementation 'rmw_fastrtps_cpp' as default\n"}
+[11.010057] (-) TimerEvent: {}
+[11.111203] (-) TimerEvent: {}
+[11.156562] (new_package) StdoutLine: {'line': b'-- Found xacro: 2.0.13 (/opt/ros/humble/share/xacro/cmake)\n'}
+[11.171088] (new_package) StdoutLine: {'line': b'-- Found controller_manager: 2.52.0 (/opt/ros/humble/share/controller_manager/cmake)\n'}
+[11.211567] (-) TimerEvent: {}
+[11.312879] (-) TimerEvent: {}
+[11.413980] (-) TimerEvent: {}
+[11.514734] (-) TimerEvent: {}
+[11.615508] (-) TimerEvent: {}
+[11.716550] (-) TimerEvent: {}
+[11.817881] (-) TimerEvent: {}
+[11.919439] (-) TimerEvent: {}
+[12.020907] (-) TimerEvent: {}
+[12.132215] (-) TimerEvent: {}
+[12.233855] (-) TimerEvent: {}
+[12.334779] (-) TimerEvent: {}
+[12.435551] (-) TimerEvent: {}
+[12.536429] (-) TimerEvent: {}
+[12.637483] (-) TimerEvent: {}
+[12.738447] (-) TimerEvent: {}
+[12.839134] (-) TimerEvent: {}
+[12.939974] (-) TimerEvent: {}
+[13.040662] (-) TimerEvent: {}
+[13.141495] (-) TimerEvent: {}
+[13.242286] (-) TimerEvent: {}
+[13.343342] (-) TimerEvent: {}
+[13.444447] (-) TimerEvent: {}
+[13.545202] (-) TimerEvent: {}
+[13.645991] (-) TimerEvent: {}
+[13.746858] (-) TimerEvent: {}
+[13.847532] (-) TimerEvent: {}
+[13.948287] (-) TimerEvent: {}
+[14.049226] (-) TimerEvent: {}
+[14.150075] (-) TimerEvent: {}
+[14.167866] (new_package) StdoutLine: {'line': b'-- Found diff_drive_controller: 2.50.0 (/opt/ros/humble/share/diff_drive_controller/cmake)\n'}
+[14.250734] (-) TimerEvent: {}
+[14.351951] (-) TimerEvent: {}
+[14.453320] (-) TimerEvent: {}
+[14.554361] (-) TimerEvent: {}
+[14.655529] (-) TimerEvent: {}
+[14.756892] (-) TimerEvent: {}
+[14.769107] (new_package) StdoutLine: {'line': b'-- Found joint_state_broadcaster: 2.50.0 (/opt/ros/humble/share/joint_state_broadcaster/cmake)\n'}
+[14.843998] (new_package) StdoutLine: {'line': b'-- Found robot_state_publisher: 3.0.3 (/opt/ros/humble/share/robot_state_publisher/cmake)\n'}
+[14.857335] (-) TimerEvent: {}
+[14.958521] (-) TimerEvent: {}
+[15.011234] (new_package) StdoutLine: {'line': b'-- Found eigen3_cmake_module: 0.1.1 (/opt/ros/humble/share/eigen3_cmake_module/cmake)\n'}
+[15.022771] (new_package) StdoutLine: {'line': b'-- Found Eigen3: TRUE (found version "3.4.0") \n'}
+[15.024176] (new_package) StdoutLine: {'line': b'-- Ensuring Eigen3 include directory is part of orocos-kdl CMake target\n'}
+[15.059368] (-) TimerEvent: {}
+[15.160730] (-) TimerEvent: {}
+[15.262426] (-) TimerEvent: {}
+[15.363979] (-) TimerEvent: {}
+[15.467258] (-) TimerEvent: {}
+[15.568465] (-) TimerEvent: {}
+[15.669790] (-) TimerEvent: {}
+[15.771117] (-) TimerEvent: {}
+[15.872316] (-) TimerEvent: {}
+[15.973557] (-) TimerEvent: {}
+[16.074905] (-) TimerEvent: {}
+[16.176262] (-) TimerEvent: {}
+[16.277477] (-) TimerEvent: {}
+[16.378669] (-) TimerEvent: {}
+[16.480041] (-) TimerEvent: {}
+[16.581214] (-) TimerEvent: {}
+[16.682409] (-) TimerEvent: {}
+[16.783428] (-) TimerEvent: {}
+[16.884202] (-) TimerEvent: {}
+[16.984992] (-) TimerEvent: {}
+[17.085809] (-) TimerEvent: {}
+[17.186582] (-) TimerEvent: {}
+[17.287446] (-) TimerEvent: {}
+[17.388392] (-) TimerEvent: {}
+[17.489324] (-) TimerEvent: {}
+[17.590477] (-) TimerEvent: {}
+[17.682475] (new_package) StderrLine: {'line': b'\x1b[31mCMake Error at CMakeLists.txt:19 (find_package):\n'}
+[17.683070] (new_package) StderrLine: {'line': b'  By not providing "Findros_ign_gazebo.cmake" in CMAKE_MODULE_PATH this\n'}
+[17.683393] (new_package) StderrLine: {'line': b'  project has asked CMake to find a package configuration file provided by\n'}
+[17.683591] (new_package) StderrLine: {'line': b'  "ros_ign_gazebo", but CMake did not find one.\n'}
+[17.683768] (new_package) StderrLine: {'line': b'\n'}
+[17.683936] (new_package) StderrLine: {'line': b'  Could not find a package configuration file provided by "ros_ign_gazebo"\n'}
+[17.684543] (new_package) StderrLine: {'line': b'  with any of the following names:\n'}
+[17.684756] (new_package) StderrLine: {'line': b'\n'}
+[17.684941] (new_package) StderrLine: {'line': b'    ros_ign_gazeboConfig.cmake\n'}
+[17.685330] (new_package) StderrLine: {'line': b'    ros_ign_gazebo-config.cmake\n'}
+[17.685545] (new_package) StderrLine: {'line': b'\n'}
+[17.685725] (new_package) StderrLine: {'line': b'  Add the installation prefix of "ros_ign_gazebo" to CMAKE_PREFIX_PATH or set\n'}
+[17.685899] (new_package) StderrLine: {'line': b'  "ros_ign_gazebo_DIR" to a directory containing one of the above files.  If\n'}
+[17.686136] (new_package) StderrLine: {'line': b'  "ros_ign_gazebo" provides a separate development package or SDK, be sure it\n'}
+[17.686424] (new_package) StderrLine: {'line': b'  has been installed.\n'}
+[17.686714] (new_package) StderrLine: {'line': b'\n'}
+[17.686905] (new_package) StderrLine: {'line': b'\x1b[0m\n'}
+[17.687144] (new_package) StdoutLine: {'line': b'-- Configuring incomplete, errors occurred!\n'}
+[17.687389] (new_package) StdoutLine: {'line': b'See also "/home/annette-robosync/new_ws/build/new_package/CMakeFiles/CMakeOutput.log".\n'}
+[17.690607] (-) TimerEvent: {}
+[17.736074] (new_package) StderrLine: {'line': b'gmake: *** [Makefile:226: cmake_check_build_system] Error 1\n'}
+[17.743986] (new_package) CommandEnded: {'returncode': 2}
+[17.790962] (-) TimerEvent: {}
+[17.833342] (new_package) JobEnded: {'identifier': 'new_package', 'rc': 2}
+[17.846206] (-) EventReactorShutdown: {}

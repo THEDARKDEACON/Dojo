@@ -1,0 +1,1 @@
+/home/annette-robosync/new_ws/build/new_package/ament_cmake_core/new_packageConfig-version.cmake

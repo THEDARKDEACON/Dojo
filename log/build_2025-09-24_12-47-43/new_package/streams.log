@@ -1,0 +1,30 @@
+[0.076s] Invoking command in '/home/annette-robosync/new_ws/build/new_package': /usr/bin/cmake --build /home/annette-robosync/new_ws/build/new_package -- -j4 -l4
+[0.435s] Invoked command in '/home/annette-robosync/new_ws/build/new_package' returned '0': /usr/bin/cmake --build /home/annette-robosync/new_ws/build/new_package -- -j4 -l4
+[0.481s] Invoking command in '/home/annette-robosync/new_ws/build/new_package': /usr/bin/cmake --install /home/annette-robosync/new_ws/build/new_package
+[0.533s] -- Install configuration: ""
+[0.536s] -- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/urdf
+[0.536s] -- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/urdf/zeta.urdf.xacro
+[0.536s] -- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/launch
+[0.537s] -- Installing: /home/annette-robosync/new_ws/install/new_package/share/new_package/launch/simulate.launch.py
+[0.537s] -- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/launch/robot.launch.py
+[0.537s] -- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/config
+[0.538s] -- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/config/zeta.rviz
+[0.538s] -- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/config/diff_drive_controllers.yaml
+[0.538s] -- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/meshes
+[0.539s] -- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/ament_index/resource_index/package_run_dependencies/new_package
+[0.539s] -- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/ament_index/resource_index/parent_prefix_path/new_package
+[0.540s] -- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/environment/ament_prefix_path.sh
+[0.540s] -- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/environment/ament_prefix_path.dsv
+[0.540s] -- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/environment/path.sh
+[0.541s] -- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/environment/path.dsv
+[0.541s] -- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/local_setup.bash
+[0.541s] -- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/local_setup.sh
+[0.541s] -- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/local_setup.zsh
+[0.542s] -- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/local_setup.dsv
+[0.544s] -- Installing: /home/annette-robosync/new_ws/install/new_package/share/new_package/package.dsv
+[0.545s] -- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/ament_index/resource_index/packages/new_package
+[0.546s] -- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/cmake/ament_cmake_export_dependencies-extras.cmake
+[0.547s] -- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/cmake/new_packageConfig.cmake
+[0.551s] -- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/cmake/new_packageConfig-version.cmake
+[0.551s] -- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/package.xml
+[0.559s] Invoked command in '/home/annette-robosync/new_ws/build/new_package' returned '0': /usr/bin/cmake --install /home/annette-robosync/new_ws/build/new_package

@@ -1,0 +1,36 @@
+[0.044s] Invoking command in '/home/annette-robosync/new_ws/build/new_package': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/annette-robosync/new_ws/build/new_package -- -j4 -l4
+[0.108s] -- Found ament_cmake: 1.3.12 (/opt/ros/humble/share/ament_cmake/cmake)
+[0.488s] -- Override CMake install command with custom implementation using symlinks instead of copying resources
+[0.508s] -- Found xacro: 2.0.13 (/opt/ros/humble/share/xacro/cmake)
+[0.508s] -- Found robot_state_publisher: 3.0.3 (/opt/ros/humble/share/robot_state_publisher/cmake)
+[0.760s] -- Found rosidl_generator_c: 3.1.7 (/opt/ros/humble/share/rosidl_generator_c/cmake)
+[0.768s] -- Found rosidl_adapter: 3.1.7 (/opt/ros/humble/share/rosidl_adapter/cmake)
+[0.783s] -- Found rosidl_generator_cpp: 3.1.7 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)
+[0.810s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[0.846s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[0.954s] -- Found eigen3_cmake_module: 0.1.1 (/opt/ros/humble/share/eigen3_cmake_module/cmake)
+[0.957s] -- Ensuring Eigen3 include directory is part of orocos-kdl CMake target
+[1.041s] -- Found rmw_implementation_cmake: 6.1.2 (/opt/ros/humble/share/rmw_implementation_cmake/cmake)
+[1.044s] -- Found rmw_fastrtps_cpp: 6.2.8 (/opt/ros/humble/share/rmw_fastrtps_cpp/cmake)
+[7.465s] -- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[11.607s] [31mCMake Error at CMakeLists.txt:13 (find_package):
+[11.607s]   By not providing "Findignition-gazebo5.cmake" in CMAKE_MODULE_PATH this
+[11.608s]   project has asked CMake to find a package configuration file provided by
+[11.608s]   "ignition-gazebo5", but CMake did not find one.
+[11.608s] 
+[11.608s]   Could not find a package configuration file provided by "ignition-gazebo5"
+[11.608s]   with any of the following names:
+[11.609s] 
+[11.609s]     ignition-gazebo5Config.cmake
+[11.609s]     ignition-gazebo5-config.cmake
+[11.609s] 
+[11.609s]   Add the installation prefix of "ignition-gazebo5" to CMAKE_PREFIX_PATH or
+[11.610s]   set "ignition-gazebo5_DIR" to a directory containing one of the above
+[11.610s]   files.  If "ignition-gazebo5" provides a separate development package or
+[11.610s]   SDK, be sure it has been installed.
+[11.610s] 
+[11.610s] [0m
+[11.610s] -- Configuring incomplete, errors occurred!
+[11.611s] See also "/home/annette-robosync/new_ws/build/new_package/CMakeFiles/CMakeOutput.log".
+[11.627s] gmake: *** [Makefile:226: cmake_check_build_system] Error 1
+[11.632s] Invoked command in '/home/annette-robosync/new_ws/build/new_package' returned '2': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/annette-robosync/new_ws/build/new_package -- -j4 -l4

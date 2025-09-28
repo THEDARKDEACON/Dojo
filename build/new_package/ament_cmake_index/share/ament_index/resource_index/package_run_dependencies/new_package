@@ -1,0 +1,1 @@
+xacro;robot_state_publisher;joint_state_publisher;joint_state_publisher_gui;teleop_twist_keyboard;rviz2;controller_manager;diff_drive_controller;joint_state_broadcaster;gazebo_ros;geometry_msgs;sensor_msgs;nav_msgs;std_msgs;tf2_ros;ament_copyright;ament_flake8;ament_pep257;python3-pytest

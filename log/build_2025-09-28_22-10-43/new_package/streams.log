@@ -1,0 +1,96 @@
+[0.185s] Invoking command in '/home/annette-robosync/new_ws/build/new_package': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/annette-robosync/new_ws/build/new_package -- -j4 -l4
+[1.051s] -- Found ament_cmake: 1.3.12 (/opt/ros/humble/share/ament_cmake/cmake)
+[2.569s] -- Override CMake install command with custom implementation using symlinks instead of copying resources
+[2.673s] -- Found xacro: 2.0.13 (/opt/ros/humble/share/xacro/cmake)
+[2.676s] -- Found robot_state_publisher: 3.0.3 (/opt/ros/humble/share/robot_state_publisher/cmake)
+[3.442s] -- Found rosidl_generator_c: 3.1.7 (/opt/ros/humble/share/rosidl_generator_c/cmake)
+[3.463s] -- Found rosidl_adapter: 3.1.7 (/opt/ros/humble/share/rosidl_adapter/cmake)
+[3.493s] -- Found rosidl_generator_cpp: 3.1.7 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)
+[3.532s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[3.589s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[3.964s] -- Found eigen3_cmake_module: 0.1.1 (/opt/ros/humble/share/eigen3_cmake_module/cmake)
+[3.992s] -- Ensuring Eigen3 include directory is part of orocos-kdl CMake target
+[4.256s] -- Found rmw_implementation_cmake: 6.1.2 (/opt/ros/humble/share/rmw_implementation_cmake/cmake)
+[4.285s] -- Found rmw_fastrtps_cpp: 6.2.8 (/opt/ros/humble/share/rmw_fastrtps_cpp/cmake)
+[19.533s] -- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[24.935s] -- Found gazebo_ros: 3.9.0 (/opt/ros/humble/share/gazebo_ros/cmake)
+[25.168s] -- Found DART: /usr/include (Required is at least version "6.6") found components: dart 
+[25.515s] -- Found Protobuf: /usr/lib/x86_64-linux-gnu/libprotobuf.so (found version "3.12.4") 
+[25.525s] -- Looking for ignition-math6 -- found version 6.15.1
+[25.600s] -- Searching for dependencies of ignition-math6
+[25.620s] -- Looking for OGRE...
+[25.682s] -- Found Ogre Ghadamon (1.9.0)
+[25.691s] -- Found OGRE: optimized;/usr/lib/x86_64-linux-gnu/libOgreMain.so;debug;/usr/lib/x86_64-linux-gnu/libOgreMain.so
+[25.742s] -- Looking for OGRE_Paging...
+[25.742s] -- Found OGRE_Paging: optimized;/usr/lib/x86_64-linux-gnu/libOgrePaging.so;debug;/usr/lib/x86_64-linux-gnu/libOgrePaging.so
+[25.742s] -- Looking for OGRE_Terrain...
+[25.744s] -- Found OGRE_Terrain: optimized;/usr/lib/x86_64-linux-gnu/libOgreTerrain.so;debug;/usr/lib/x86_64-linux-gnu/libOgreTerrain.so
+[25.744s] -- Looking for OGRE_Property...
+[25.744s] -- Found OGRE_Property: optimized;/usr/lib/x86_64-linux-gnu/libOgreProperty.so;debug;/usr/lib/x86_64-linux-gnu/libOgreProperty.so
+[25.745s] -- Looking for OGRE_RTShaderSystem...
+[25.745s] -- Found OGRE_RTShaderSystem: optimized;/usr/lib/x86_64-linux-gnu/libOgreRTShaderSystem.so;debug;/usr/lib/x86_64-linux-gnu/libOgreRTShaderSystem.so
+[25.749s] -- Looking for OGRE_Volume...
+[25.749s] -- Found OGRE_Volume: optimized;/usr/lib/x86_64-linux-gnu/libOgreVolume.so;debug;/usr/lib/x86_64-linux-gnu/libOgreVolume.so
+[25.749s] -- Looking for OGRE_Overlay...
+[25.750s] -- Found OGRE_Overlay: optimized;/usr/lib/x86_64-linux-gnu/libOgreOverlay.so;debug;/usr/lib/x86_64-linux-gnu/libOgreOverlay.so
+[74.691s] -- Looking for ignition-math6 -- found version 6.15.1
+[74.701s] -- Looking for ignition-transport8 -- found version 8.2.1
+[74.702s] -- Searching for dependencies of ignition-transport8
+[77.908s] -- Found Protobuf: /usr/lib/x86_64-linux-gnu/libprotobuf.so (found suitable version "3.12.4", minimum required is "3") 
+[81.531s] -- Config-file not installed for ZeroMQ -- checking for pkg-config
+[81.558s] -- Checking for module 'libzmq >= 4'
+[81.650s] --   Found libzmq , version 4.3.4
+[81.758s] -- Checking for module 'uuid'
+[81.815s] --   Found uuid, version 2.37.2
+[82.080s] -- Looking for ignition-msgs5 -- found version 5.8.1
+[82.085s] -- Searching for dependencies of ignition-msgs5
+[85.598s] -- Looking for ignition-math6 -- found version 6.15.1
+[85.657s] -- Looking for ignition-msgs5 -- found version 5.8.1
+[85.662s] -- Looking for ignition-common3 -- found version 3.14.0
+[85.663s] -- Searching for dependencies of ignition-common3
+[85.663s] -- Looking for dlfcn.h - found
+[85.664s] -- Looking for libdl - found
+[85.998s] -- Searching for <ignition-common3> component [graphics]
+[86.003s] -- Looking for ignition-common3-graphics -- found version 3.14.0
+[86.006s] -- Searching for dependencies of ignition-common3-graphics
+[86.007s] -- Looking for ignition-math6 -- found version 6.15.1
+[86.031s] -- Looking for ignition-fuel_tools4 -- found version 4.4.0
+[86.033s] -- Searching for dependencies of ignition-fuel_tools4
+[90.416s] -- Checking for module 'jsoncpp'
+[90.489s] --   Found jsoncpp, version 1.9.5
+[90.714s] -- Checking for module 'libzip'
+[90.773s] --   Found libzip, version 1.7.3
+[90.947s] -- Looking for ignition-common3 -- found version 3.14.0
+[90.948s] -- Looking for ignition-math6 -- found version 6.15.1
+[90.950s] -- Looking for ignition-msgs5 -- found version 5.8.1
+[90.970s] -- Gazebo version: 11.10
+[90.993s] -- Found ament_lint_auto: 0.12.14 (/opt/ros/humble/share/ament_lint_auto/cmake)
+[105.176s] -- Configuring done
+[105.331s] -- Generating done
+[105.399s] -- Build files have been written to: /home/annette-robosync/new_ws/build/new_package
+[105.553s] Invoked command in '/home/annette-robosync/new_ws/build/new_package' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/annette-robosync/new_ws/build/new_package -- -j4 -l4
+[105.594s] Invoking command in '/home/annette-robosync/new_ws/build/new_package': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --install /home/annette-robosync/new_ws/build/new_package
+[105.623s] -- Install configuration: ""
+[105.627s] -- Execute custom install script
+[105.629s] -- Up-to-date symlink: /home/annette-robosync/new_ws/install/new_package/share/new_package/urdf/zeta.urdf.xacro
+[105.631s] -- Up-to-date symlink: /home/annette-robosync/new_ws/install/new_package/share/new_package/launch/robot.launch.py
+[105.632s] -- Up-to-date symlink: /home/annette-robosync/new_ws/install/new_package/share/new_package/launch/simulate.launch.py
+[105.633s] -- Up-to-date symlink: /home/annette-robosync/new_ws/install/new_package/share/new_package/config/diff_drive_controllers.yaml
+[105.634s] -- Up-to-date symlink: /home/annette-robosync/new_ws/install/new_package/share/new_package/config/zeta.rviz
+[105.636s] -- Up-to-date symlink: /home/annette-robosync/new_ws/install/new_package/share/ament_index/resource_index/package_run_dependencies/new_package
+[105.637s] -- Up-to-date symlink: /home/annette-robosync/new_ws/install/new_package/share/ament_index/resource_index/parent_prefix_path/new_package
+[105.638s] -- Up-to-date symlink: /home/annette-robosync/new_ws/install/new_package/share/new_package/environment/ament_prefix_path.sh
+[105.643s] -- Up-to-date symlink: /home/annette-robosync/new_ws/install/new_package/share/new_package/environment/ament_prefix_path.dsv
+[105.644s] -- Up-to-date symlink: /home/annette-robosync/new_ws/install/new_package/share/new_package/environment/path.sh
+[105.646s] -- Up-to-date symlink: /home/annette-robosync/new_ws/install/new_package/share/new_package/environment/path.dsv
+[105.647s] -- Up-to-date symlink: /home/annette-robosync/new_ws/install/new_package/share/new_package/local_setup.bash
+[105.648s] -- Up-to-date symlink: /home/annette-robosync/new_ws/install/new_package/share/new_package/local_setup.sh
+[105.649s] -- Up-to-date symlink: /home/annette-robosync/new_ws/install/new_package/share/new_package/local_setup.zsh
+[105.650s] -- Up-to-date symlink: /home/annette-robosync/new_ws/install/new_package/share/new_package/local_setup.dsv
+[105.651s] -- Symlinking: /home/annette-robosync/new_ws/install/new_package/share/new_package/package.dsv
+[105.688s] -- Up-to-date symlink: /home/annette-robosync/new_ws/install/new_package/share/ament_index/resource_index/packages/new_package
+[105.688s] -- Up-to-date symlink: /home/annette-robosync/new_ws/install/new_package/share/new_package/cmake/ament_cmake_export_dependencies-extras.cmake
+[105.689s] -- Up-to-date symlink: /home/annette-robosync/new_ws/install/new_package/share/new_package/cmake/new_packageConfig.cmake
+[105.690s] -- Up-to-date symlink: /home/annette-robosync/new_ws/install/new_package/share/new_package/cmake/new_packageConfig-version.cmake
+[105.699s] -- Up-to-date symlink: /home/annette-robosync/new_ws/install/new_package/share/new_package/package.xml
+[105.706s] Invoked command in '/home/annette-robosync/new_ws/build/new_package' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --install /home/annette-robosync/new_ws/build/new_package

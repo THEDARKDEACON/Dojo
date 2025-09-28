@@ -1,0 +1,26 @@
+-- Install configuration: ""
+-- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/urdf
+-- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/urdf/zeta.urdf.xacro
+-- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/launch
+-- Installing: /home/annette-robosync/new_ws/install/new_package/share/new_package/launch/simulate.launch.py
+-- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/launch/robot.launch.py
+-- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/config
+-- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/config/zeta.rviz
+-- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/config/diff_drive_controllers.yaml
+-- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/meshes
+-- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/ament_index/resource_index/package_run_dependencies/new_package
+-- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/ament_index/resource_index/parent_prefix_path/new_package
+-- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/environment/ament_prefix_path.sh
+-- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/environment/ament_prefix_path.dsv
+-- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/environment/path.sh
+-- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/environment/path.dsv
+-- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/local_setup.bash
+-- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/local_setup.sh
+-- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/local_setup.zsh
+-- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/local_setup.dsv
+-- Installing: /home/annette-robosync/new_ws/install/new_package/share/new_package/package.dsv
+-- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/ament_index/resource_index/packages/new_package
+-- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/cmake/ament_cmake_export_dependencies-extras.cmake
+-- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/cmake/new_packageConfig.cmake
+-- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/cmake/new_packageConfig-version.cmake
+-- Up-to-date: /home/annette-robosync/new_ws/install/new_package/share/new_package/package.xml

@@ -1,0 +1,9 @@
+/home/annette-robosync/new_ws/build/new_package/CMakeFiles/uninstall.dir
+/home/annette-robosync/new_ws/build/new_package/CMakeFiles/new_package_uninstall.dir
+/home/annette-robosync/new_ws/build/new_package/CMakeFiles/test.dir
+/home/annette-robosync/new_ws/build/new_package/CMakeFiles/edit_cache.dir
+/home/annette-robosync/new_ws/build/new_package/CMakeFiles/rebuild_cache.dir
+/home/annette-robosync/new_ws/build/new_package/CMakeFiles/list_install_components.dir
+/home/annette-robosync/new_ws/build/new_package/CMakeFiles/install.dir
+/home/annette-robosync/new_ws/build/new_package/CMakeFiles/install/local.dir
+/home/annette-robosync/new_ws/build/new_package/CMakeFiles/install/strip.dir

@@ -1,0 +1,21 @@
+[2.468s] Invoking command in '/home/annette-robosync/new_ws/src/new_package': PYTHONPATH=/home/annette-robosync/new_ws/build/new_package/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/annette-robosync/new_ws/install/new_package/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/new_package build --build-base /home/annette-robosync/new_ws/build/new_package/build install --record /home/annette-robosync/new_ws/build/new_package/install.log --single-version-externally-managed install_data
+[3.481s] running egg_info
+[3.483s] writing ../../build/new_package/new_package.egg-info/PKG-INFO
+[3.510s] writing dependency_links to ../../build/new_package/new_package.egg-info/dependency_links.txt
+[3.510s] writing entry points to ../../build/new_package/new_package.egg-info/entry_points.txt
+[3.511s] writing requirements to ../../build/new_package/new_package.egg-info/requires.txt
+[3.511s] writing top-level names to ../../build/new_package/new_package.egg-info/top_level.txt
+[3.517s] reading manifest file '../../build/new_package/new_package.egg-info/SOURCES.txt'
+[3.520s] writing manifest file '../../build/new_package/new_package.egg-info/SOURCES.txt'
+[3.521s] running build
+[3.521s] running build_py
+[3.522s] running install
+[3.522s] running install_lib
+[3.534s] running install_data
+[3.536s] copying urdf/zeta.urdf.xacro -> /home/annette-robosync/new_ws/install/new_package/share/new_package/urdf
+[3.538s] running install_egg_info
+[3.544s] removing '/home/annette-robosync/new_ws/install/new_package/lib/python3.10/site-packages/new_package-0.0.0-py3.10.egg-info' (and everything under it)
+[3.545s] Copying ../../build/new_package/new_package.egg-info to /home/annette-robosync/new_ws/install/new_package/lib/python3.10/site-packages/new_package-0.0.0-py3.10.egg-info
+[3.559s] running install_scripts
+[3.637s] writing list of installed files to '/home/annette-robosync/new_ws/build/new_package/install.log'
+[3.715s] Invoked command in '/home/annette-robosync/new_ws/src/new_package' returned '0': PYTHONPATH=/home/annette-robosync/new_ws/build/new_package/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/annette-robosync/new_ws/install/new_package/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/new_package build --build-base /home/annette-robosync/new_ws/build/new_package/build install --record /home/annette-robosync/new_ws/build/new_package/install.log --single-version-externally-managed install_data

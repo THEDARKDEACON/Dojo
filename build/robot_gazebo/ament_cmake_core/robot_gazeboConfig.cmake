@@ -16,7 +16,7 @@ set(_robot_gazebo_CONFIG_INCLUDED TRUE)
 
 # output package information
 if(NOT robot_gazebo_FIND_QUIETLY)
-  message(STATUS "Found robot_gazebo: 0.0.1 (${robot_gazebo_DIR})")
+  message(STATUS "Found robot_gazebo: 1.0.0 (${robot_gazebo_DIR})")
 endif()
 
 # warn when using a deprecated package
@@ -36,7 +36,7 @@ endif()
 set(robot_gazebo_FOUND_AMENT_PACKAGE TRUE)
 
 # include all config extra files
-set(_extras "")
+set(_extras "robot_gazebo-extras.cmake;ament_cmake_export_include_directories-extras.cmake;ament_cmake_export_dependencies-extras.cmake")
 foreach(_extra ${_extras})
   include("${robot_gazebo_DIR}/${_extra}")
 endforeach()

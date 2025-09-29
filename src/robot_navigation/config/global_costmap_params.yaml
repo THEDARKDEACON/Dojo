@@ -4,33 +4,82 @@
     
     global_costmap:
       ros__parameters:
+        # Global costmap parameters
         global_frame: map
-        robot_base_frame: base_link
-        update_frequency: 1.0
-        publish_frequency: 1.0
-        width: 10
-        height: 10
-        resolution: 0.05
-        robot_radius: 0.22
+        robot_base_frame: base_footprint
+        update_frequency: 1.0  # Hz
+        publish_frequency: 1.0  # Hz
+        always_send_full_costmap: true
+        
+        # Map dimensions
+        width: 20.0  # meters
+        height: 20.0  # meters
+        resolution: 0.05  # meters/cell
+        origin_x: -10.0  # meters
+        origin_y: -10.0  # meters
+        
+        # Robot footprint
+        robot_radius: 0.22  # meters
+        footprint: "[[-0.22, -0.22], [-0.22, 0.22], [0.22, 0.22], [0.22, -0.22]]"
+        
+        # Plugins to use
         plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
+        
+        # Static map layer - loads the static map
         static_layer:
           plugin: "nav2_costmap_2d::StaticLayer"
-          map_subscribe_transient_local: True
+          map_subscribe_transient_local: true
+          subscribe_to_updates: true
+          track_unknown_space: true
+          use_maximum: false
+          trinary_map: true
+          unknown_cost_value: 255
+          
+        # Obstacle layer - for dynamic obstacles
         obstacle_layer:
           plugin: "nav2_costmap_2d::ObstacleLayer"
-          enabled: True
+          enabled: true
+          max_obstacle_height: 2.0  # meters
+          combination_method: 1  # Maximum (1) of all observation sources
           observation_sources: scan
+          
+          # Laser scan configuration
           scan:
             topic: /scan
-            max_obstacle_height: 2.0
-            clearing: True
-            marking: True
+            sensor_frame: base_scan
             data_type: "LaserScan"
-            raytrace_max_range: 3.0
-            raytrace_min_range: 0.0
-            obstacle_max_range: 2.5
-            obstacle_min_range: 0.0
+            marking: true
+            clearing: true
+            min_obstacle_height: 0.0  # meters
+            max_obstacle_height: 2.0  # meters
+            obstacle_range: 2.5  # meters
+            raytrace_range: 3.0  # meters
+            inf_is_valid: false
+            clear_after_reading: true
+            
+        # Inflation layer - for obstacle inflation
         inflation_layer:
           plugin: "nav2_costmap_2d::InflationLayer"
-          cost_scaling_factor: 10.0
-          inflation_radius: 0.55
+          cost_scaling_factor: 10.0  # Exponential rate at which the obstacle cost drops off
+          inflation_radius: 0.55  # meters - should be at least the robot radius + safety margin
+          inflate_unknown: false
+          inflate_around_unknown: false
+          
+        # Footprint clearing
+        footprint_clearing_enabled: true
+        footprint_padding: 0.1  # meters
+        
+        # Transformation parameters
+        transform_tolerance: 0.2  # seconds
+        
+        # Rolling window (disabled for global costmap)
+        rolling_window: false
+        
+        # Map update parameters
+        map_topic: map
+        first_map_only: false
+        
+        # Debug visualization
+        publish_voxel_map: false
+        publish_footprint: true
+        publish_voxel_footprint: false

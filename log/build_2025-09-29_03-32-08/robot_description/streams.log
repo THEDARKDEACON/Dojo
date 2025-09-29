@@ -1,0 +1,152 @@
+[0.052s] Invoking command in '/root/Dojo/build/robot_description': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /root/Dojo/src/robot_description -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/root/Dojo/install/robot_description
+[1.909s] -- The C compiler identification is GNU 11.4.0
+[1.909s] -- The CXX compiler identification is GNU 11.4.0
+[1.909s] -- Detecting C compiler ABI info
+[1.909s] -- Detecting C compiler ABI info - done
+[1.909s] -- Check for working C compiler: /usr/bin/cc - skipped
+[1.909s] -- Detecting C compile features
+[1.909s] -- Detecting C compile features - done
+[1.909s] -- Detecting CXX compiler ABI info
+[1.909s] -- Detecting CXX compiler ABI info - done
+[1.909s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[1.909s] -- Detecting CXX compile features
+[1.909s] -- Detecting CXX compile features - done
+[1.910s] -- Found ament_cmake: 1.3.12 (/opt/ros/humble/share/ament_cmake/cmake)
+[1.910s] -- Found Python3: /usr/bin/python3 (found version "3.10.12") found components: Interpreter 
+[1.910s] -- Override CMake install command with custom implementation using symlinks instead of copying resources
+[1.910s] -- Found rclcpp: 16.0.14 (/opt/ros/humble/share/rclcpp/cmake)
+[1.910s] -- Found rosidl_generator_c: 3.1.7 (/opt/ros/humble/share/rosidl_generator_c/cmake)
+[1.910s] -- Found rosidl_adapter: 3.1.7 (/opt/ros/humble/share/rosidl_adapter/cmake)
+[1.910s] -- Found rosidl_generator_cpp: 3.1.7 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)
+[1.910s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[1.910s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[1.910s] -- Found rmw_implementation_cmake: 6.1.2 (/opt/ros/humble/share/rmw_implementation_cmake/cmake)
+[1.910s] -- Found rmw_fastrtps_cpp: 6.2.8 (/opt/ros/humble/share/rmw_fastrtps_cpp/cmake)
+[1.910s] -- Found OpenSSL: /usr/lib/x86_64-linux-gnu/libcrypto.so (found version "3.0.2")  
+[1.911s] -- Found FastRTPS: /opt/ros/humble/include  
+[1.911s] -- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[1.911s] -- Looking for pthread.h
+[1.911s] -- Looking for pthread.h - found
+[1.911s] -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+[1.911s] -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+[1.911s] -- Found Threads: TRUE  
+[1.911s] -- Found geometry_msgs: 4.9.0 (/opt/ros/humble/share/geometry_msgs/cmake)
+[1.911s] -- Found sensor_msgs: 4.9.0 (/opt/ros/humble/share/sensor_msgs/cmake)
+[1.911s] -- Found tf2_ros: 0.25.16 (/opt/ros/humble/share/tf2_ros/cmake)
+[1.927s] -- Found urdf: 2.6.1 (/opt/ros/humble/share/urdf/cmake)
+[1.972s] -- Found xacro: 2.0.13 (/opt/ros/humble/share/xacro/cmake)
+[1.975s] -- Found gazebo_ros2_control: 0.4.10 (/opt/ros/humble/share/gazebo_ros2_control/cmake)
+[2.110s] -- Found PkgConfig: /usr/bin/pkg-config (found version "0.29.2") 
+[2.111s] -- Checking for module 'bullet>=2.82'
+[2.133s] --   Found bullet, version 3.05
+[2.331s] -- Found fcl: /usr/include (found suitable version "0.7.0", minimum required is "0.5.0") 
+[2.428s] -- Found assimp: /usr/include (found version "5.2.0") 
+[2.483s] -- Found DART: /usr/include (Required is at least version "6.6") found components: dart 
+[2.554s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found suitable version "1.74.0", minimum required is "1.40.0") found components: thread system filesystem program_options regex iostreams date_time 
+[2.577s] -- Found Protobuf: /usr/lib/x86_64-linux-gnu/libprotobuf.so (found version "3.12.4") 
+[2.592s] -- Looking for ignition-math6 -- found version 6.15.1
+[2.605s] -- Searching for dependencies of ignition-math6
+[2.608s] -- Looking for OGRE...
+[2.608s] -- OGRE_PREFIX_WATCH changed.
+[2.618s] -- Checking for module 'OGRE'
+[2.645s] --   Found OGRE, version 1.9.0
+[2.721s] -- Found Ogre Ghadamon (1.9.0)
+[2.735s] -- Found OGRE: optimized;/usr/lib/x86_64-linux-gnu/libOgreMain.so;debug;/usr/lib/x86_64-linux-gnu/libOgreMain.so
+[2.752s] -- Looking for OGRE_Paging...
+[2.763s] -- Found OGRE_Paging: optimized;/usr/lib/x86_64-linux-gnu/libOgrePaging.so;debug;/usr/lib/x86_64-linux-gnu/libOgrePaging.so
+[2.763s] -- Looking for OGRE_Terrain...
+[2.772s] -- Found OGRE_Terrain: optimized;/usr/lib/x86_64-linux-gnu/libOgreTerrain.so;debug;/usr/lib/x86_64-linux-gnu/libOgreTerrain.so
+[2.772s] -- Looking for OGRE_Property...
+[2.782s] -- Found OGRE_Property: optimized;/usr/lib/x86_64-linux-gnu/libOgreProperty.so;debug;/usr/lib/x86_64-linux-gnu/libOgreProperty.so
+[2.782s] -- Looking for OGRE_RTShaderSystem...
+[2.790s] -- Found OGRE_RTShaderSystem: optimized;/usr/lib/x86_64-linux-gnu/libOgreRTShaderSystem.so;debug;/usr/lib/x86_64-linux-gnu/libOgreRTShaderSystem.so
+[2.790s] -- Looking for OGRE_Volume...
+[2.799s] -- Found OGRE_Volume: optimized;/usr/lib/x86_64-linux-gnu/libOgreVolume.so;debug;/usr/lib/x86_64-linux-gnu/libOgreVolume.so
+[2.799s] -- Looking for OGRE_Overlay...
+[2.805s] -- Found OGRE_Overlay: optimized;/usr/lib/x86_64-linux-gnu/libOgreOverlay.so;debug;/usr/lib/x86_64-linux-gnu/libOgreOverlay.so
+[3.034s] -- Looking for ignition-math6 -- found version 6.15.1
+[3.042s] -- Looking for ignition-transport8 -- found version 8.2.1
+[3.042s] -- Searching for dependencies of ignition-transport8
+[3.090s] -- Found Protobuf: /usr/lib/x86_64-linux-gnu/libprotobuf.so (found suitable version "3.12.4", minimum required is "3") 
+[3.127s] -- Config-file not installed for ZeroMQ -- checking for pkg-config
+[3.136s] -- Checking for module 'libzmq >= 4'
+[3.172s] --   Found libzmq , version 4.3.4
+[3.267s] -- Found ZeroMQ: TRUE (Required is at least version "4") 
+[3.280s] -- Checking for module 'uuid'
+[3.313s] --   Found uuid, version 2.37.2
+[3.393s] -- Found UUID: TRUE  
+[3.401s] -- Looking for ignition-msgs5 -- found version 5.8.1
+[3.402s] -- Searching for dependencies of ignition-msgs5
+[3.448s] -- Looking for ignition-math6 -- found version 6.15.1
+[3.460s] -- Checking for module 'tinyxml2'
+[3.486s] --   Found tinyxml2, version 9.0.0
+[3.557s] -- Looking for ignition-msgs5 -- found version 5.8.1
+[3.562s] -- Looking for ignition-common3 -- found version 3.14.0
+[3.562s] -- Searching for dependencies of ignition-common3
+[3.563s] -- Looking for dlfcn.h - found
+[3.563s] -- Looking for libdl - found
+[3.565s] -- Found DL: TRUE  
+[3.582s] -- Found tinyobjloader: /usr/lib/x86_64-linux-gnu/cmake/tinyobjloader/tinyobjloader-config.cmake (found version "2.0.0") 
+[3.583s] -- Searching for <ignition-common3> component [graphics]
+[3.589s] -- Looking for ignition-common3-graphics -- found version 3.14.0
+[3.590s] -- Searching for dependencies of ignition-common3-graphics
+[3.591s] -- Looking for ignition-math6 -- found version 6.15.1
+[3.597s] -- Looking for ignition-fuel_tools4 -- found version 4.4.0
+[3.598s] -- Searching for dependencies of ignition-fuel_tools4
+[3.766s] -- Found CURL: /usr/lib/x86_64-linux-gnu/libcurl.so (found version "7.81.0")  
+[3.787s] -- Checking for module 'jsoncpp'
+[3.816s] --   Found jsoncpp, version 1.9.5
+[3.894s] -- Found JSONCPP: TRUE  
+[3.904s] -- Checking for module 'libzip'
+[3.935s] --   Found libzip, version 1.7.3
+[4.012s] -- Found ZIP: TRUE  
+[4.013s] -- Looking for ignition-common3 -- found version 3.14.0
+[4.014s] -- Looking for ignition-math6 -- found version 6.15.1
+[4.015s] -- Looking for ignition-msgs5 -- found version 5.8.1
+[4.024s] -- Gazebo version: 11.10
+[4.025s] -- Checking for module 'tbb'
+[4.050s] --   Found tbb, version 2021.5.0
+[4.249s] -- Configuring done
+[4.264s] -- Generating done
+[4.268s] -- Build files have been written to: /root/Dojo/build/robot_description
+[4.292s] Invoked command in '/root/Dojo/build/robot_description' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /root/Dojo/src/robot_description -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/root/Dojo/install/robot_description
+[4.295s] Invoking command in '/root/Dojo/build/robot_description': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /root/Dojo/build/robot_description -- -j16 -l16
+[4.389s] Invoked command in '/root/Dojo/build/robot_description' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /root/Dojo/build/robot_description -- -j16 -l16
+[4.400s] Invoking command in '/root/Dojo/build/robot_description': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /root/Dojo/build/robot_description
+[4.422s] -- Install configuration: "Release"
+[4.425s] -- Execute custom install script
+[4.429s] -- Symlinking: /root/Dojo/install/robot_description/share/robot_description/launch/description.launch.py
+[4.460s] -- Symlinking: /root/Dojo/install/robot_description/share/robot_description/launch/display.launch.py
+[4.490s] -- Symlinking: /root/Dojo/install/robot_description/share/robot_description/launch/robot_state_publisher.launch.py
+[4.533s] -- Symlinking: /root/Dojo/install/robot_description/share/robot_description/config/robot_controllers.yaml
+[4.554s] -- Symlinking: /root/Dojo/install/robot_description/share/robot_description/common_properties.xacro
+[4.570s] -- Symlinking: /root/Dojo/install/robot_description/share/robot_description/dojo_robot.gazebo
+[4.586s] -- Symlinking: /root/Dojo/install/robot_description/share/robot_description/dojo_robot.urdf.xacro
+[4.607s] -- Symlinking: /root/Dojo/install/robot_description/share/robot_description/robot.urdf
+[4.622s] -- Symlinking: /root/Dojo/install/robot_description/share/robot_description/robot.urdf.xacro
+[4.640s] -- Symlinking: /root/Dojo/install/robot_description/share/robot_description/robot.urdf.xacro.clean
+[4.657s] -- Symlinking: /root/Dojo/install/robot_description/share/robot_description/sensors/rplidar.urdf.xacro
+[4.679s] -- Symlinking: /root/Dojo/install/robot_description/share/robot_description/display.rviz
+[4.697s] -- Symlinking: /root/Dojo/install/robot_description/share/robot_description/dojo_robot.rviz
+[4.712s] -- Symlinking: /root/Dojo/install/robot_description/share/robot_description/robot.rviz
+[4.731s] -- Symlinking: /root/Dojo/install/robot_description/lib//robot_description/__init__.py
+[4.750s] -- Symlinking: /root/Dojo/install/robot_description/lib/robot_description/display_robot.py
+[4.766s] -- Symlinking: /root/Dojo/install/robot_description/share/robot_description/package.xml
+[4.784s] -- Symlinking: /root/Dojo/install/robot_description/share/robot_description/setup.py
+[4.801s] -- Symlinking: /root/Dojo/install/robot_description/share/robot_description/setup.cfg
+[4.819s] -- Symlinking: /root/Dojo/install/robot_description/share/ament_index/resource_index/package_run_dependencies/robot_description
+[4.837s] -- Symlinking: /root/Dojo/install/robot_description/share/ament_index/resource_index/parent_prefix_path/robot_description
+[4.856s] -- Symlinking: /root/Dojo/install/robot_description/share/robot_description/environment/ament_prefix_path.sh
+[4.877s] -- Symlinking: /root/Dojo/install/robot_description/share/robot_description/environment/ament_prefix_path.dsv
+[4.902s] -- Symlinking: /root/Dojo/install/robot_description/share/robot_description/environment/path.sh
+[4.910s] -- Symlinking: /root/Dojo/install/robot_description/share/robot_description/environment/path.dsv
+[4.930s] -- Symlinking: /root/Dojo/install/robot_description/share/robot_description/local_setup.bash
+[4.951s] -- Symlinking: /root/Dojo/install/robot_description/share/robot_description/local_setup.sh
+[4.970s] -- Symlinking: /root/Dojo/install/robot_description/share/robot_description/local_setup.zsh
+[4.988s] -- Symlinking: /root/Dojo/install/robot_description/share/robot_description/local_setup.dsv
+[5.005s] -- Symlinking: /root/Dojo/install/robot_description/share/robot_description/package.dsv
+[5.021s] -- Symlinking: /root/Dojo/install/robot_description/share/ament_index/resource_index/packages/robot_description
+[5.039s] -- Symlinking: /root/Dojo/install/robot_description/share/robot_description/cmake/robot_descriptionConfig.cmake
+[5.059s] -- Symlinking: /root/Dojo/install/robot_description/share/robot_description/cmake/robot_descriptionConfig-version.cmake
+[5.076s] -- Up-to-date symlink: /root/Dojo/install/robot_description/share/robot_description/package.xml
+[5.082s] Invoked command in '/root/Dojo/build/robot_description' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /root/Dojo/build/robot_description

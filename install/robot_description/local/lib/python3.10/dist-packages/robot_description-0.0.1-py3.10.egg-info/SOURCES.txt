@@ -1,1 +1,0 @@
-/root/Dojo/build/robot_description/ament_cmake_python/robot_description/robot_description.egg-info/SOURCES.txt

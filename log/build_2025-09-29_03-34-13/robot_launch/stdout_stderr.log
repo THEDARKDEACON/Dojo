@@ -1,0 +1,13 @@
+running develop
+running egg_info
+writing robot_launch.egg-info/PKG-INFO
+writing dependency_links to robot_launch.egg-info/dependency_links.txt
+writing requirements to robot_launch.egg-info/requires.txt
+writing top-level names to robot_launch.egg-info/top_level.txt
+reading manifest file 'robot_launch.egg-info/SOURCES.txt'
+writing manifest file 'robot_launch.egg-info/SOURCES.txt'
+running build_ext
+Creating /root/Dojo/install/robot_launch/lib/python3.10/site-packages/robot-launch.egg-link (link to .)
+
+Installed /root/Dojo/build/robot_launch
+running symlink_data

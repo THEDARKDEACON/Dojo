@@ -1,0 +1,101 @@
+# Perception System Configuration
+
+# Camera Parameters
+camera:
+  image_topic: "/camera/color/image_raw"
+  info_topic: "/camera/color/camera_info"
+  compressed: false
+  queue_size: 10
+  use_compressed: false
+  compressed_format: "jpeg"
+  
+  # Image processing
+  resize_width: 640
+  resize_height: 480
+  undistort: true
+  
+  # Color detection (HSV ranges)
+  color_ranges:
+    red_lower: [0, 120, 70]
+    red_upper: [10, 255, 255]
+    green_lower: [36, 50, 70]
+    green_upper: [89, 255, 255]
+    blue_lower: [90, 50, 70]
+    blue_upper: [128, 255, 255]
+
+# LiDAR Parameters
+lidar:
+  pointcloud_topic: "/points2"
+  queue_size: 10
+  
+  # Clustering parameters
+  cluster_tolerance: 0.5  # meters
+  min_cluster_size: 10
+  max_cluster_size: 1000
+  
+  # Filtering
+  min_distance: 0.1  # meters
+  max_distance: 30.0  # meters
+  
+  # Voxel grid filter
+  voxel_leaf_size: 0.1  # meters
+
+# Object Detection Parameters
+detection:
+  # YOLO parameters
+  yolo_model: "yolov8n.pt"  # Path to model or model name
+  confidence_threshold: 0.5
+  nms_threshold: 0.4
+  
+  # Detection classes (80 COCO classes by default)
+  # Set to empty list to use all classes
+  classes: []
+  
+  # Publish rate (Hz)
+  publish_rate: 10.0
+
+# Sensor Fusion Parameters
+fusion:
+  # Association parameters
+  max_association_distance: 1.0  # meters
+  max_association_age: 1.0  # seconds
+  
+  # Tracking parameters
+  max_track_age: 5.0  # seconds
+  min_hits: 3  # Minimum detections before publishing
+  
+  # Kalman filter parameters
+  process_noise: 0.1
+  measurement_noise: 0.5
+
+# Visualization Parameters
+visualization:
+  # Image visualization
+  show_image: true
+  show_boxes: true
+  show_labels: true
+  show_scores: true
+  
+  # 3D visualization
+  publish_markers: true
+  marker_lifetime: 0.1  # seconds (0 for infinite)
+  
+  # Colors (RGBA 0-1)
+  colors:
+    - [1.0, 0.0, 0.0, 0.8]  # Red
+    - [0.0, 1.0, 0.0, 0.8]  # Green
+    - [0.0, 0.0, 1.0, 0.8]  # Blue
+    - [1.0, 1.0, 0.0, 0.8]  # Yellow
+    - [1.0, 0.0, 1.0, 0.8]  # Magenta
+    - [0.0, 1.0, 1.0, 0.8]  # Cyan
+
+# Debugging
+debug:
+  enable: true
+  log_level: "info"  # debug, info, warn, error, fatal
+  save_images: false
+  save_dir: "~/ros2_ws/perception_debug"
+  
+  # Profiling
+  profile_cpu: false
+  profile_memory: false

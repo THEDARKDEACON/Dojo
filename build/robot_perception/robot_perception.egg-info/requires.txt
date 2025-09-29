@@ -1,3 +1,0 @@
-setuptools
-opencv-python
-numpy

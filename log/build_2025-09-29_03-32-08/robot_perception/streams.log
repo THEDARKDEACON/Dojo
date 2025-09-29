@@ -1,0 +1,100 @@
+[0.409s] Invoking command in '/root/Dojo/build/robot_perception': /usr/bin/cmake /root/Dojo/src/robot_perception -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF -DCMAKE_INSTALL_PREFIX=/root/Dojo/install/robot_perception
+[1.903s] -- The C compiler identification is GNU 11.4.0
+[1.903s] -- The CXX compiler identification is GNU 11.4.0
+[1.903s] -- Detecting C compiler ABI info
+[1.903s] -- Detecting C compiler ABI info - done
+[1.903s] -- Check for working C compiler: /usr/bin/cc - skipped
+[1.903s] -- Detecting C compile features
+[1.904s] -- Detecting C compile features - done
+[1.904s] -- Detecting CXX compiler ABI info
+[1.904s] -- Detecting CXX compiler ABI info - done
+[1.904s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[1.904s] -- Detecting CXX compile features
+[1.904s] -- Detecting CXX compile features - done
+[1.904s] -- Found ament_cmake: 1.3.12 (/opt/ros/humble/share/ament_cmake/cmake)
+[1.904s] -- Found Python3: /usr/bin/python3 (found version "3.10.12") found components: Interpreter 
+[1.904s] -- Configuring done
+[1.904s] -- Generating done
+[1.904s] -- Build files have been written to: /root/Dojo/build/robot_perception
+[2.341s] Invoked command in '/root/Dojo/build/robot_perception' returned '0': /usr/bin/cmake /root/Dojo/src/robot_perception -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF -DCMAKE_INSTALL_PREFIX=/root/Dojo/install/robot_perception
+[2.343s] Invoking command in '/root/Dojo/build/robot_perception': /usr/bin/cmake --build /root/Dojo/build/robot_perception -- -j16 -l16
+[2.431s] Built target ament_cmake_python_copy_robot_perception_setup
+[2.459s] Built target ament_cmake_python_copy_robot_perception
+[3.059s] running egg_info
+[3.061s] creating robot_perception.egg-info
+[3.087s] writing robot_perception.egg-info/PKG-INFO
+[3.088s] writing dependency_links to robot_perception.egg-info/dependency_links.txt
+[3.089s] writing top-level names to robot_perception.egg-info/top_level.txt
+[3.089s] writing manifest file 'robot_perception.egg-info/SOURCES.txt'
+[3.170s] reading manifest file 'robot_perception.egg-info/SOURCES.txt'
+[3.171s] writing manifest file 'robot_perception.egg-info/SOURCES.txt'
+[3.282s] Built target ament_cmake_python_build_robot_perception_egg
+[3.306s] Invoked command in '/root/Dojo/build/robot_perception' returned '0': /usr/bin/cmake --build /root/Dojo/build/robot_perception -- -j16 -l16
+[3.324s] Invoking command in '/root/Dojo/build/robot_perception': /usr/bin/cmake --install /root/Dojo/build/robot_perception
+[3.334s] -- Install configuration: "Release"
+[3.335s] -- Installing: /root/Dojo/install/robot_perception/share/robot_perception/environment/pythonpath.sh
+[3.335s] -- Installing: /root/Dojo/install/robot_perception/share/robot_perception/environment/pythonpath.dsv
+[3.335s] -- Installing: /root/Dojo/install/robot_perception/local/lib/python3.10/dist-packages/robot_perception-0.2.0-py3.10.egg-info
+[3.336s] -- Installing: /root/Dojo/install/robot_perception/local/lib/python3.10/dist-packages/robot_perception-0.2.0-py3.10.egg-info/SOURCES.txt
+[3.336s] -- Installing: /root/Dojo/install/robot_perception/local/lib/python3.10/dist-packages/robot_perception-0.2.0-py3.10.egg-info/dependency_links.txt
+[3.336s] -- Installing: /root/Dojo/install/robot_perception/local/lib/python3.10/dist-packages/robot_perception-0.2.0-py3.10.egg-info/PKG-INFO
+[3.336s] -- Installing: /root/Dojo/install/robot_perception/local/lib/python3.10/dist-packages/robot_perception-0.2.0-py3.10.egg-info/top_level.txt
+[3.336s] -- Installing: /root/Dojo/install/robot_perception/local/lib/python3.10/dist-packages/robot_perception
+[3.337s] -- Installing: /root/Dojo/install/robot_perception/local/lib/python3.10/dist-packages/robot_perception/yolov8n.pt
+[3.347s] -- Installing: /root/Dojo/install/robot_perception/local/lib/python3.10/dist-packages/robot_perception/utils
+[3.347s] -- Installing: /root/Dojo/install/robot_perception/local/lib/python3.10/dist-packages/robot_perception/utils/common.py
+[3.347s] -- Installing: /root/Dojo/install/robot_perception/local/lib/python3.10/dist-packages/robot_perception/utils/__init__.py
+[3.348s] -- Installing: /root/Dojo/install/robot_perception/local/lib/python3.10/dist-packages/robot_perception/utils/config.py
+[3.348s] -- Installing: /root/Dojo/install/robot_perception/local/lib/python3.10/dist-packages/robot_perception/nodes
+[3.348s] -- Installing: /root/Dojo/install/robot_perception/local/lib/python3.10/dist-packages/robot_perception/nodes/object_detector.py
+[3.348s] -- Installing: /root/Dojo/install/robot_perception/local/lib/python3.10/dist-packages/robot_perception/nodes/perception_integrator.py
+[3.348s] -- Installing: /root/Dojo/install/robot_perception/local/lib/python3.10/dist-packages/robot_perception/nodes/lidar_processor.py
+[3.348s] -- Installing: /root/Dojo/install/robot_perception/local/lib/python3.10/dist-packages/robot_perception/nodes/camera_processor.py
+[3.349s] -- Installing: /root/Dojo/install/robot_perception/local/lib/python3.10/dist-packages/robot_perception/nodes/__init__.py
+[3.349s] -- Installing: /root/Dojo/install/robot_perception/local/lib/python3.10/dist-packages/robot_perception/__init__.py
+[3.425s] Listing '/root/Dojo/install/robot_perception/local/lib/python3.10/dist-packages/robot_perception'...
+[3.425s] Compiling '/root/Dojo/install/robot_perception/local/lib/python3.10/dist-packages/robot_perception/__init__.py'...
+[3.425s] Listing '/root/Dojo/install/robot_perception/local/lib/python3.10/dist-packages/robot_perception/nodes'...
+[3.426s] Compiling '/root/Dojo/install/robot_perception/local/lib/python3.10/dist-packages/robot_perception/nodes/__init__.py'...
+[3.426s] Compiling '/root/Dojo/install/robot_perception/local/lib/python3.10/dist-packages/robot_perception/nodes/camera_processor.py'...
+[3.426s] Compiling '/root/Dojo/install/robot_perception/local/lib/python3.10/dist-packages/robot_perception/nodes/lidar_processor.py'...
+[3.426s] Compiling '/root/Dojo/install/robot_perception/local/lib/python3.10/dist-packages/robot_perception/nodes/object_detector.py'...
+[3.426s] Compiling '/root/Dojo/install/robot_perception/local/lib/python3.10/dist-packages/robot_perception/nodes/perception_integrator.py'...
+[3.426s] Listing '/root/Dojo/install/robot_perception/local/lib/python3.10/dist-packages/robot_perception/utils'...
+[3.426s] Compiling '/root/Dojo/install/robot_perception/local/lib/python3.10/dist-packages/robot_perception/utils/__init__.py'...
+[3.426s] Compiling '/root/Dojo/install/robot_perception/local/lib/python3.10/dist-packages/robot_perception/utils/common.py'...
+[3.426s] Compiling '/root/Dojo/install/robot_perception/local/lib/python3.10/dist-packages/robot_perception/utils/config.py'...
+[3.434s] -- Installing: /root/Dojo/install/robot_perception/share/robot_perception/launch
+[3.434s] -- Installing: /root/Dojo/install/robot_perception/share/robot_perception/launch/robot_perception.launch.py
+[3.435s] -- Installing: /root/Dojo/install/robot_perception/share/robot_perception/launch/perception.launch.py
+[3.435s] -- Installing: /root/Dojo/install/robot_perception/share/robot_perception/launch/perception_integration.launch.py
+[3.435s] -- Installing: /root/Dojo/install/robot_perception/share/robot_perception/launch/object_detector.launch.py
+[3.435s] -- Installing: /root/Dojo/install/robot_perception/share/robot_perception/launch/perception_system.launch.py
+[3.435s] -- Installing: /root/Dojo/install/robot_perception/share/robot_perception/config
+[3.435s] -- Installing: /root/Dojo/install/robot_perception/share/robot_perception/config/robot_perception_params.yaml
+[3.436s] -- Installing: /root/Dojo/install/robot_perception/share/robot_perception/config/perception_params.yaml
+[3.436s] -- Installing: /root/Dojo/install/robot_perception/share/robot_perception/rviz
+[3.436s] -- Installing: /root/Dojo/install/robot_perception/share/robot_perception/rviz/object_detection.rviz
+[3.436s] -- Installing: /root/Dojo/install/robot_perception/share/robot_perception/rviz/perception_integration.rviz
+[3.436s] -- Installing: /root/Dojo/install/robot_perception/share/robot_perception/resource
+[3.437s] -- Installing: /root/Dojo/install/robot_perception/share/robot_perception/resource/robot_perception
+[3.437s] -- Installing: /root/Dojo/install/robot_perception/share/robot_perception/CMakeLists.txt
+[3.437s] -- Installing: /root/Dojo/install/robot_perception/share/robot_perception/package.xml
+[3.438s] -- Installing: /root/Dojo/install/robot_perception/lib/local/lib/python3.10/dist-packages/robot_perception/setup.py
+[3.438s] -- Installing: /root/Dojo/install/robot_perception/share/ament_index/resource_index/package_run_dependencies/robot_perception
+[3.439s] -- Installing: /root/Dojo/install/robot_perception/share/ament_index/resource_index/parent_prefix_path/robot_perception
+[3.439s] -- Installing: /root/Dojo/install/robot_perception/share/robot_perception/environment/ament_prefix_path.sh
+[3.440s] -- Installing: /root/Dojo/install/robot_perception/share/robot_perception/environment/ament_prefix_path.dsv
+[3.440s] -- Installing: /root/Dojo/install/robot_perception/share/robot_perception/environment/path.sh
+[3.442s] -- Installing: /root/Dojo/install/robot_perception/share/robot_perception/environment/path.dsv
+[3.443s] -- Installing: /root/Dojo/install/robot_perception/share/robot_perception/local_setup.bash
+[3.443s] -- Installing: /root/Dojo/install/robot_perception/share/robot_perception/local_setup.sh
+[3.443s] -- Installing: /root/Dojo/install/robot_perception/share/robot_perception/local_setup.zsh
+[3.443s] -- Installing: /root/Dojo/install/robot_perception/share/robot_perception/local_setup.dsv
+[3.444s] -- Installing: /root/Dojo/install/robot_perception/share/robot_perception/package.dsv
+[3.446s] -- Installing: /root/Dojo/install/robot_perception/share/ament_index/resource_index/packages/robot_perception
+[3.447s] -- Installing: /root/Dojo/install/robot_perception/share/robot_perception/cmake/ament_cmake_export_dependencies-extras.cmake
+[3.448s] -- Installing: /root/Dojo/install/robot_perception/share/robot_perception/cmake/robot_perceptionConfig.cmake
+[3.449s] -- Installing: /root/Dojo/install/robot_perception/share/robot_perception/cmake/robot_perceptionConfig-version.cmake
+[3.450s] -- Up-to-date: /root/Dojo/install/robot_perception/share/robot_perception/package.xml
+[3.455s] Invoked command in '/root/Dojo/build/robot_perception' returned '0': /usr/bin/cmake --install /root/Dojo/build/robot_perception

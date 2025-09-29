@@ -41,7 +41,7 @@ ASSIMP_INCLUDE_DIRS:PATH=/usr/include
 ASSIMP_LIBRARIES:FILEPATH=/usr/lib/x86_64-linux-gnu/libassimp.so
 
 //Build the testing tree.
-BUILD_TESTING:BOOL=ON
+BUILD_TESTING:BOOL=OFF
 
 Boost_DATE_TIME_LIBRARY_RELEASE:STRING=/usr/lib/x86_64-linux-gnu/libboost_date_time.so.1.74.0
 
@@ -71,7 +71,7 @@ CMAKE_AR:FILEPATH=/usr/bin/ar
 
 //Choose the type of build, options are: None Debug Release RelWithDebInfo
 // MinSizeRel ...
-CMAKE_BUILD_TYPE:STRING=
+CMAKE_BUILD_TYPE:STRING=Release
 
 //Enable/Disable color output during build.
 CMAKE_COLOR_MAKEFILE:BOOL=ON
@@ -596,9 +596,6 @@ Protobuf_PROTOC_LIBRARY_RELEASE:FILEPATH=/usr/lib/x86_64-linux-gnu/libprotoc.so
 //Path to a program.
 Python3_EXECUTABLE:FILEPATH=/usr/bin/python3
 
-//Name of the computer/site where compile is being run
-SITE:STRING=gareth-joel-HP-Pavilion-Gaming-Laptop-15-ec2xxx
-
 //The directory containing a CMake configuration file for Simbody.
 Simbody_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/simbody
 
@@ -636,7 +633,7 @@ ZeroMQ_DIR:PATH=ZeroMQ_DIR-NOTFOUND
 ZeroMQ_LIBRARY_zmq:FILEPATH=/usr/lib/x86_64-linux-gnu/libzmq.so
 
 //Path to a library.
-_lib:FILEPATH=/opt/ros/humble/lib/liburdf.so
+_lib:FILEPATH=/opt/ros/humble/lib/libstd_srvs__rosidl_typesupport_fastrtps_cpp.so
 
 //The directory containing a CMake configuration file for action_msgs.
 action_msgs_DIR:PATH=/opt/ros/humble/share/action_msgs/cmake
@@ -691,6 +688,9 @@ ament_cmake_version_DIR:PATH=/opt/ros/humble/share/ament_cmake_version/cmake
 
 //The directory containing a CMake configuration file for ament_index_cpp.
 ament_index_cpp_DIR:PATH=/opt/ros/humble/share/ament_index_cpp/cmake
+
+//The directory containing a CMake configuration file for angles.
+angles_DIR:PATH=/opt/ros/humble/share/angles/cmake
 
 //The directory containing a CMake configuration file for boost_atomic.
 boost_atomic_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/boost_atomic-1.74.0
@@ -770,8 +770,17 @@ gazebo_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/gazebo
 //The directory containing a CMake configuration file for gazebo_dev.
 gazebo_dev_DIR:PATH=/opt/ros/humble/share/gazebo_dev/cmake
 
+//The directory containing a CMake configuration file for gazebo_msgs.
+gazebo_msgs_DIR:PATH=/opt/ros/humble/share/gazebo_msgs/cmake
+
+//The directory containing a CMake configuration file for gazebo_plugins.
+gazebo_plugins_DIR:PATH=/opt/ros/humble/share/gazebo_plugins/cmake
+
 //Path to a library.
 gazebo_proto_msgs_lib:FILEPATH=/usr/lib/x86_64-linux-gnu/libgazebo_msgs.so
+
+//The directory containing a CMake configuration file for gazebo_ros2_control.
+gazebo_ros2_control_DIR:PATH=/opt/ros/humble/share/gazebo_ros2_control/cmake
 
 //The directory containing a CMake configuration file for gazebo_ros.
 gazebo_ros_DIR:PATH=/opt/ros/humble/share/gazebo_ros/cmake
@@ -806,9 +815,6 @@ ignition-transport8_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/ignition-transport8
 //The directory containing a CMake configuration file for jsoncpp.
 jsoncpp_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/jsoncpp
 
-//The directory containing a CMake configuration file for kdl_parser.
-kdl_parser_DIR:PATH=/opt/ros/humble/share/kdl_parser/cmake
-
 //The directory containing a CMake configuration file for libstatistics_collector.
 libstatistics_collector_DIR:PATH=/opt/ros/humble/share/libstatistics_collector/cmake
 
@@ -821,14 +827,14 @@ lifecycle_msgs_DIR:PATH=/opt/ros/humble/share/lifecycle_msgs/cmake
 //The directory containing a CMake configuration file for message_filters.
 message_filters_DIR:PATH=/opt/ros/humble/share/message_filters/cmake
 
+//The directory containing a CMake configuration file for nav_msgs.
+nav_msgs_DIR:PATH=/opt/ros/humble/share/nav_msgs/cmake
+
 //The directory containing a CMake configuration file for octomap.
 octomap_DIR:PATH=/usr/share/octomap
 
 //Path to a library.
-onelib:FILEPATH=/opt/ros/humble/lib/x86_64-linux-gnu/liburdfdom_world.so
-
-//Path to a library.
-onelibd:FILEPATH=onelibd-NOTFOUND
+onelib:FILEPATH=/usr/lib/x86_64-linux-gnu/libgazebo_opende_ou.so
 
 //The directory containing a CMake configuration file for orocos_kdl.
 orocos_kdl_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/orocos_kdl
@@ -938,6 +944,9 @@ rclcpp_components_DIR:PATH=/opt/ros/humble/share/rclcpp_components/cmake
 //The directory containing a CMake configuration file for rclcpp_lifecycle.
 rclcpp_lifecycle_DIR:PATH=/opt/ros/humble/share/rclcpp_lifecycle/cmake
 
+//The directory containing a CMake configuration file for rclpy.
+rclpy_DIR:PATH=/opt/ros/humble/share/rclpy/cmake
+
 //The directory containing a CMake configuration file for rcpputils.
 rcpputils_DIR:PATH=/opt/ros/humble/share/rcpputils/cmake
 
@@ -965,6 +974,12 @@ rmw_implementation_DIR:PATH=/opt/ros/humble/share/rmw_implementation/cmake
 //The directory containing a CMake configuration file for rmw_implementation_cmake.
 rmw_implementation_cmake_DIR:PATH=/opt/ros/humble/share/rmw_implementation_cmake/cmake
 
+//The directory containing a CMake configuration file for robot_control.
+robot_control_DIR:PATH=/root/Dojo/install/robot_control/share/robot_control/cmake
+
+//The directory containing a CMake configuration file for robot_description.
+robot_description_DIR:PATH=/root/Dojo/install/robot_description/share/robot_description/cmake
+
 //Value Computed by CMake
 robot_gazebo_BINARY_DIR:STATIC=/root/Dojo/build/robot_gazebo
 
@@ -974,11 +989,11 @@ robot_gazebo_IS_TOP_LEVEL:STATIC=ON
 //Value Computed by CMake
 robot_gazebo_SOURCE_DIR:STATIC=/root/Dojo/src/robot_gazebo
 
-//The directory containing a CMake configuration file for robot_state_publisher.
-robot_state_publisher_DIR:PATH=/opt/ros/humble/share/robot_state_publisher/cmake
-
 //The directory containing a CMake configuration file for ros2_control.
 ros2_control_DIR:PATH=/opt/ros/humble/share/ros2_control/cmake
+
+//The directory containing a CMake configuration file for ros2_controllers.
+ros2_controllers_DIR:PATH=/opt/ros/humble/share/ros2_controllers/cmake
 
 //The directory containing a CMake configuration file for rosgraph_msgs.
 rosgraph_msgs_DIR:PATH=/opt/ros/humble/share/rosgraph_msgs/cmake
@@ -1043,8 +1058,14 @@ statistics_msgs_DIR:PATH=/opt/ros/humble/share/statistics_msgs/cmake
 //The directory containing a CMake configuration file for std_msgs.
 std_msgs_DIR:PATH=/opt/ros/humble/share/std_msgs/cmake
 
+//The directory containing a CMake configuration file for std_srvs.
+std_srvs_DIR:PATH=/opt/ros/humble/share/std_srvs/cmake
+
 //The directory containing a CMake configuration file for tf2.
 tf2_DIR:PATH=/opt/ros/humble/share/tf2/cmake
+
+//The directory containing a CMake configuration file for tf2_geometry_msgs.
+tf2_geometry_msgs_DIR:PATH=/opt/ros/humble/share/tf2_geometry_msgs/cmake
 
 //The directory containing a CMake configuration file for tf2_msgs.
 tf2_msgs_DIR:PATH=/opt/ros/humble/share/tf2_msgs/cmake
@@ -1067,20 +1088,14 @@ trajectory_msgs_DIR:PATH=/opt/ros/humble/share/trajectory_msgs/cmake
 //The directory containing a CMake configuration file for unique_identifier_msgs.
 unique_identifier_msgs_DIR:PATH=/opt/ros/humble/share/unique_identifier_msgs/cmake
 
-//The directory containing a CMake configuration file for urdf.
-urdf_DIR:PATH=/opt/ros/humble/share/urdf/cmake
-
-//The directory containing a CMake configuration file for urdf_parser_plugin.
-urdf_parser_plugin_DIR:PATH=/opt/ros/humble/share/urdf_parser_plugin/cmake
-
-//The directory containing a CMake configuration file for urdfdom.
-urdfdom_DIR:PATH=/opt/ros/humble/lib/x86_64-linux-gnu/urdfdom/cmake
-
-//The directory containing a CMake configuration file for urdfdom_headers.
-urdfdom_headers_DIR:PATH=/opt/ros/humble/lib/x86_64-linux-gnu/urdfdom_headers/cmake
+//The directory containing a CMake configuration file for yaml-cpp.
+yaml-cpp_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/yaml-cpp
 
 //The directory containing a CMake configuration file for yaml.
 yaml_DIR:PATH=/opt/ros/humble/cmake
+
+//The directory containing a CMake configuration file for yaml_cpp_vendor.
+yaml_cpp_vendor_DIR:PATH=/opt/ros/humble/share/yaml_cpp_vendor/cmake
 
 
 ########################
@@ -1316,7 +1331,7 @@ FIND_PACKAGE_MESSAGE_DETAILS_PkgConfig:INTERNAL=[/usr/bin/pkg-config][v0.29.2()]
 //Details about finding Protobuf
 FIND_PACKAGE_MESSAGE_DETAILS_Protobuf:INTERNAL=[/usr/lib/x86_64-linux-gnu/libprotobuf.so][/usr/include][v3.12.4(3)]
 //Details about finding Python3
-FIND_PACKAGE_MESSAGE_DETAILS_Python3:INTERNAL=[/usr/bin/python3][cfound components: Interpreter ][v3.10.12()]
+FIND_PACKAGE_MESSAGE_DETAILS_Python3:INTERNAL=[/usr/bin/python3][/usr/include/python3.10][/usr/lib/x86_64-linux-gnu/libpython3.10.so][cfound components: Interpreter Development Development.Module Development.Embed ][v3.10.12()]
 //Details about finding Threads
 FIND_PACKAGE_MESSAGE_DETAILS_Threads:INTERNAL=[TRUE][v()]
 //Details about finding UUID
@@ -1911,10 +1926,16 @@ _OPENSSL_openssl_INCLUDEDIR:INTERNAL=
 _OPENSSL_openssl_LIBDIR:INTERNAL=
 _OPENSSL_openssl_PREFIX:INTERNAL=
 _OPENSSL_openssl_VERSION:INTERNAL=
+_Python3_DEVELOPMENT_EMBED_SIGNATURE:INTERNAL=625d9e0f7a1af1ddb80bfa11fbea90e0
+_Python3_DEVELOPMENT_MODULE_SIGNATURE:INTERNAL=4bc14a0ea6a21ea267e38aa660e9b54b
 _Python3_EXECUTABLE:INTERNAL=/usr/bin/python3
+//Path to a file.
+_Python3_INCLUDE_DIR:INTERNAL=/usr/include/python3.10
 //Python3 Properties
 _Python3_INTERPRETER_PROPERTIES:INTERNAL=Python;3;10;12;64;;cpython-310-x86_64-linux-gnu;/usr/lib/python3.10;/usr/lib/python3.10;/usr/lib/python3/dist-packages;/usr/lib/python3/dist-packages
 _Python3_INTERPRETER_SIGNATURE:INTERNAL=0f3e53742e142b1d9e50e4ca5b901dd8
+//Path to a library.
+_Python3_LIBRARY_RELEASE:INTERNAL=/usr/lib/x86_64-linux-gnu/libpython3.10.so
 //Index for unique symlink install targets
 __AMENT_CMAKE_SYMLINK_INSTALL_TARGETS_INDEX:INTERNAL=0
 __pkg_config_arguments_BULLET:INTERNAL=bullet>=2.82

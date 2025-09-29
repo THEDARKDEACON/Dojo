@@ -1,7 +1,0 @@
-Metadata-Version: 2.1
-Name: robot-perception
-Version: 0.1.0
-Summary: Robot perception package for handling camera and vision processing
-Maintainer: robosync
-Maintainer-email: robosync@example.com
-License: Apache License 2.0

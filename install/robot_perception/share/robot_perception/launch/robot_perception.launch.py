@@ -1,1 +1,6 @@
-/root/Dojo/build/robot_perception/launch/robot_perception.launch.py
+from launch import LaunchDescription
+
+def generate_launch_description():
+    return LaunchDescription([
+        # Add your launch configurations here
+    ])

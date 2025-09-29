@@ -33,10 +33,11 @@ def generate_launch_description():
         PathJoinSubstitution([
             FindPackageShare('robot_description'),
             'urdf',
-            'dojo_robot.urdf.xacro'
+            'robot.urdf.xacro'  # Changed from dojo_robot.urdf.xacro to robot.urdf.xacro
         ]),
         ' ',
-        'use_gazebo:=', use_gazebo
+        'use_gazebo:=', use_gazebo,
+        ' use_sim_time:=', use_sim_time
     ])
     
     robot_description = {'robot_description': robot_description_content}
@@ -128,31 +129,44 @@ def generate_launch_description():
     ])
     
     # Launch argument declarations
-    declares = [
-        DeclareLaunchArgument('use_hardware', default_value='true', 
-                            description='Launch hardware drivers'),
-        DeclareLaunchArgument('use_control', default_value='true',
-                            description='Launch control system'),
-        DeclareLaunchArgument('use_perception', default_value='false',
-                            description='Launch perception system'),
-        DeclareLaunchArgument('use_navigation', default_value='false',
-                            description='Launch navigation system'),
-        DeclareLaunchArgument('use_sim_time', default_value='false',
-                            description='Use simulation clock'),
-        DeclareLaunchArgument('use_robot_description', default_value='true',
-                            description='Launch robot state publisher'),
-        # New flags
-        DeclareLaunchArgument('use_gazebo', default_value='false',
-                            description='Include Gazebo-specific elements in robot description'),
-        DeclareLaunchArgument('use_arduino', default_value='true',
-                            description='Enable Arduino driver'),
-        DeclareLaunchArgument('use_camera', default_value='true',
-                            description='Enable camera driver'),
-        DeclareLaunchArgument('use_lidar', default_value='true',
-                            description='Enable LiDAR driver'),
-    ]
-
     return LaunchDescription([
-        *declares,
+        DeclareLaunchArgument('use_hardware', default_value='true',
+                           description='Enable hardware interfaces'),
+        DeclareLaunchArgument('use_control', default_value='true',
+                           description='Enable control system'),
+        DeclareLaunchArgument('use_perception', default_value='false',
+                           description='Enable perception stack'),
+        DeclareLaunchArgument('use_navigation', default_value='false',
+                           description='Enable navigation stack'),
+        DeclareLaunchArgument('use_sim_time', default_value='true' if use_gazebo == 'true' else 'false',
+                           description='Use simulation (Gazebo) clock if true'),
+        DeclareLaunchArgument('use_robot_description', default_value='true',
+                           description='Load robot description'),
+        DeclareLaunchArgument('use_gazebo', default_value='false',
+                           description='Enable Gazebo simulation'),
+        DeclareLaunchArgument('use_arduino', default_value='true',
+                           description='Enable Arduino interface'),
+        DeclareLaunchArgument('use_camera', default_value='true',
+                           description='Enable camera driver'),
+        DeclareLaunchArgument('use_lidar', default_value='true',
+                           description='Enable LiDAR driver'),
+        
+        # Include Gazebo launch file if use_gazebo is true
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource([
+                PathJoinSubstitution([
+                    FindPackageShare('robot_gazebo'),
+                    'launch',
+                    'gazebo.launch.py'
+                ])
+            ]),
+            condition=IfCondition(use_gazebo),
+            launch_arguments={
+                'use_sim_time': use_sim_time,
+                'world': 'empty.world'
+            }.items()
+        ),
+        
+        # Add all robot components
         robot_group
     ])

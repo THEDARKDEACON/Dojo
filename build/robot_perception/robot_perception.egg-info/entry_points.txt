@@ -1,3 +1,0 @@
-[console_scripts]
-camera_processor = robot_perception.camera_processor:main
-object_detector = robot_perception.object_detector:main

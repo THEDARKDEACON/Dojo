@@ -1,1 +1,2 @@
-/root/Dojo/install/robot_gazebo/lib/robot_gazebo/spawn_robot.py
+/robot_gazebo/__init__.py
+/robot_gazebo/cmd_vel_relay.py

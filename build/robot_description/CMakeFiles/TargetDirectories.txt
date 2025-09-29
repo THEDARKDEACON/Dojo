@@ -1,7 +1,5 @@
 /root/Dojo/build/robot_description/CMakeFiles/uninstall.dir
 /root/Dojo/build/robot_description/CMakeFiles/robot_description_uninstall.dir
-/root/Dojo/build/robot_description/CMakeFiles/ament_cmake_python_symlink_robot_description.dir
-/root/Dojo/build/robot_description/CMakeFiles/ament_cmake_python_build_robot_description_egg.dir
 /root/Dojo/build/robot_description/CMakeFiles/test.dir
 /root/Dojo/build/robot_description/CMakeFiles/edit_cache.dir
 /root/Dojo/build/robot_description/CMakeFiles/rebuild_cache.dir

@@ -1,0 +1,15 @@
+running develop
+running egg_info
+writing nv21_converter_pkg.egg-info/PKG-INFO
+writing dependency_links to nv21_converter_pkg.egg-info/dependency_links.txt
+writing entry points to nv21_converter_pkg.egg-info/entry_points.txt
+writing requirements to nv21_converter_pkg.egg-info/requires.txt
+writing top-level names to nv21_converter_pkg.egg-info/top_level.txt
+reading manifest file 'nv21_converter_pkg.egg-info/SOURCES.txt'
+writing manifest file 'nv21_converter_pkg.egg-info/SOURCES.txt'
+running build_ext
+Creating /root/Dojo/install/nv21_converter_pkg/lib/python3.10/site-packages/nv21-converter-pkg.egg-link (link to .)
+Installing nv21_converter script to /root/Dojo/install/nv21_converter_pkg/lib/nv21_converter_pkg
+
+Installed /root/Dojo/build/nv21_converter_pkg
+running symlink_data

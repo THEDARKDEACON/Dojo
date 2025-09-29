@@ -1,5 +1,5 @@
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription, ExecuteProcess, TimerAction
+from launch.actions import IncludeLaunchDescription, TimerAction
 from launch.substitutions import Command, PathJoinSubstitution, FindExecutable
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
@@ -49,19 +49,21 @@ def generate_launch_description():
             output='screen'
         ),
 
-        # Delay controller loading to ensure Gazebo and robot are ready
+        # Delay controller spawners to wait for Gazebo + ros2_control
         TimerAction(
-            period=15.0,
+            period=10.0,
             actions=[
-                ExecuteProcess(
-                    cmd=['ros2', 'control', 'load_controller', '--set-state', 'active', 'joint_state_broadcaster'],
-                    shell=True,
-                    output='screen'
+                Node(
+                    package="controller_manager",
+                    executable="spawner",
+                    arguments=["joint_state_broadcaster", "--controller-manager", "/controller_manager"],
+                    output="screen"
                 ),
-                ExecuteProcess(
-                    cmd=['ros2', 'control', 'load_controller', '--set-state', 'active', 'diff_drive_controller'],
-                    shell=True,
-                    output='screen'
+                Node(
+                    package="controller_manager",
+                    executable="spawner",
+                    arguments=["diff_drive_controller", "--controller-manager", "/controller_manager"],
+                    output="screen"
                 )
             ]
         ),
@@ -76,3 +78,4 @@ def generate_launch_description():
             remappings=[('/cmd_vel', '/diff_drive_controller/cmd_vel')]
         )
     ])
+

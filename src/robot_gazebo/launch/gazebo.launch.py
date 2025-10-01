@@ -33,7 +33,7 @@ def generate_launch_description():
         PathJoinSubstitution([
             FindPackageShare('robot_description'),
             'urdf',
-            'dojo_robot.urdf.xacro'
+            'robot.urdf.xacro'
         ]),
         ' use_gazebo:=true'
     ])
@@ -125,7 +125,7 @@ def generate_launch_description():
     rviz_config_file = PathJoinSubstitution([
         FindPackageShare('robot_gazebo'),
         'rviz',
-        'gazebo.rviz'
+        'dojo_robot.rviz'
     ])
     
     rviz_node = Node(

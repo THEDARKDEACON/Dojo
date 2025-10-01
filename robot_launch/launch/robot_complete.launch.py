@@ -19,7 +19,11 @@ def check_package(package_name):
 def generate_launch_description():
     # Configuration parameters
     use_sim_time = LaunchConfiguration('use_sim_time', default='false')
-    rviz_config = '/tmp/robot_rviz.rviz'
+    rviz_config = os.path.join(
+        get_package_share_directory('robot_description'),
+        'rviz',
+        'dojo_robot.rviz'
+    )
 
     # Declare launch arguments
     declare_use_sim_time = DeclareLaunchArgument(
@@ -96,8 +100,12 @@ def generate_launch_description():
 
     # Launch RViz if available
     if check_package('rviz2'):
-        rviz = ExecuteProcess(
-            cmd=['rviz2', '-d', rviz_config, '--ros-args', '--log-level', 'WARN'],
+        rviz = Node(
+            package='rviz2',
+            executable='rviz2',
+            name='rviz2',
+            arguments=['-d', rviz_config],
+            parameters=[{'use_sim_time': use_sim_time}],
             output='screen'
         )
         if actions:

@@ -1,14 +1,54 @@
-# src/robot_control/config/twist_mux.yaml
-topics:
-  navigation:
-    topic: cmd_vel_nav
-    timeout: 1.0
-    priority: 10
-  teleop:
-    topic: cmd_vel_teleop
-    timeout: 1.0
-    priority: 100
-  safety:
-    topic: cmd_vel_safety
-    timeout: 0.5
-    priority: 200
+# Twist Mux Configuration
+
+/**:
+  ros__parameters:
+    # The output topic where twist commands are published
+    topic_out: /diff_drive_controller/cmd_vel_unstamped
+
+    # Velocity Limits
+    # These limits apply to all input topics unless overridden
+    linear:
+      x:
+        has_velocity_limits: true
+        max_velocity: 0.5
+        min_velocity: -0.5
+    angular:
+      z:
+        has_velocity_limits: true
+        max_velocity: 1.0
+        min_velocity: -1.0
+
+    # Input Topic Configuration
+    topics:
+      # Navigation stack input (lowest priority)
+      navigation:
+        topic: /cmd_vel_nav
+        timeout: 1.0
+        priority: 10
+        # Optional: Override global velocity limits
+        # linear:
+        #   x: {max_velocity: 0.3, min_velocity: -0.3}
+        # angular:
+        #   z: {max_velocity: 0.5, min_velocity: -0.5}
+
+      # Teleoperation input (medium priority)
+      teleop:
+        topic: /cmd_vel_teleop
+        timeout: 1.0
+        priority: 100
+        # Optional: Override global velocity limits
+        # linear:
+        #   x: {max_velocity: 0.3, min_velocity: -0.3}
+        # angular:
+        #   z: {max_velocity: 0.5, min_velocity: -0.5}
+
+      # Safety controller input (highest priority)
+      safety:
+        topic: /cmd_vel_safety
+        timeout: 0.5
+        priority: 200
+        # Optional: Override global velocity limits
+        # linear:
+        #   x: {max_velocity: 0.1, min_velocity: -0.1}
+        # angular:
+        #   z: {max_velocity: 0.2, min_velocity: -0.2}

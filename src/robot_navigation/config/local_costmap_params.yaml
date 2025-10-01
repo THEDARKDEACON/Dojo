@@ -1,3 +1,71 @@
 /**:
   ros__parameters:
     use_sim_time: False
+    
+    local_costmap:
+      ros__parameters:
+        # Local costmap parameters
+        global_frame: odom  # Local costmap follows robot in odom frame
+        robot_base_frame: base_footprint
+        update_frequency: 10.0  # Hz - higher frequency for local planning
+        publish_frequency: 5.0  # Hz
+        always_send_full_costmap: false
+        
+        # Rolling window parameters (enabled for local costmap)
+        rolling_window: true
+        width: 3.0  # meters - smaller window for local planning
+        height: 3.0  # meters
+        resolution: 0.05  # meters/cell - matches global costmap
+        
+        # Robot footprint
+        robot_radius: 0.22  # meters
+        footprint: "[[-0.22, -0.22], [-0.22, 0.22], [0.22, 0.22], [0.22, -0.22]]"
+        
+        # Plugins to use
+        plugins: ["obstacle_layer", "inflation_layer"]
+        
+        # Obstacle layer - for dynamic obstacles
+        obstacle_layer:
+          plugin: "nav2_costmap_2d::ObstacleLayer"
+          enabled: true
+          max_obstacle_height: 2.0  # meters
+          combination_method: 1  # Maximum (1) of all observation sources
+          observation_sources: scan
+          
+          # Laser scan configuration
+          scan:
+            topic: /scan
+            sensor_frame: base_scan
+            data_type: "LaserScan"
+            marking: true
+            clearing: true
+            min_obstacle_height: 0.0  # meters
+            max_obstacle_height: 2.0  # meters
+            obstacle_range: 2.5  # meters
+            raytrace_range: 3.0  # meters
+            inf_is_valid: false
+            clear_after_reading: true
+            
+        # Inflation layer - for obstacle inflation
+        inflation_layer:
+          plugin: "nav2_costmap_2d::InflationLayer"
+          cost_scaling_factor: 10.0  # Exponential rate at which the obstacle cost drops off
+          inflation_radius: 0.55  # meters - should be at least the robot radius + safety margin
+          inflate_unknown: false
+          inflate_around_unknown: false
+          
+        # Footprint clearing
+        footprint_clearing_enabled: true
+        footprint_padding: 0.1  # meters
+        
+        # Transformation parameters
+        transform_tolerance: 0.2  # seconds
+        
+        # Map update parameters
+        map_topic: map
+        first_map_only: false
+        
+        # Debug visualization
+        publish_voxel_map: false
+        publish_footprint: true
+        publish_voxel_footprint: false

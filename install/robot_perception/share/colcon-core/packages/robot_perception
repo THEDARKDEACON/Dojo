@@ -1,1 +1,1 @@
-builtin_interfaces:cv_bridge:geometry_msgs:image_transport:python3-numpy:python3-opencv:rclpy:sensor_msgs:std_msgs:vision_opencv
+ament_cmake:ament_cmake_pytest:ament_cmake_python:ament_lint_auto

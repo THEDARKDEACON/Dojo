@@ -1,1 +1,1 @@
-/root/Dojo/install/robot_bringup:/root/Dojo/install/robot_perception:/root/Dojo/install/robot_navigation:/root/Dojo/install/robot_interfaces:/root/Dojo/install/robot_hardware:/root/Dojo/install/robot_gazebo:/root/Dojo/install/robot_description:/root/Dojo/install/robot_control:/root/Dojo/install/camera_ros:/opt/ros/humble
+/opt/ros/humble

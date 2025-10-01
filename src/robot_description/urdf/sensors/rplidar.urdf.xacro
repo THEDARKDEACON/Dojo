@@ -3,20 +3,15 @@
   <!-- RPLIDAR A1M8 Parameters -->
   <xacro:property name="lidar_radius" value="0.038" />  <!-- Approximate radius of the LiDAR -->
   <xacro:property name="lidar_height" value="0.045" />   <!-- Approximate height of the LiDAR -->
-  
-  <!-- Position of the LiDAR relative to base_link -->
-  <xacro:property name="lidar_x" value="0.0" />  <!-- Centered front-to-back -->
-  <xacro:property name="lidar_y" value="0.0" />  <!-- Centered left-to-right -->
-  <xacro:property name="lidar_z" value="0.15" />  <!-- On top of the robot -->
 
   <!-- RPLIDAR A1M8 Link -->
-  <link name="laser">
+  <link name="rplidar_link">
     <visual>
       <origin xyz="0 0 ${lidar_height/2}" rpy="0 0 0"/>
       <geometry>
         <cylinder radius="${lidar_radius}" length="${lidar_height}"/>
       </geometry>
-      <material name="black"/>
+      <material name="sensor_white"/>
     </visual>
     
     <collision>
@@ -27,10 +22,5 @@
     </collision>
   </link>
 
-  <!-- Joint from base_link to laser -->
-  <joint name="base_link_to_laser" type="fixed">
-    <parent link="base_link"/>
-    <child link="laser"/>
-    <origin xyz="${lidar_x} ${lidar_y} ${lidar_z}" rpy="0 0 0"/>
-  </joint>
+  <!-- The joint is already defined in dojo_robot.urdf.xacro -->
 </robot>

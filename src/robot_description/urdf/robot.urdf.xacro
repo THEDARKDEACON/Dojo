@@ -1,196 +1,224 @@
 <?xml version="1.0"?>
-<robot name="robot_car" xmlns:xacro="http://www.ros.org/wiki/xacro">
-  <!-- Include Gazebo Xacro macros -->
-  <xacro:include filename="$(find gazebo_ros)/launch/empty_world.launch" />
-  <xacro:include filename="$(find gazebo_ros)/launch/helpers/empty_world.launch.py" />
-  
-  <!-- Include Sensors -->
-  <xacro:include filename="$(find robot_description)/urdf/sensors/rplidar.urdf.xacro" />
-  
+<robot name="zeta" xmlns:xacro="http://www.ros.org/wiki/xacro">
   <!-- Constants -->
-  <xacro:property name="PI" value="3.1415926535897931" />
+  <xacro:property name="M_PI" value="3.1415926535897931" />
+  <xacro:property name="M_PI_2" value="1.5707963267948966" />
   
-  <!-- Robot dimensions (in meters) -->
-  <xacro:property name="base_length" value="0.3" />
-  <xacro:property name="base_width" value="0.25" />
-  <xacro:property name="base_height" value="0.15" />
-  <xacro:property name="wheel_radius" value="0.05" />
+  <!-- Robot Parameters -->
+  <xacro:property name="base_x" value="0.28" />
+  <xacro:property name="base_y" value="0.23" />
+  <xacro:property name="base_z" value="0.07" />
+  <xacro:property name="wheel_radius" value="0.0325" />
   <xacro:property name="wheel_width" value="0.03" />
-  <xacro:property name="wheel_separation" value="0.3" />
-  <xacro:property name="caster_radius" value="0.01" />
+  <xacro:property name="wheel_separation" value="0.26" />
   
-  <!-- Colors -->
-  <material name="blue">
-    <color rgba="0.0 0.0 0.8 1.0"/>
+  <!-- Materials -->
+  <material name="grey">
+    <color rgba="0.7 0.7 0.7 1"/>
   </material>
-  
+  <material name="green">
+    <color rgba="0 0.6 0 1"/>
+  </material>
+  <material name="white">
+    <color rgba="1 1 1 1"/>
+  </material>
   <material name="black">
-    <color rgba="0.0 0.0 0.0 1.0"/>
+    <color rgba="0.1 0.1 0.1 1"/>
   </material>
   
-  <material name="gray">
-    <color rgba="0.5 0.5 0.5 1.0"/>
-  </material>
+  <!-- Gazebo materials -->
+  <gazebo reference="base_link">
+    <material>Gazebo/Green</material>
+  </gazebo>
+  <gazebo reference="top_floor">
+    <material>Gazebo/Green</material>
+  </gazebo>
+  <gazebo reference="lidar">
+    <material>Gazebo/White</material>
+  </gazebo>
+  <gazebo reference="left_wheel">
+    <material>Gazebo/Grey</material>
+  </gazebo>
+  <gazebo reference="right_wheel">
+    <material>Gazebo/Grey</material>
+  </gazebo>
+  <gazebo reference="frontright_wheel">
+    <material>Gazebo/Grey</material>
+  </gazebo>
+  <gazebo reference="frontleft_wheel">
+    <material>Gazebo/Grey</material>
+  </gazebo>
   
-  <!-- Base Link -->
-  <link name="base_footprint">
-    <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <geometry>
-        <box size="0.01 0.01 0.01"/>
-      </geometry>
-    </visual>
-  </link>
-  
-  <!-- Base -->
+  <!-- Base link -->
   <link name="base_link">
     <visual>
-      <origin xyz="0 0 ${base_height/2}" rpy="0 0 0"/>
       <geometry>
-        <box size="${base_length} ${base_width} ${base_height}"/>
+        <box size="${base_x} ${base_y} ${base_z}"/>
       </geometry>
-      <material name="blue"/>
+      <origin xyz="0 0 0.035" rpy="0 0 0"/>
+      <material name="green"/>
     </visual>
     <collision>
-      <origin xyz="0 0 ${base_height/2}" rpy="0 0 0"/>
       <geometry>
-        <box size="${base_length} ${base_width} ${base_height}"/>
+        <box size="${base_x} ${base_y} ${base_z}"/>
       </geometry>
+      <origin xyz="0 0 0.035" rpy="0 0 0"/>
     </collision>
+    <inertial>
+      <mass value="1.5"/>
+      <inertia ixx="0.003" ixy="0.0" ixz="0.0"
+               iyy="0.002" iyz="0.0"
+               izz="0.003"/>
+    </inertial>
   </link>
-  
-  <!-- Wheels -->
+
+  <!-- Top floor -->
+  <link name="top_floor">
+    <visual>
+      <geometry>
+        <box size="0.15 0.085 0.038"/>
+      </geometry>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <material name="green"/>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.15 0.085 0.038"/>
+      </geometry>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="0.3"/>
+      <inertia ixx="0.0001" ixy="0.0" ixz="0.0"
+               iyy="0.0001" iyz="0.0"
+               izz="0.0001"/>
+    </inertial>
+  </link>
+
+  <!-- Joint between base and top floor -->
+  <joint name="base_to_top_floor" type="fixed">
+    <parent link="base_link"/>
+    <child link="top_floor"/>
+    <origin xyz="0 0 0.069" rpy="0 0 0"/>
+  </joint>
+
+  <!-- Wheel Macro -->
   <xacro:macro name="wheel" params="prefix x y z">
     <link name="${prefix}_wheel">
       <visual>
-        <origin xyz="0 0 0" rpy="${PI/2} 0 0"/>
         <geometry>
           <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
         </geometry>
-        <material name="black"/>
+        <material name="grey"/>
       </visual>
       <collision>
-        <origin xyz="0 0 0" rpy="${PI/2} 0 0"/>
         <geometry>
           <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
         </geometry>
       </collision>
       <inertial>
         <mass value="0.1"/>
-        <inertia ixx="0.0005" ixy="0" ixz="0"
-                 iyy="0.0005" iyz="0"
-                 izz="0.0001"/>
+        <inertia ixx="0.0001" ixy="0.0" ixz="0.0" iyy="0.0001" iyz="0.0" izz="0.0001"/>
       </inertial>
     </link>
-    
+
     <joint name="${prefix}_wheel_joint" type="continuous">
       <parent link="base_link"/>
       <child link="${prefix}_wheel"/>
-      <origin xyz="${x} ${y} ${z}" rpy="0 0 0"/>
+      <origin xyz="${x} ${y} ${z}" rpy="${M_PI_2} 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit effort="100" velocity="100"/>
-      <dynamics damping="0.1" friction="0.5"/>
     </joint>
   </xacro:macro>
-  
-  <!-- Casters -->
-  <xacro:macro name="caster" params="prefix x y z">
-    <link name="${prefix}_caster">
-      <visual>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
-        <geometry>
-          <sphere radius="${caster_radius}"/>
-        </geometry>
-        <material name="gray"/>
-      </visual>
-      <collision>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
-        <geometry>
-          <sphere radius="${caster_radius}"/>
-        </geometry>
-      </collision>
-      <inertial>
-        <mass value="0.01"/>
-        <inertia ixx="0.00001" ixy="0" ixz="0"
-                 iyy="0.00001" iyz="0"
-                 izz="0.00001"/>
-      </inertial>
-    </link>
-    
-    <joint name="${prefix}_caster_joint" type="fixed">
-      <parent link="base_link"/>
-      <child link="${prefix}_caster"/>
-      <origin xyz="${x} ${y} ${z}" rpy="0 0 0"/>
-    </joint>
-  </xacro:macro>
-  
-  <!-- Create wheels and casters -->
-  <xacro:wheel prefix="left" x="0" y="${wheel_separation/2}" z="0"/>
-  <xacro:wheel prefix="right" x="0" y="-${wheel_separation/2}" z="0"/>
-  <xacro:caster prefix="front" x="${base_length/4}" y="0" z="-${base_height/2}"/>
-  <xacro:caster prefix="back" x="-${base_length/4}" y="0" z="-${base_height/2}"/>
-  
-  <!-- Base link joint -->
-  <joint name="base_footprint_joint" type="fixed">
-    <parent link="base_footprint"/>
-    <child link="base_link"/>
-    <origin xyz="0 0 ${wheel_radius}" rpy="0 0 0"/>
+
+  <!-- Create wheels -->
+  <xacro:wheel prefix="left" x="0" y="${base_y/2 + 0.01}" z="0"/>
+  <xacro:wheel prefix="right" x="0" y="-${base_y/2 - 0.01}" z="0"/>
+  <xacro:wheel prefix="frontleft" x="${base_x/2}" y="${base_y/2 + 0.01}" z="0"/>
+  <xacro:wheel prefix="frontright" x="${base_x/2}" y="-${base_y/2 - 0.01}" z="0"/>
+
+  <!-- Lidar -->
+  <link name="lidar">
+    <visual>
+      <geometry>
+        <cylinder radius="0.03" length="0.05"/>
+      </geometry>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder radius="0.03" length="0.05"/>
+      </geometry>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="0.1"/>
+      <inertia ixx="0.0001" ixy="0.0" ixz="0.0" iyy="0.0001" iyz="0.0" izz="0.0001"/>
+    </inertial>
+  </link>
+
+  <joint name="lidar_joint" type="fixed">
+    <parent link="top_floor"/>
+    <child link="lidar"/>
+    <origin xyz="0 0 0.04" rpy="0 0 0"/>
   </joint>
-  
-  <!-- ROS 2 Control -->
-  <xacro:if value="$(arg use_ros2_control)">
-    <xacro:include filename="$(find ros2_control_demo_robot)/urdf/diffbot_system.ros2_control.xacro" />
-    <xacro:diffbot_system_robot name="diffbot" prefix="" use_sim="true">
-      <xacro:property name="diff_drive_controller_name" value="diffbot_base_controller" />
-      <xacro:property name="diff_drive_controller_type" value="diff_drive_controller/DiffDriveController" />
-      <xacro:property name="left_wheel_name" value="left_wheel_joint" />
-      <xacro:property name="right_wheel_name" value="right_wheel_joint" />
-      <xacro:property name="wheel_separation" value="${wheel_separation}" />
-      <xacro:property name="wheel_radius" value="${wheel_radius}" />
-    </xacro:diffbot_system_robot>
-  </xacro:if>
-  
-  <!-- Gazebo plugins -->
+
+  <!-- Camera -->
+  <link name="camera">
+    <visual>
+      <geometry>
+        <box size="0.02 0.04 0.03"/>
+      </geometry>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <material name="black">
+        <color rgba="0.1 0.1 0.1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.02 0.04 0.03"/>
+      </geometry>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="0.05"/>
+      <inertia ixx="0.00001" ixy="0.0" ixz="0.0" iyy="0.00001" iyz="0.0" izz="0.00001"/>
+    </inertial>
+  </link>
+
+  <joint name="camera_joint" type="fixed">
+    <parent link="top_floor"/>
+    <child link="camera"/>
+    <origin xyz="0.08 0 0.01" rpy="0 0 0"/>
+  </joint>
+
+  <!-- Gazebo Plugins -->
   <gazebo>
-    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
-      <robotNamespace>/</robotNamespace>
+    <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
+      <ros>
+        <namespace>/</namespace>
+      </ros>
+      <left_joint>left_wheel_joint</left_joint>
+      <right_joint>right_wheel_joint</right_joint>
+      <wheel_separation>${wheel_separation}</wheel_separation>
+      <wheel_diameter>${2 * wheel_radius}</wheel_diameter>
+      <command_topic>cmd_vel</command_topic>
+      <odometry_topic>odom</odometry_topic>
+      <odometry_frame>odom</odometry_frame>
+      <robot_base_frame>base_link</robot_base_frame>
+      <publish_odom>true</publish_odom>
+      <publish_odom_tf>true</publish_odom_tf>
+      <publish_wheel_tf>false</publish_wheel_tf>
+    </plugin>
+
+    <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+      <alwaysOn>true</alwaysOn>
+      <updateRate>30.0</updateRate>
+      <cameraName>camera</cameraName>
+      <frameName>camera</frameName>
+      <imageTopicName>image_raw</imageTopicName>
+      <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+      <hackBaseline>0.07</hackBaseline>
     </plugin>
   </gazebo>
-  
-  <gazebo reference="base_link">
-    <material>Gazebo/Blue</material>
-  </gazebo>
-  
-  <gazebo reference="left_wheel">
-    <material>Gazebo/Black</material>
-  </gazebo>
-  
-  <gazebo reference="right_wheel">
-    <material>Gazebo/Black</material>
-  </gazebo>
-  
-  <!-- Transmissions for ROS Control -->
-  <xacro:if value="$(arg use_ros2_control)">
-    <transmission name="left_wheel_trans">
-      <type>transmission_interface/SimpleTransmission</type>
-      <joint name="left_wheel_joint">
-        <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
-      </joint>
-      <actuator name="left_wheel_motor">
-        <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
-        <mechanicalReduction>1</mechanicalReduction>
-      </actuator>
-    </transmission>
-    
-    <transmission name="right_wheel_trans">
-      <type>transmission_interface/SimpleTransmission</type>
-      <joint name="right_wheel_joint">
-        <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
-      </joint>
-      <actuator name="right_wheel_motor">
-        <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
-        <mechanicalReduction>1</mechanicalReduction>
-      </actuator>
-    </transmission>
-  </xacro:if>
 </robot>

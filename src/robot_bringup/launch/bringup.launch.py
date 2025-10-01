@@ -1,7 +1,6 @@
-#!/usr/bin/env python3
 """
 Improved Robot Bringup Launch File
-Uses new modular hardware architecture
+Uses new modular hardware architecture with unified simulation support
 """
 
 from launch import LaunchDescription
@@ -34,10 +33,11 @@ def generate_launch_description():
         PathJoinSubstitution([
             FindPackageShare('robot_description'),
             'urdf',
-            'dojo_robot.urdf.xacro'
+            'robot.urdf.xacro'  # Changed from dojo_robot.urdf.xacro to robot.urdf.xacro
         ]),
         ' ',
-        'use_gazebo:=', use_gazebo
+        'use_gazebo:=', use_gazebo,
+        ' use_sim_time:=', use_sim_time
     ])
     
     robot_description = {'robot_description': robot_description_content}
@@ -51,7 +51,23 @@ def generate_launch_description():
         condition=IfCondition(use_robot_description)
     )
     
-    # Hardware layer - new unified hardware interface
+    # Unified simulation launch (when use_gazebo=true)
+    unified_simulation = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(get_package_share_directory('robot_gazebo'), 'launch', 'unified_simulation.launch.py')
+        ),
+        launch_arguments={
+            'use_sim_time': use_sim_time,
+            'use_slam': 'true',
+            'use_nav2': use_navigation,
+            'use_perception': use_perception,
+            'use_rviz': 'true',
+            'use_teleop': 'true'
+        }.items(),
+        condition=IfCondition(use_gazebo)
+    )
+    
+    # Hardware layer - new unified hardware interface (when use_gazebo=false)
     hardware_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(get_package_share_directory('robot_hardware'), 'launch', 'hardware.launch.py')
@@ -65,7 +81,7 @@ def generate_launch_description():
         condition=IfCondition(use_hardware)
     )
     
-    # Control layer - high-level control coordination
+    # Control layer - high-level control coordination (when use_gazebo=false)
     control_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(get_package_share_directory('robot_control'), 'launch', 'control.launch.py')
@@ -76,7 +92,7 @@ def generate_launch_description():
         condition=IfCondition(use_control)
     )
     
-    # Perception layer - optional computer vision and AI
+    # Perception layer - optional computer vision and AI (when use_gazebo=false)
     perception_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(get_package_share_directory('robot_perception'), 'launch', 'perception.launch.py')
@@ -91,7 +107,7 @@ def generate_launch_description():
         condition=IfCondition(use_perception)
     )
     
-    # Navigation layer - optional autonomous navigation
+    # Navigation layer - optional autonomous navigation (when use_gazebo=false)
     navigation_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(get_package_share_directory('robot_navigation'), 'launch', 'nav2.launch.py')
@@ -105,38 +121,52 @@ def generate_launch_description():
     # Group all launches for better organization
     robot_group = GroupAction([
         robot_state_publisher_node,
-        hardware_launch,
-        control_launch,
-        perception_launch,
-        navigation_launch
+        unified_simulation,  # This will be ignored if use_gazebo=false
+        hardware_launch,     # This will be ignored if use_gazebo=true
+        control_launch,      # This will be ignored if use_gazebo=true
+        perception_launch,   # This will be ignored if use_gazebo=true
+        navigation_launch,   # This will be ignored if use_gazebo=true
     ])
     
     # Launch argument declarations
-    declares = [
-        DeclareLaunchArgument('use_hardware', default_value='true', 
-                            description='Launch hardware drivers'),
-        DeclareLaunchArgument('use_control', default_value='true',
-                            description='Launch control system'),
-        DeclareLaunchArgument('use_perception', default_value='false',
-                            description='Launch perception system'),
-        DeclareLaunchArgument('use_navigation', default_value='false',
-                            description='Launch navigation system'),
-        DeclareLaunchArgument('use_sim_time', default_value='false',
-                            description='Use simulation clock'),
-        DeclareLaunchArgument('use_robot_description', default_value='true',
-                            description='Launch robot state publisher'),
-        # New flags
-        DeclareLaunchArgument('use_gazebo', default_value='false',
-                            description='Include Gazebo-specific elements in robot description'),
-        DeclareLaunchArgument('use_arduino', default_value='true',
-                            description='Enable Arduino driver'),
-        DeclareLaunchArgument('use_camera', default_value='true',
-                            description='Enable camera driver'),
-        DeclareLaunchArgument('use_lidar', default_value='true',
-                            description='Enable LiDAR driver'),
-    ]
-
     return LaunchDescription([
-        *declares,
+        DeclareLaunchArgument('use_hardware', default_value='true',
+                           description='Enable hardware interfaces'),
+        DeclareLaunchArgument('use_control', default_value='true',
+                           description='Enable control system'),
+        DeclareLaunchArgument('use_perception', default_value='false',
+                           description='Enable perception stack'),
+        DeclareLaunchArgument('use_navigation', default_value='false',
+                           description='Enable navigation stack'),
+        DeclareLaunchArgument('use_sim_time', default_value='true' if use_gazebo == 'true' else 'false',
+                           description='Use simulation (Gazebo) clock if true'),
+        DeclareLaunchArgument('use_robot_description', default_value='true',
+                           description='Load robot description'),
+        DeclareLaunchArgument('use_gazebo', default_value='false',
+                           description='Enable Gazebo simulation'),
+        DeclareLaunchArgument('use_arduino', default_value='true',
+                           description='Enable Arduino interface'),
+        DeclareLaunchArgument('use_camera', default_value='true',
+                           description='Enable camera driver'),
+        DeclareLaunchArgument('use_lidar', default_value='true',
+                           description='Enable LiDAR driver'),
+        
+        # Include Gazebo launch file if use_gazebo is true
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource([
+                PathJoinSubstitution([
+                    FindPackageShare('robot_gazebo'),
+                    'launch',
+                    'gazebo.launch.py'
+                ])
+            ]),
+            condition=IfCondition(use_gazebo),
+            launch_arguments={
+                'use_sim_time': use_sim_time,
+                'world': 'empty.world'
+            }.items()
+        ),
+        
+        # Add all robot components
         robot_group
     ])

@@ -1,1 +1,0 @@
-/root/Dojo/build/robot_description/ament_cmake_environment_hooks/pythonpath.sh

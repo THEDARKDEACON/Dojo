@@ -1,1 +1,0 @@
-/root/Dojo/src/robot_gazebo/launch/robot_simulation.launch.py

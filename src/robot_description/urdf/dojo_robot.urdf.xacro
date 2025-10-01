@@ -1,8 +1,12 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="dojo_robot">
+  <!-- Math constants -->
+  <xacro:property name="M_PI" value="3.1415926535897931" />
+  <xacro:property name="M_PI_2" value="1.5707963267948966" />
 
-  <!-- Include common properties -->
+  <!-- Include common properties and sensors -->
   <xacro:include filename="$(find robot_description)/urdf/common_properties.xacro"/>
+  <xacro:include filename="$(find robot_description)/urdf/sensors/rplidar.urdf.xacro"/>
   
   <!-- Simulation toggle (set by xacro arg) -->
   <xacro:arg name="use_gazebo" default="false"/>
@@ -15,6 +19,16 @@
   <xacro:property name="wheel_width" value="0.03"/>
   <xacro:property name="wheel_separation" value="0.26"/>
   <xacro:property name="wheel_base" value="0.215"/>
+
+  <!-- Camera parameters -->
+  <xacro:property name="camera_width" value="0.05" />
+  <xacro:property name="camera_height" value="0.03" />
+  <xacro:property name="camera_depth" value="0.05" />
+  <xacro:property name="camera_x" value="0.1" />  <!-- Position in front of the robot -->
+  <xacro:property name="camera_y" value="0.0" />
+  <xacro:property name="camera_z" value="0.05" />
+  <xacro:property name="camera_fps" value="30" />
+  <xacro:property name="camera_hfov" value="1.0472" />  <!-- 60 degrees in radians -->
 
   <!-- Materials -->
   <material name="dojo_green">
@@ -78,30 +92,6 @@
     </inertial>
   </link>
 
-  <!-- LiDAR sensor -->
-  <link name="laser">
-    <visual>
-      <geometry>
-        <cylinder radius="0.033" length="0.018"/>
-      </geometry>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <material name="sensor_white"/>
-    </visual>
-    <collision>
-      <geometry>
-        <cylinder radius="0.033" length="0.018"/>
-      </geometry>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-    </collision>
-    <inertial>
-      <mass value="0.15"/>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <inertia ixx="0.00002" ixy="0.0" ixz="0.0"
-               iyy="0.00002" iyz="0.0"
-               izz="0.00008"/>
-    </inertial>
-  </link>
-
   <!-- Camera link -->
   <link name="camera_link">
     <visual>
@@ -133,30 +123,88 @@
         <geometry>
           <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
         </geometry>
-        <origin xyz="0 0 0" rpy="1.57 0 0"/>
+        <origin xyz="0 0 0" rpy="${reflect * M_PI_2} 0 0"/>
         <material name="wheel_grey"/>
       </visual>
       <collision>
         <geometry>
           <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
         </geometry>
-        <origin xyz="0 0 0" rpy="1.57 0 0"/>
+        <origin xyz="0 0 0" rpy="${reflect * 1.5707963267948966} 0 0"/>
+        <surface>
+          <friction>
+            <ode>
+              <mu>0.8</mu>
+              <mu2>0.8</mu2>
+              <slip1>0.0</slip1>
+              <slip2>0.0</slip2>
+            </ode>
+          </friction>
+        </surface>
       </collision>
       <inertial>
-        <mass value="0.25"/>
-        <origin xyz="0 0 0" rpy="1.57 0 0"/>
-        <inertia ixx="0.0001" ixy="0.0" ixz="0.0"
-                 iyy="0.0003" iyz="0.0"
-                 izz="0.0001"/>
+        <mass value="0.5"/>
+        <inertia ixx="0.0005" ixy="0" ixz="0"
+                 iyy="0.001" iyz="0"
+                 izz="0.0005"/>
       </inertial>
     </link>
   </xacro:macro>
 
-  <!-- Create all four wheels -->
+  <!-- Create all four wheels with Gazebo properties -->
   <xacro:wheel prefix="front_left" reflect="1"/>
   <xacro:wheel prefix="front_right" reflect="-1"/>
   <xacro:wheel prefix="rear_left" reflect="1"/>
   <xacro:wheel prefix="rear_right" reflect="-1"/>
+  
+  <!-- Gazebo wheel properties -->
+  <gazebo reference="front_left_wheel">
+    <material>Gazebo/Grey</material>
+    <mu1>0.8</mu1>
+    <mu2>0.8</mu2>
+    <kp>1000000.0</kp>
+    <kd>100.0</kd>
+    <fdir1>1 0 0</fdir1>
+    <minDepth>0.001</minDepth>
+    <maxVel>1.0</maxVel>
+    <selfCollide>false</selfCollide>
+  </gazebo>
+  
+  <gazebo reference="front_right_wheel">
+    <material>Gazebo/Grey</material>
+    <mu1>0.8</mu1>
+    <mu2>0.8</mu2>
+    <kp>1000000.0</kp>
+    <kd>100.0</kd>
+    <fdir1>1 0 0</fdir1>
+    <minDepth>0.001</minDepth>
+    <maxVel>1.0</maxVel>
+    <selfCollide>false</selfCollide>
+  </gazebo>
+  
+  <gazebo reference="rear_left_wheel">
+    <material>Gazebo/Grey</material>
+    <mu1>0.8</mu1>
+    <mu2>0.8</mu2>
+    <kp>1000000.0</kp>
+    <kd>100.0</kd>
+    <fdir1>1 0 0</fdir1>
+    <minDepth>0.001</minDepth>
+    <maxVel>1.0</maxVel>
+    <selfCollide>false</selfCollide>
+  </gazebo>
+  
+  <gazebo reference="rear_right_wheel">
+    <material>Gazebo/Grey</material>
+    <mu1>0.8</mu1>
+    <mu2>0.8</mu2>
+    <kp>1000000.0</kp>
+    <kd>100.0</kd>
+    <fdir1>1 0 0</fdir1>
+    <minDepth>0.001</minDepth>
+    <maxVel>1.0</maxVel>
+    <selfCollide>false</selfCollide>
+  </gazebo>
 
   <!-- Joints -->
   <joint name="base_footprint_joint" type="fixed">
@@ -173,7 +221,7 @@
 
   <joint name="laser_joint" type="fixed">
     <parent link="sensor_platform"/>
-    <child link="laser"/>
+    <child link="rplidar_link"/>
     <origin xyz="0 0 ${0.038/2 + 0.009}" rpy="0 0 0"/>
   </joint>
 
@@ -187,35 +235,47 @@
   <joint name="front_left_wheel_joint" type="continuous">
     <parent link="base_link"/>
     <child link="front_left_wheel"/>
-    <origin xyz="${wheel_base/2} ${wheel_separation/2} 0" rpy="0 0 0"/>
+    <origin xyz="${wheel_base/2} ${wheel_separation/2} -${wheel_radius}" rpy="0 0 0"/>
     <axis xyz="0 1 0"/>
+    <limit effort="100" velocity="100"/>
+    <dynamics damping="0.1" friction="0.5"/>
   </joint>
 
   <joint name="front_right_wheel_joint" type="continuous">
     <parent link="base_link"/>
     <child link="front_right_wheel"/>
-    <origin xyz="${wheel_base/2} ${-wheel_separation/2} 0" rpy="0 0 0"/>
+    <origin xyz="${wheel_base/2} ${-wheel_separation/2} -${wheel_radius}" rpy="0 0 0"/>
     <axis xyz="0 1 0"/>
+    <limit effort="100" velocity="100"/>
+    <dynamics damping="0.1" friction="0.5"/>
   </joint>
 
   <joint name="rear_left_wheel_joint" type="continuous">
     <parent link="base_link"/>
     <child link="rear_left_wheel"/>
-    <origin xyz="${-wheel_base/2} ${wheel_separation/2} 0" rpy="0 0 0"/>
+    <origin xyz="-${wheel_base/2} ${wheel_separation/2} -${wheel_radius}" rpy="0 0 0"/>
     <axis xyz="0 1 0"/>
+    <limit effort="100" velocity="100"/>
+    <dynamics damping="0.1" friction="0.5"/>
   </joint>
 
   <joint name="rear_right_wheel_joint" type="continuous">
     <parent link="base_link"/>
     <child link="rear_right_wheel"/>
-    <origin xyz="${-wheel_base/2} ${-wheel_separation/2} 0" rpy="0 0 0"/>
+    <origin xyz="-${wheel_base/2} ${-wheel_separation/2} -${wheel_radius}" rpy="0 0 0"/>
     <axis xyz="0 1 0"/>
+    <limit effort="100" velocity="100"/>
+    <dynamics damping="0.1" friction="0.5"/>
   </joint>
 
   <!-- ROS2 Control Hardware Interface -->
   <ros2_control name="dojo_robot_system" type="system">
     <hardware>
       <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+      <param name="update_rate">100</param>
+      <param name="robot_param">robot_description</param>
+      <param name="robot_param_type">robot_description</param>
+      <param name="use_sim_time">true</param>
     </hardware>
     
     <!-- Front left wheel -->
@@ -226,6 +286,8 @@
       </command_interface>
       <state_interface name="position"/>
       <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+      <param name="initial_position">0.0</param>
     </joint>
     
     <!-- Front right wheel -->
@@ -236,6 +298,8 @@
       </command_interface>
       <state_interface name="position"/>
       <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+      <param name="initial_position">0.0</param>
     </joint>
     
     <!-- Rear left wheel -->
@@ -259,9 +323,98 @@
     </joint>
   </ros2_control>
 
-  <!-- Include Gazebo-specific elements -->
-  <xacro:if value="$(arg use_gazebo)">
-    <xacro:include filename="$(find robot_description)/urdf/dojo_robot.gazebo"/>
-  </xacro:if>
+  <!-- Gazebo properties -->
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>/</robotNamespace>
+      <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+    </plugin>
+  </gazebo>
+
+  <!-- Base link Gazebo properties -->
+  <gazebo reference="base_link">
+    <material>Gazebo/Green</material>
+  </gazebo>
+
+  <gazebo reference="sensor_platform">
+    <material>Gazebo/Green</material>
+  </gazebo>
+
+  <gazebo reference="laser">
+    <material>Gazebo/White</material>
+  </gazebo>
+
+  <gazebo reference="camera_link">
+    <material>Gazebo/White</material>
+  </gazebo>
+
+  <gazebo reference="front_left_wheel">
+    <material>Gazebo/Grey</material>
+    <mu1>0.8</mu1>
+    <mu2>0.8</mu2>
+    <kp>1000000.0</kp>
+    <kd>100.0</kd>
+  </gazebo>
+
+  <gazebo reference="front_right_wheel">
+    <material>Gazebo/Grey</material>
+    <mu1>0.8</mu1>
+    <mu2>0.8</mu2>
+    <kp>1000000.0</kp>
+    <kd>100.0</kd>
+  </gazebo>
+
+  <gazebo reference="rear_left_wheel">
+    <material>Gazebo/Grey</material>
+    <mu1>0.8</mu1>
+    <mu2>0.8</mu2>
+    <kp>1000000.0</kp>
+    <kd>100.0</kd>
+  </gazebo>
+
+  <gazebo reference="rear_right_wheel">
+    <material>Gazebo/Grey</material>
+    <mu1>0.8</mu1>
+    <mu2>0.8</mu2>
+    <kp>1000000.0</kp>
+    <kd>100.0</kd>
+  </gazebo>
+
+  <!-- RPLIDAR Gazebo plugin -->
+  <gazebo reference="rplidar_link">
+    <sensor type="ray" name="rplidar">
+      <pose>0 0 0 0 0 0</pose>
+      <visualize>true</visualize>
+      <update_rate>10</update_rate>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>360</samples>
+            <resolution>1.0</resolution>
+            <min_angle>0.0</min_angle>
+            <max_angle>6.28319</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>0.15</min>
+          <max>12.0</max>
+          <resolution>0.01</resolution>
+        </range>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.01</stddev>
+        </noise>
+      </ray>
+      <plugin name="gazebo_ros_rplidar_controller" filename="libgazebo_ros_ray_sensor.so">
+        <ros>
+          <namespace>/</namespace>
+          <remapping>~/out:=scan</remapping>
+        </ros>
+        <output_type>sensor_msgs/msg/LaserScan</output_type>
+        <frame_name>rplidar_link</frame_name>
+      </plugin>
+    </sensor>
+  </gazebo>
 
 </robot>

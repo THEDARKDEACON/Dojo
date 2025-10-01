@@ -58,7 +58,7 @@
   </gazebo>
 
   <!-- LiDAR Plugin -->
-  <gazebo reference="laser">
+  <gazebo reference="rplidar_link">
     <sensor type="ray" name="rplidar">
       <pose>0 0 0 0 0 0</pose>
       <visualize>true</visualize>
@@ -87,8 +87,8 @@
         <ros>
           <remapping>~/out:=scan</remapping>
         </ros>
-        <output_type>sensor_msgs/LaserScan</output_type>
-        <frame_name>laser</frame_name>
+        <output_type>sensor_msgs/msg/LaserScan</output_type>
+        <frame_name>rplidar_link</frame_name>
       </plugin>
     </sensor>
   </gazebo>

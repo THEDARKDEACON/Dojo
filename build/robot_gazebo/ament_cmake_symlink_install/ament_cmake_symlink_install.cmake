@@ -310,17 +310,20 @@ message(STATUS "Execute custom install script")
 
 # begin of custom install code
 
-# install(DIRECTORY "launch" "DESTINATION" "share/robot_gazebo" "PATTERN" "*.py")
-ament_cmake_symlink_install_directory("/root/Dojo/src/robot_gazebo" DIRECTORY "launch" "DESTINATION" "share/robot_gazebo" "PATTERN" "*.py")
+# install(DIRECTORY "launch/" "DESTINATION" "share/robot_gazebo/launch" "PATTERN" "*.launch.py" "PATTERN" "*.launch")
+ament_cmake_symlink_install_directory("/root/Dojo/src/robot_gazebo" DIRECTORY "launch/" "DESTINATION" "share/robot_gazebo/launch" "PATTERN" "*.launch.py" "PATTERN" "*.launch")
 
-# install(DIRECTORY "config" "DESTINATION" "share/robot_gazebo" "PATTERN" "*.yaml")
-ament_cmake_symlink_install_directory("/root/Dojo/src/robot_gazebo" DIRECTORY "config" "DESTINATION" "share/robot_gazebo" "PATTERN" "*.yaml")
+# install(DIRECTORY "config/" "DESTINATION" "share/robot_gazebo/config" "PATTERN" "*.yaml" "PATTERN" "*.yml" "PATTERN" "*.rviz")
+ament_cmake_symlink_install_directory("/root/Dojo/src/robot_gazebo" DIRECTORY "config/" "DESTINATION" "share/robot_gazebo/config" "PATTERN" "*.yaml" "PATTERN" "*.yml" "PATTERN" "*.rviz")
 
-# install(DIRECTORY "rviz" "DESTINATION" "share/robot_gazebo" "PATTERN" "*.rviz")
-ament_cmake_symlink_install_directory("/root/Dojo/src/robot_gazebo" DIRECTORY "rviz" "DESTINATION" "share/robot_gazebo" "PATTERN" "*.rviz")
+# install(DIRECTORY "worlds/" "DESTINATION" "share/robot_gazebo/worlds" "PATTERN" "*.world" "PATTERN" "*.sdf")
+ament_cmake_symlink_install_directory("/root/Dojo/src/robot_gazebo" DIRECTORY "worlds/" "DESTINATION" "share/robot_gazebo/worlds" "PATTERN" "*.world" "PATTERN" "*.sdf")
 
-# install(DIRECTORY "worlds" "DESTINATION" "share/robot_gazebo" "PATTERN" "*.world")
-ament_cmake_symlink_install_directory("/root/Dojo/src/robot_gazebo" DIRECTORY "worlds" "DESTINATION" "share/robot_gazebo" "PATTERN" "*.world")
+# install(DIRECTORY "scripts/" "DESTINATION" "lib/robot_gazebo")
+ament_cmake_symlink_install_directory("/root/Dojo/src/robot_gazebo" DIRECTORY "scripts/" "DESTINATION" "lib/robot_gazebo")
+
+# install(FILES "package.xml" "setup.py" "setup.cfg" "DESTINATION" "share/robot_gazebo")
+ament_cmake_symlink_install_files("/root/Dojo/src/robot_gazebo" FILES "package.xml" "setup.py" "setup.cfg" "DESTINATION" "share/robot_gazebo")
 
 # install(FILES "/root/Dojo/build/robot_gazebo/ament_cmake_index/share/ament_index/resource_index/package_run_dependencies/robot_gazebo" "DESTINATION" "share/ament_index/resource_index/package_run_dependencies")
 ament_cmake_symlink_install_files("/root/Dojo/src/robot_gazebo" FILES "/root/Dojo/build/robot_gazebo/ament_cmake_index/share/ament_index/resource_index/package_run_dependencies/robot_gazebo" "DESTINATION" "share/ament_index/resource_index/package_run_dependencies")
@@ -357,6 +360,15 @@ ament_cmake_symlink_install_files("/root/Dojo/src/robot_gazebo" FILES "/root/Doj
 
 # install(FILES "/root/Dojo/build/robot_gazebo/ament_cmake_index/share/ament_index/resource_index/packages/robot_gazebo" "DESTINATION" "share/ament_index/resource_index/packages")
 ament_cmake_symlink_install_files("/root/Dojo/src/robot_gazebo" FILES "/root/Dojo/build/robot_gazebo/ament_cmake_index/share/ament_index/resource_index/packages/robot_gazebo" "DESTINATION" "share/ament_index/resource_index/packages")
+
+# install(FILES "robot_gazebo-extras.cmake" "DESTINATION" "share/robot_gazebo/cmake")
+ament_cmake_symlink_install_files("/root/Dojo/src/robot_gazebo" FILES "robot_gazebo-extras.cmake" "DESTINATION" "share/robot_gazebo/cmake")
+
+# install(FILES "/root/Dojo/build/robot_gazebo/ament_cmake_export_include_directories/ament_cmake_export_include_directories-extras.cmake" "DESTINATION" "share/robot_gazebo/cmake")
+ament_cmake_symlink_install_files("/root/Dojo/src/robot_gazebo" FILES "/root/Dojo/build/robot_gazebo/ament_cmake_export_include_directories/ament_cmake_export_include_directories-extras.cmake" "DESTINATION" "share/robot_gazebo/cmake")
+
+# install(FILES "/root/Dojo/build/robot_gazebo/ament_cmake_export_dependencies/ament_cmake_export_dependencies-extras.cmake" "DESTINATION" "share/robot_gazebo/cmake")
+ament_cmake_symlink_install_files("/root/Dojo/src/robot_gazebo" FILES "/root/Dojo/build/robot_gazebo/ament_cmake_export_dependencies/ament_cmake_export_dependencies-extras.cmake" "DESTINATION" "share/robot_gazebo/cmake")
 
 # install(FILES "/root/Dojo/build/robot_gazebo/ament_cmake_core/robot_gazeboConfig.cmake" "/root/Dojo/build/robot_gazebo/ament_cmake_core/robot_gazeboConfig-version.cmake" "DESTINATION" "share/robot_gazebo/cmake")
 ament_cmake_symlink_install_files("/root/Dojo/src/robot_gazebo" FILES "/root/Dojo/build/robot_gazebo/ament_cmake_core/robot_gazeboConfig.cmake" "/root/Dojo/build/robot_gazebo/ament_cmake_core/robot_gazeboConfig-version.cmake" "DESTINATION" "share/robot_gazebo/cmake")

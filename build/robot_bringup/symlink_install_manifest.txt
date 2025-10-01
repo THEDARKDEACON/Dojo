@@ -1,5 +1,6 @@
 /root/Dojo/install/robot_bringup/share/robot_bringup/launch/bringup.launch.py
-/root/Dojo/install/robot_bringup/share/robot_bringup/launch/modified_bringup.launch.py
+/root/Dojo/install/robot_bringup/share/robot_bringup/launch/bringup.launch.py.backup
+/root/Dojo/install/robot_bringup/share/robot_bringup/launch/rviz.launch.py
 /root/Dojo/install/robot_bringup/share/ament_index/resource_index/package_run_dependencies/robot_bringup
 /root/Dojo/install/robot_bringup/share/ament_index/resource_index/parent_prefix_path/robot_bringup
 /root/Dojo/install/robot_bringup/share/robot_bringup/environment/ament_prefix_path.sh

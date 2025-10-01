@@ -1,162 +1,143 @@
 #!/usr/bin/env python3
 """
-Complete Dojo Robot Simulation Launch
-Includes Gazebo + Control System + Visualization
+Launch file for the robot simulation in Gazebo.
 """
-
+import os
+from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, GroupAction
-from launch.conditions import IfCondition
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, ExecuteProcess, RegisterEventHandler
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
+from launch.substitutions import LaunchConfiguration, PathJoinSubstitution, Command
 from launch_ros.actions import Node
-from launch_ros.substitutions import FindPackageShare
-from launch.actions import GroupAction
-from launch_ros.parameters_type import SomeParameters
+from launch.event_handlers import OnProcessExit
 
 def generate_launch_description():
-    # Launch arguments
-    world_name = LaunchConfiguration('world', default='empty.world')
+    # Get the package directories
+    pkg_robot_gazebo = get_package_share_directory('robot_gazebo')
+    pkg_robot_description = get_package_share_directory('robot_description')
+    
+    # Launch configuration variables
     use_sim_time = LaunchConfiguration('use_sim_time', default='true')
-    gui = LaunchConfiguration('gui', default='true')
-    rviz = LaunchConfiguration('rviz', default='true')
-    use_control = LaunchConfiguration('use_control', default='true')
-    use_teleop = LaunchConfiguration('use_teleop', default='true')
-    use_perception = LaunchConfiguration('use_perception', default='true')
+    world = LaunchConfiguration('world', default='empty.world')
     
-    # Gazebo simulation
-    gazebo_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([
-            PathJoinSubstitution([
-                FindPackageShare('robot_gazebo'),
-                'launch',
-                'gazebo.launch.py'
-            ])
-        ]),
-        launch_arguments={
-            'world': world_name,
-            'gui': gui,
-            'use_sim_time': use_sim_time,
-            'rviz': 'false'  # We'll launch RViz separately
-        }.items()
+    # Declare launch arguments
+    declare_use_sim_time = DeclareLaunchArgument(
+        'use_sim_time',
+        default_value='true',
+        description='Use simulation (Gazebo) clock if true'
     )
     
-    # Control system (simulation mode)
-    control_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([
-            PathJoinSubstitution([
-                FindPackageShare('robot_control'),
-                'launch',
-                'control.launch.py'
-            ])
-        ]),
-        launch_arguments={
-            'use_sim_time': use_sim_time,
-            'use_legacy_nodes': 'false',  # Use new control manager
-            'use_control_manager': 'true'
-        }.items(),
-        condition=IfCondition(use_control)
+    declare_world = DeclareLaunchArgument(
+        'world',
+        default_value='empty',
+        description='Gazebo world file name (without .world extension)'
     )
     
-    # Teleop keyboard control
-    teleop_node = Node(
-        package='teleop_twist_keyboard',
-        executable='teleop_twist_keyboard',
-        name='teleop_keyboard',
-        output='screen',
-        parameters=[{'use_sim_time': use_sim_time}],
-        remappings=[
-            ('cmd_vel', 'cmd_vel_manual')  # Connect to control manager
-        ],
-        condition=IfCondition(use_teleop),
-        prefix='xterm -e'  # Run in separate terminal
+    # Start Gazebo with the specified world
+    start_gazebo = ExecuteProcess(
+        cmd=['gazebo', '--verbose', '-s', 'libgazebo_ros_init.so',
+             '-s', 'libgazebo_ros_factory.so',
+             os.path.join(pkg_robot_gazebo, 'worlds', world + '.world')],
+        output='screen'
     )
     
-    # RViz with simulation config
-    rviz_config_file = PathJoinSubstitution([
-        FindPackageShare('robot_gazebo'),
-        'rviz',
-        'simulation.rviz'
+    # Get the robot description
+    robot_description_content = Command([
+        'xacro ', 
+        PathJoinSubstitution([pkg_robot_description, 'urdf', 'robot.urdf.xacro']),
+        ' use_ros2_control:=true',
+        ' use_sim:=true',
+        ' sim_mode:=gazebo'
     ])
     
-    rviz_node = Node(
+    # Robot state publisher
+    robot_state_publisher = Node(
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        name='robot_state_publisher',
+        output='screen',
+        parameters=[{
+            'robot_description': robot_description_content,
+            'use_sim_time': use_sim_time,
+            'publish_frequency': 50.0
+        }]
+    )
+    
+    # Spawn the robot
+    spawn_entity = Node(
+        package='gazebo_ros',
+        executable='spawn_entity.py',
+        arguments=['-topic', 'robot_description',
+                  '-entity', 'robot',
+                  '-x', '0.0',
+                  '-y', '0.0',
+                  '-z', '0.1',
+                  '-Y', '0.0'],
+        output='screen'
+    )
+    
+    # Load controllers
+    load_joint_state_controller = ExecuteProcess(
+        cmd=['ros2', 'control', 'load_controller', '--set-state', 'active',
+             'joint_state_broadcaster'],
+        output='screen'
+    )
+    
+    load_diff_drive_controller = ExecuteProcess(
+        cmd=['ros2', 'control', 'load_controller', '--set-state', 'active',
+             'diff_drive_controller'],
+        output='screen'
+    )
+    
+    # RViz
+    rviz_config = os.path.join(pkg_robot_gazebo, 'rviz', 'simulation.rviz')
+    rviz = Node(
         package='rviz2',
         executable='rviz2',
         name='rviz2',
-        arguments=['-d', rviz_config_file],
+        arguments=['-d', rviz_config],
         parameters=[{'use_sim_time': use_sim_time}],
-        output='screen',
-        condition=IfCondition(rviz)
+        output='screen'
     )
     
-    # Perception stack (camera + object detection)
-    perception_group = GroupAction([
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource([
-                PathJoinSubstitution([
-                    FindPackageShare('robot_perception'),
-                    'launch',
-                    'perception.launch.py'
-                ])
-            ]),
-            launch_arguments={
-                'use_sim_time': use_sim_time,
-                'enable_vision': 'true',
-                'enable_detector': 'true',
-                'camera_topic': 'image_raw',
-                'camera_info_topic': 'camera_info'
-            }.items()
-        )
-    ], condition=IfCondition(use_perception))
-    
-    # Robot diagnostics
-    diagnostics_node = Node(
-        package='robot_state_publisher',
-        executable='robot_state_publisher',
-        name='diagnostics_aggregator',
+    # Controller manager
+    controller_manager = Node(
+        package='controller_manager',
+        executable='ros2_control_node',
         parameters=[
-            {'use_sim_time': use_sim_time},
-            PathJoinSubstitution([
-                FindPackageShare('robot_gazebo'),
-                'config',
-                'diagnostics.yaml'
-            ])
+            os.path.join(pkg_robot_gazebo, 'config', 'gazebo_controllers.yaml'),
+            {'use_sim_time': use_sim_time}
         ],
-        condition=IfCondition(LaunchConfiguration('diagnostics', default='false'))
+        output='screen'
     )
     
-    # Group simulation components
-    simulation_group = GroupAction([
-        gazebo_launch,
-        control_launch,
-        teleop_node,
-        rviz_node,
-        diagnostics_node,
-        perception_group
-    ])
+    # Delay loading controllers after Gazebo is up
+    delay_controllers = RegisterEventHandler(
+        event_handler=OnProcessExit(
+            target_action=spawn_entity,
+            on_exit=[load_joint_state_controller, load_diff_drive_controller]
+        )
+    )
     
     return LaunchDescription([
-        # Launch arguments
-        DeclareLaunchArgument('world', default_value='empty.world',
-                            description='Gazebo world file'),
-        DeclareLaunchArgument('gui', default_value='true',
-                            description='Start Gazebo GUI'),
-        DeclareLaunchArgument('rviz', default_value='true',
-                            description='Start RViz'),
-        DeclareLaunchArgument('use_sim_time', default_value='true',
-                            description='Use simulation clock'),
-        DeclareLaunchArgument('use_control', default_value='true',
-                            description='Start control system'),
-        DeclareLaunchArgument('use_teleop', default_value='true',
-                            description='Start keyboard teleop'),
-        DeclareLaunchArgument('diagnostics', default_value='false',
-                            description='Start diagnostics'),
-        DeclareLaunchArgument(
-    'use_perception',
-    default_value='true',
-    description='Enable perception stack (camera + object detection)'
-),
+        declare_use_sim_time,
+        declare_world,
         
-        # Launch simulation
-        simulation_group
+        # Start Gazebo
+        start_gazebo,
+        
+        # Robot state publisher
+        robot_state_publisher,
+        
+        # Spawn robot
+        spawn_entity,
+        
+        # Controller manager
+        controller_manager,
+        
+        # RViz
+        rviz,
+        
+        # Delay loading controllers
+        delay_controllers,
     ])

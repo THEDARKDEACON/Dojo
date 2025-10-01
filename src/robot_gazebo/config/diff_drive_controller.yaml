@@ -9,10 +9,10 @@ controller_manager:
     
     diff_drive_controller:
       type: diff_drive_controller/DiffDriveController
-      left_wheel_names: ["left_wheel_joint"]
-      right_wheel_names: ["right_wheel_joint"]
-      wheel_separation: 0.3  # meters
-      wheel_radius: 0.05  # meters
+      left_wheel_names: ["rear_left_wheel_joint", "front_left_wheel_joint"]
+      right_wheel_names: ["rear_right_wheel_joint", "front_right_wheel_joint"]
+      wheel_separation: 0.26  # meters (distance between left and right wheels)
+      wheel_radius: 0.0325  # meters
       wheel_separation_multiplier: 1.0
       left_wheel_radius_multiplier: 1.0
       right_wheel_radius_multiplier: 1.0
@@ -29,12 +29,12 @@ controller_manager:
       cmd_vel_topic: cmd_vel  # Topic that the controller will subscribe to for velocity commands
       
       # Velocity and acceleration limits
-      linear.x.max_velocity: 0.5  # m/s
-      linear.x.min_velocity: -0.5  # m/s
-      linear.x.max_acceleration: 0.5  # m/s^2
-      angular.z.max_velocity: 1.0  # rad/s
-      angular.z.min_velocity: -1.0  # rad/s
-      angular.z.max_acceleration: 1.0  # rad/s^2
+      linear.x.max_velocity: 1.0  # m/s
+      linear.x.min_velocity: -1.0  # m/s
+      linear.x.max_acceleration: 1.0  # m/s^2
+      angular.z.max_velocity: 2.0  # rad/s
+      angular.z.min_velocity: -2.0  # rad/s
+      angular.z.max_acceleration: 2.0  # rad/s^2
 
       # PID controller parameters
       left_wheel_controller:

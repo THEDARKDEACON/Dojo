@@ -1,1 +1,0 @@
-/root/Dojo/src/robot_gazebo/launch/docker_simulation.launch.py

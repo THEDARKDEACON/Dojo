@@ -1,1 +1,0 @@
-/root/Dojo/articubot_one/launch/joystick.launch.py

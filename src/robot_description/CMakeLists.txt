@@ -4,72 +4,78 @@ project(robot_description)
 # Default to C++17
 if(NOT CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 17)
+  set(CMAKE_CXX_STANDARD_REQUIRED ON)
+  set(CMAKE_CXX_EXTENSIONS OFF)
 endif()
 
 # Find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(ament_cmake_python REQUIRED)
 
+# Find ROS 2 packages
+find_package(rclcpp REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(tf2_ros REQUIRED)
+find_package(urdf REQUIRED)
+find_package(xacro REQUIRED)
+find_package(gazebo_ros2_control REQUIRED)
+find_package(gazebo_ros REQUIRED)
+find_package(controller_manager REQUIRED)
+find_package(hardware_interface REQUIRED)
+find_package(pluginlib REQUIRED)
+
 # Install launch files
 install(
   DIRECTORY launch/
   DESTINATION share/${PROJECT_NAME}/launch
+  PATTERN "*.launch.py"
+  PATTERN "*.launch"
 )
 
-# Install URDF, meshes, and RViz config
-set(DIRS_TO_INSTALL urdf)
-
-# Only include directories that exist
-if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/meshes" AND IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/meshes")
-    list(APPEND DIRS_TO_INSTALL meshes)
-endif()
-
-if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/rviz" AND IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/rviz")
-    list(APPEND DIRS_TO_INSTALL rviz)
-endif()
-
-foreach(dir ${DIRS_TO_INSTALL})
-    install(
-        DIRECTORY ${dir}/
-        DESTINATION share/${PROJECT_NAME}/${dir}
-    )
-endforeach()
-
-# Install config files
+# Install configuration files
 install(
   DIRECTORY config/
-  DESTINATION share/${PROJECT_NAME}/config/
+  DESTINATION share/${PROJECT_NAME}/config
   PATTERN "*.yaml"
+  PATTERN "*.yml"
   PATTERN "*.rviz"
 )
 
-# Install package.xml
+# Install model and resource files
 install(
-  DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/
+  DIRECTORY 
+    urdf/
+    rviz/
+    worlds/
+    meshes/
+    models/
   DESTINATION share/${PROJECT_NAME}
-  FILES_MATCHING
-  PATTERN "package.xml"
-  PATTERN "setup.py"
-  PATTERN "setup.cfg"
+  PATTERN "*"
 )
 
-# Install Python modules
-install(
-  DIRECTORY src/robot_description
-  DESTINATION lib/${PROJECT_NAME}
-  USE_SOURCE_PERMISSIONS
+# Install Python package
+install(DIRECTORY
+  src/robot_description
+  DESTINATION lib/${PYTHON_INSTALL_DIR}
 )
 
-# Add Python modules to the PYTHONPATH
-ament_python_install_package(robot_description
-  PACKAGE_DIR src/robot_description
-)
-
-# Install executables
-install(
-  PROGRAMS
+# Install Python scripts
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/scripts")
+  install(PROGRAMS
     scripts/display_robot.py
-  DESTINATION lib/${PROJECT_NAME}
+    DESTINATION lib/${PROJECT_NAME}
+  )
+endif()
+
+# Install package.xml and setup files
+install(FILES
+  package.xml
+  setup.py
+  setup.cfg
+  DESTINATION share/${PROJECT_NAME}
 )
 
+# Register the package with ament
 ament_package()

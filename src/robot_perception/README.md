@@ -1,52 +1,79 @@
 # Robot Perception Package
 
-The `robot_perception` package provides computer vision and object detection capabilities for the Dojo Robot platform.
+Enhanced `robot_perception` package providing advanced computer vision, LiDAR processing, and sensor fusion capabilities for the Dojo Robot platform.
 
 ## 🎯 **Features**
 
-- **Camera Processing**: Real-time image processing and analysis
-- **Object Detection**: OpenCV-based object detection (extensible to ML models)
-- **Color-based Detection**: Configurable color range detection
-- **Face Detection**: Haar cascade-based face detection
-- **ROS2 Integration**: Full integration with robot hardware and control systems
+- **Multi-modal Perception**: Camera, LiDAR, and sensor fusion
+- **Object Detection**: YOLOv8-based object detection with configurable models
+- **3D Object Tracking**: Real-time 3D object tracking with Kalman filtering
+- **Point Cloud Processing**: LiDAR point cloud clustering and analysis
+- **Sensor Fusion**: Camera-LiDAR data fusion for robust perception
+- **Visualization**: RViz integration for debugging and monitoring
+- **Modular Architecture**: Easy to extend and customize
 
 ## 📦 **Package Structure**
 
 ```
 robot_perception/
 ├── config/
-│   └── robot_perception_params.yaml    # Configuration parameters
+│   └── perception_params.yaml         # Main configuration file
 ├── launch/
-│   ├── perception.launch.py            # Main perception launch file
-│   └── robot_perception.launch.py      # Alternative launch file
+│   ├── perception_system.launch.py    # Launch entire perception system
+│   ├── object_detector.launch.py      # Launch object detection only
+│   └── perception_integration.launch.py  # Launch sensor fusion
+├── rviz/
+│   ├── object_detection.rviz         # RViz config for object detection
+│   └── perception_integration.rviz   # RViz config for sensor fusion
 ├── robot_perception/
-│   ├── __init__.py                     # Package initialization
-│   ├── camera_processor.py             # Main camera processing node
-│   ├── object_detector.py              # Object detection node
-│   └── yolov8n.pt                     # ML model (placeholder)
-├── package.xml                         # Package dependencies
-├── setup.py                           # Python package setup
-└── README.md                          # This file
+│   ├── __init__.py                   # Package initialization
+│   ├── nodes/                        # ROS2 nodes
+│   │   ├── camera_processor.py       # Camera processing node
+│   │   ├── object_detector.py        # Object detection node
+│   │   ├── lidar_processor.py        # LiDAR processing node
+│   │   └── perception_integrator.py  # Sensor fusion node
+│   └── utils/                        # Utility modules
+│       ├── __init__.py
+│       ├── common.py                 # Common utilities
+│       └── config.py                 # Configuration management
+├── package.xml                       # Package dependencies
+├── setup.py                          # Python package setup
+└── README.md                         # This file
 ```
 
 ## 🚀 **Quick Start**
 
-### **Launch Perception with Hardware**
-```bash
-# Launch with real camera
-ros2 launch robot_bringup bringup.launch.py use_perception:=true use_camera:=true
+### **Prerequisites**
+- ROS 2 Humble or newer
+- Python 3.8+
+- Required Python packages (see `package.xml` and `setup.py`)
 
-# Launch perception only
-ros2 launch robot_perception perception.launch.py
+### **Build the Package**
+```bash
+# From your workspace root
+colcon build --packages-select robot_perception
+source install/setup.bash
 ```
 
-### **Launch Perception in Simulation**
+### **Launch the Perception System**
 ```bash
-# Full simulation with perception
-ros2 launch robot_gazebo simulation.launch.py use_perception:=true
+# Launch complete perception system with RViz
+ros2 launch robot_perception perception_system.launch.py
 
-# Gazebo with perception
-ros2 launch robot_bringup bringup.launch.py use_gazebo:=true use_perception:=true
+# Launch with custom config
+ros2 launch robot_perception perception_system.launch.py \
+  config_file:=/path/to/custom_config.yaml
+
+# Launch individual components
+ros2 run robot_perception object_detector
+ros2 run robot_perception perception_integrator
+```
+
+### **Launch with Simulation**
+```bash
+# Launch Gazebo simulation with perception
+ros2 launch robot_gazebo simulation.launch.py
+ros2 launch robot_perception perception_system.launch.py
 ```
 
 ## 🔧 **Configuration**

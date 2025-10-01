@@ -67,6 +67,8 @@ fix_cmake_files() {
     if [ -f "src/robot_control/CMakeLists.txt" ]; then
         echo "  🔧 Fixing robot_control CMakeLists.txt..."
         sed -i 's/ament_enable_testing()/# ament_enable_testing() # Commented out - not available in this ROS 2 installation/g' src/robot_control/CMakeLists.txt
+        # Also fix any other testing-related issues
+        sed -i 's/if(BUILD_TESTING)/if(BUILD_TESTING AND FALSE)/g' src/robot_control/CMakeLists.txt
     fi
     
     # Fix robot_description CMakeLists.txt - make gazebo dependencies optional
@@ -74,11 +76,24 @@ fix_cmake_files() {
         echo "  🔧 Fixing robot_description CMakeLists.txt..."
         sed -i 's/find_package(gazebo_ros2_control REQUIRED)/find_package(gazebo_ros2_control QUIET)/g' src/robot_description/CMakeLists.txt
         sed -i 's/find_package(gazebo_ros REQUIRED)/find_package(gazebo_ros QUIET)/g' src/robot_description/CMakeLists.txt
+        # Also make other gazebo packages optional
+        sed -i 's/find_package(gazebo_dev REQUIRED)/find_package(gazebo_dev QUIET)/g' src/robot_description/CMakeLists.txt
+        sed -i 's/find_package(gazebo_msgs REQUIRED)/find_package(gazebo_msgs QUIET)/g' src/robot_description/CMakeLists.txt
+    fi
+    
+    # Fix robot_bringup dependencies - make them optional in CMakeLists if it exists
+    if [ -f "src/robot_bringup/CMakeLists.txt" ]; then
+        echo "  🔧 Fixing robot_bringup CMakeLists.txt..."
+        # Make sure it doesn't fail if some packages aren't found
+        sed -i 's/find_package(\([^)]*\) REQUIRED)/find_package(\1 QUIET)/g' src/robot_bringup/CMakeLists.txt
     fi
     
     # Clean any Docker-specific CMake cache files
     find . -name "CMakeCache.txt" -delete 2>/dev/null || true
     find . -name "CMakeFiles" -type d -exec rm -rf {} + 2>/dev/null || true
+    
+    # Clean environment variables that might cause issues
+    unset AMENT_PREFIX_PATH CMAKE_PREFIX_PATH COLCON_PREFIX_PATH 2>/dev/null || true
     
     echo "  ✅ CMake files fixed for Pi environment"
 }
@@ -124,11 +139,22 @@ build_package() {
         source "$WORKSPACE/install/setup.bash"
     fi
     
-    # Special handling for problematic packages
+    # Special handling for packages with known issues
     case "$pkg" in
         "robot_description")
-            echo "  ⚠️  Skipping robot_description (gazebo dependencies not available on ARM64)"
-            return 0
+            echo "  🔧 Building robot_description with gazebo dependencies made optional..."
+            if colcon build \
+                --packages-select "$pkg" \
+                --symlink-install \
+                --cmake-args \
+                    -DCMAKE_BUILD_TYPE=Release \
+                    -DBUILD_TESTING=OFF \
+                    -DCMAKE_SYSTEM_PROCESSOR=aarch64; then
+                echo "✅ Successfully built $pkg (with gazebo dependencies optional)"
+            else
+                echo "❌ Failed to build $pkg"
+                return 1
+            fi
             ;;
         "robot_control")
             echo "  🔧 Building robot_control with special CMake args..."
@@ -218,35 +244,29 @@ build_workspace() {
         fi
     done
     
-    # Define packages to exclude (Gazebo, simulation-related, and problematic packages)
+    # Define packages to exclude (only packages that truly don't exist or are simulation-only)
     local excluded_packages=(
-        "robot_gazebo"
-        "arduino_bridge"
-        "ros2arduino_bridge"
-        "robot_sensors"
-        "vision_system"
-        "camera_ws"
-        "nv21_converter_pkg"
-        "robot_launch"
-        "gazebo_ros2_control"
-        "gazebo_ros"
-        "gazebo_plugins"
-        "gazebo_ros_control"
-        "gazebo_dev"
-        "gazebo_msgs"
-        "gazebo_ros_pkgs"
-        "gazebo_simulator"
-        "rviz"
-        "rviz2"
-        "rviz_common"
-        "rviz_default_plugins"
-        "rviz_rendering"
-        "rviz_visual_tools"
+        "robot_gazebo"          # Simulation only
+        "gazebo_ros2_control"   # Not available on ARM64
+        "gazebo_ros"            # Not available on ARM64  
+        "gazebo_plugins"        # Not available on ARM64
+        "gazebo_ros_control"    # Not available on ARM64
+        "gazebo_dev"            # Not available on ARM64
+        "gazebo_msgs"           # Not available on ARM64
+        "gazebo_ros_pkgs"       # Not available on ARM64
+        "gazebo_simulator"      # Not available on ARM64
+        "rviz"                  # GUI - not needed on headless Pi
+        "rviz2"                 # GUI - not needed on headless Pi
+        "rviz_common"           # GUI - not needed on headless Pi
+        "rviz_default_plugins"  # GUI - not needed on headless Pi
+        "rviz_rendering"        # GUI - not needed on headless Pi
+        "rviz_visual_tools"     # GUI - not needed on headless Pi
     )
     
     # Define packages that need special handling due to CMake issues
     local problematic_packages=(
-        "robot_description"  # Has gazebo dependencies not available on ARM64
+        "robot_description"  # Has gazebo dependencies - we'll make them optional
+        "robot_control"      # Has ament_enable_testing issue - we'll fix it
     )
     
     # Filter out excluded packages
@@ -297,7 +317,7 @@ build_workspace() {
     echo "✅ Final package list (${#packages[@]} packages): ${packages[*]}"
     
     # Prioritize essential packages for ROSArduinoBridge
-    local priority_packages=("robot_interfaces" "robot_hardware" "robot_control" "robot_bringup")
+    local priority_packages=("robot_interfaces" "robot_hardware" "robot_control" "robot_description" "robot_bringup")
     local reordered_packages=()
     
     # Add priority packages first (if they exist)
@@ -380,10 +400,28 @@ build_workspace() {
     
     if [ "$success" = true ]; then
         echo "✨ Build completed successfully!"
-        echo "Source the workspace with:"
-        echo "  source $WORKSPACE/install/setup.bash"
+        echo ""
+        echo "📦 Built packages: ${built_packages[*]}"
+        echo ""
+        echo "🚀 Next steps:"
+        echo "  1. Source the workspace:"
+        echo "     source $WORKSPACE/install/setup.bash"
+        echo ""
+        echo "  2. For ROSArduinoBridge testing:"
+        echo "     - Upload Arduino sketch: $WORKSPACE/firmware/arduino/ROSArduinoBridge/ROSArduinoBridge.ino"
+        echo "     - Test hardware: ros2 launch robot_hardware hardware.launch.py protocol:=rosarduino_bridge"
+        echo ""
+        echo "  3. For full robot launch:"
+        echo "     ros2 launch robot_bringup bringup.launch.py arduino_protocol:=rosarduino_bridge"
+        echo ""
+        echo "  4. Test communication:"
+        echo "     ros2 topic pub /cmd_vel geometry_msgs/Twist \"linear: {x: 0.1}\""
+        echo "     ros2 topic echo /odom"
+        echo ""
     else
         echo "❌ Build failed for some packages"
+        echo "📦 Successfully built: ${built_packages[*]}"
+        echo "❌ Failed packages may need manual attention"
         exit 1
     fi
 }

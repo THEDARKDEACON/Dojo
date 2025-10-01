@@ -108,7 +108,7 @@ if(BUILD_TESTING)
   # ament_add_gtest(...)
   
   # Enable testing after adding all tests
-  ament_enable_testing()
+  # ament_enable_testing() # Commented out - not available in this ROS 2 installation
 endif()
 
 # Register the package with ament

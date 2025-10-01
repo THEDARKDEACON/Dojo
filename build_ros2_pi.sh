@@ -4,16 +4,18 @@
 set -e
 
 # Set workspace directory
-WORKSPACE="/home/robosync/Robot/Dojo"
+WORKSPACE="/home/robosync/Dojo"
 cd "$WORKSPACE"
 
 # Source ROS 2 environment
 source /opt/ros/humble/setup.bash
 
 # Function to fix common issues
-# In build_ros2_pi.sh, update the fix_issues function to include:
 fix_issues() {
     echo "🔧 Fixing common issues..."
+    
+    # Fix CMake files for Pi environment
+    fix_cmake_files
     
     # Ensure rosdep is properly initialized
     if [ ! -f "/etc/ros/rosdep/sources.list.d/20-default.list" ]; then
@@ -57,6 +59,30 @@ fix_issues() {
     fi
 }
 
+# Function to fix CMake files for Pi environment
+fix_cmake_files() {
+    echo "🔧 Fixing CMake files for Pi environment..."
+    
+    # Fix robot_control CMakeLists.txt - remove ament_enable_testing
+    if [ -f "src/robot_control/CMakeLists.txt" ]; then
+        echo "  🔧 Fixing robot_control CMakeLists.txt..."
+        sed -i 's/ament_enable_testing()/# ament_enable_testing() # Commented out - not available in this ROS 2 installation/g' src/robot_control/CMakeLists.txt
+    fi
+    
+    # Fix robot_description CMakeLists.txt - make gazebo dependencies optional
+    if [ -f "src/robot_description/CMakeLists.txt" ]; then
+        echo "  🔧 Fixing robot_description CMakeLists.txt..."
+        sed -i 's/find_package(gazebo_ros2_control REQUIRED)/find_package(gazebo_ros2_control QUIET)/g' src/robot_description/CMakeLists.txt
+        sed -i 's/find_package(gazebo_ros REQUIRED)/find_package(gazebo_ros QUIET)/g' src/robot_description/CMakeLists.txt
+    fi
+    
+    # Clean any Docker-specific CMake cache files
+    find . -name "CMakeCache.txt" -delete 2>/dev/null || true
+    find . -name "CMakeFiles" -type d -exec rm -rf {} + 2>/dev/null || true
+    
+    echo "  ✅ CMake files fixed for Pi environment"
+}
+
 # Function to verify Python environment
 verify_python_environment() {
     echo "🔍 Verifying Python environment..."
@@ -89,35 +115,67 @@ build_package() {
     local pkg=$1
     echo "📦 Building package: $pkg"
     
-    # All packages use standard colcon build now
+    # Clean environment variables that might cause conflicts
+    unset AMENT_PREFIX_PATH CMAKE_PREFIX_PATH COLCON_PREFIX_PATH 2>/dev/null || true
+    source /opt/ros/humble/setup.bash
     
-    # Detect ament_python packages (presence of setup.py) and build without CMake args
-    if [ -f "src/$pkg/setup.py" ]; then
-        # Python package: let ament_python/setuptools install console scripts to lib/$pkg
-        if colcon build \
-            --packages-select "$pkg" \
-            --symlink-install; then
-            echo "✅ Successfully built $pkg (ament_python)"
-        else
-            echo "❌ Failed to build $pkg (ament_python)"
-            return 1
-        fi
-    else
-        # CMake/ament_cmake packages with explicit install dirs
-        if colcon build \
-            --packages-select "$pkg" \
-            --symlink-install \
-            --cmake-args \
-                -DCMAKE_INSTALL_PREFIX=install \
-                -DCMAKE_INSTALL_LIBDIR=lib \
-                -DCMAKE_INSTALL_BINDIR=lib/$pkg \
-                -DCMAKE_INSTALL_INCLUDEDIR=include; then
-            echo "✅ Successfully built $pkg"
-        else
-            echo "❌ Failed to build $pkg"
-            return 1
-        fi
+    # Source workspace if it exists
+    if [ -f "$WORKSPACE/install/setup.bash" ]; then
+        source "$WORKSPACE/install/setup.bash"
     fi
+    
+    # Special handling for problematic packages
+    case "$pkg" in
+        "robot_description")
+            echo "  ⚠️  Skipping robot_description (gazebo dependencies not available on ARM64)"
+            return 0
+            ;;
+        "robot_control")
+            echo "  🔧 Building robot_control with special CMake args..."
+            if colcon build \
+                --packages-select "$pkg" \
+                --symlink-install \
+                --cmake-args \
+                    -DCMAKE_BUILD_TYPE=Release \
+                    -DBUILD_TESTING=OFF \
+                    -DCMAKE_SYSTEM_PROCESSOR=aarch64; then
+                echo "✅ Successfully built $pkg (with fixes)"
+            else
+                echo "❌ Failed to build $pkg"
+                return 1
+            fi
+            ;;
+        *)
+            # Detect ament_python packages (presence of setup.py) and build without CMake args
+            if [ -f "src/$pkg/setup.py" ]; then
+                # Python package
+                if colcon build \
+                    --packages-select "$pkg" \
+                    --symlink-install \
+                    --cmake-args -DBUILD_TESTING=OFF; then
+                    echo "✅ Successfully built $pkg (ament_python)"
+                else
+                    echo "❌ Failed to build $pkg (ament_python)"
+                    return 1
+                fi
+            else
+                # CMake/ament_cmake packages
+                if colcon build \
+                    --packages-select "$pkg" \
+                    --symlink-install \
+                    --cmake-args \
+                        -DCMAKE_BUILD_TYPE=Release \
+                        -DBUILD_TESTING=OFF \
+                        -DCMAKE_SYSTEM_PROCESSOR=aarch64; then
+                    echo "✅ Successfully built $pkg"
+                else
+                    echo "❌ Failed to build $pkg"
+                    return 1
+                fi
+            fi
+            ;;
+    esac
+    
     # Source the workspace to make the package available
     if [ -f "$WORKSPACE/install/setup.bash" ]; then
         source "$WORKSPACE/install/setup.bash"
@@ -160,7 +218,7 @@ build_workspace() {
         fi
     done
     
-    # Define packages to exclude (URDF, Gazebo, simulation-related, and legacy packages)
+    # Define packages to exclude (Gazebo, simulation-related, and problematic packages)
     local excluded_packages=(
         "robot_gazebo"
         "arduino_bridge"
@@ -186,6 +244,11 @@ build_workspace() {
         "rviz_visual_tools"
     )
     
+    # Define packages that need special handling due to CMake issues
+    local problematic_packages=(
+        "robot_description"  # Has gazebo dependencies not available on ARM64
+    )
+    
     # Filter out excluded packages
     local packages=()
     local excluded_count=0
@@ -200,6 +263,15 @@ build_workspace() {
                 break
             fi
         done
+        
+        # Check for problematic packages (we'll handle these specially)
+        for problematic in "${problematic_packages[@]}"; do
+            if [[ "$pkg" == "$problematic" ]]; then
+                echo "ℹ️  Including problematic package with special handling: $pkg"
+                break
+            fi
+        done
+        
         if [[ $exclude -eq 0 ]]; then
             packages+=("$pkg")
         fi
@@ -223,6 +295,27 @@ build_workspace() {
     
     # Don't add back excluded packages - they were excluded for a reason
     echo "✅ Final package list (${#packages[@]} packages): ${packages[*]}"
+    
+    # Prioritize essential packages for ROSArduinoBridge
+    local priority_packages=("robot_interfaces" "robot_hardware" "robot_control" "robot_bringup")
+    local reordered_packages=()
+    
+    # Add priority packages first (if they exist)
+    for priority_pkg in "${priority_packages[@]}"; do
+        if [[ " ${packages[@]} " =~ " ${priority_pkg} " ]]; then
+            reordered_packages+=("$priority_pkg")
+        fi
+    done
+    
+    # Add remaining packages
+    for pkg in "${packages[@]}"; do
+        if [[ ! " ${reordered_packages[@]} " =~ " ${pkg} " ]]; then
+            reordered_packages+=("$pkg")
+        fi
+    done
+    
+    packages=("${reordered_packages[@]}")
+    echo "📦 Build order (prioritizing ROSArduinoBridge essentials): ${packages[*]}"
     
     # Build packages one by one with dependency handling
     local success=true

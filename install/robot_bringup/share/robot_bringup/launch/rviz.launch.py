@@ -1,1 +1,1 @@
-/root/Dojo/src/robot_bringup/launch/rviz.launch.py
+/root/Dojo/Dojo/src/robot_bringup/launch/rviz.launch.py

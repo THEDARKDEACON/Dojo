@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /root/Dojo/src/robot_interfaces
+CMAKE_SOURCE_DIR = /root/Dojo/Dojo/src/robot_interfaces
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /root/Dojo/build/robot_interfaces
+CMAKE_BINARY_DIR = /root/Dojo/Dojo/build/robot_interfaces
 
 # Utility rule file for robot_interfaces.
 
@@ -66,17 +66,17 @@ include CMakeFiles/robot_interfaces.dir/compiler_depend.make
 # Include the progress variables for this target.
 include CMakeFiles/robot_interfaces.dir/progress.make
 
-CMakeFiles/robot_interfaces: /root/Dojo/src/robot_interfaces/msg/HardwareStatus.msg
-CMakeFiles/robot_interfaces: /root/Dojo/src/robot_interfaces/msg/SensorData.msg
-CMakeFiles/robot_interfaces: /root/Dojo/src/robot_interfaces/msg/MotorCommand.msg
-CMakeFiles/robot_interfaces: /root/Dojo/src/robot_interfaces/msg/RobotState.msg
-CMakeFiles/robot_interfaces: /root/Dojo/src/robot_interfaces/srv/Calibration.srv
+CMakeFiles/robot_interfaces: /root/Dojo/Dojo/src/robot_interfaces/msg/HardwareStatus.msg
+CMakeFiles/robot_interfaces: /root/Dojo/Dojo/src/robot_interfaces/msg/SensorData.msg
+CMakeFiles/robot_interfaces: /root/Dojo/Dojo/src/robot_interfaces/msg/MotorCommand.msg
+CMakeFiles/robot_interfaces: /root/Dojo/Dojo/src/robot_interfaces/msg/RobotState.msg
+CMakeFiles/robot_interfaces: /root/Dojo/Dojo/src/robot_interfaces/srv/Calibration.srv
 CMakeFiles/robot_interfaces: rosidl_cmake/srv/Calibration_Request.msg
 CMakeFiles/robot_interfaces: rosidl_cmake/srv/Calibration_Response.msg
-CMakeFiles/robot_interfaces: /root/Dojo/src/robot_interfaces/srv/SetMode.srv
+CMakeFiles/robot_interfaces: /root/Dojo/Dojo/src/robot_interfaces/srv/SetMode.srv
 CMakeFiles/robot_interfaces: rosidl_cmake/srv/SetMode_Request.msg
 CMakeFiles/robot_interfaces: rosidl_cmake/srv/SetMode_Response.msg
-CMakeFiles/robot_interfaces: /root/Dojo/src/robot_interfaces/action/Navigation.action
+CMakeFiles/robot_interfaces: /root/Dojo/Dojo/src/robot_interfaces/action/Navigation.action
 CMakeFiles/robot_interfaces: /opt/ros/humble/share/builtin_interfaces/msg/Duration.idl
 CMakeFiles/robot_interfaces: /opt/ros/humble/share/builtin_interfaces/msg/Time.idl
 CMakeFiles/robot_interfaces: /opt/ros/humble/share/std_msgs/msg/Bool.idl
@@ -187,6 +187,6 @@ CMakeFiles/robot_interfaces.dir/clean:
 .PHONY : CMakeFiles/robot_interfaces.dir/clean
 
 CMakeFiles/robot_interfaces.dir/depend:
-	cd /root/Dojo/build/robot_interfaces && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /root/Dojo/src/robot_interfaces /root/Dojo/src/robot_interfaces /root/Dojo/build/robot_interfaces /root/Dojo/build/robot_interfaces /root/Dojo/build/robot_interfaces/CMakeFiles/robot_interfaces.dir/DependInfo.cmake --color=$(COLOR)
+	cd /root/Dojo/Dojo/build/robot_interfaces && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /root/Dojo/Dojo/src/robot_interfaces /root/Dojo/Dojo/src/robot_interfaces /root/Dojo/Dojo/build/robot_interfaces /root/Dojo/Dojo/build/robot_interfaces /root/Dojo/Dojo/build/robot_interfaces/CMakeFiles/robot_interfaces.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/robot_interfaces.dir/depend
 

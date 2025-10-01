@@ -1,1 +1,1 @@
-/root/Dojo/src/robot_gazebo/setup.py
+/root/Dojo/Dojo/src/robot_gazebo/setup.py

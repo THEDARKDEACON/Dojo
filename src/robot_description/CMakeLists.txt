@@ -48,17 +48,14 @@ install(
   DIRECTORY 
     urdf/
     rviz/
-    worlds/
-    meshes/
-    models/
   DESTINATION share/${PROJECT_NAME}
   PATTERN "*"
 )
 
 # Install Python package
 install(DIRECTORY
-  src/robot_description
-  DESTINATION lib/${PYTHON_INSTALL_DIR}
+  robot_description/
+  DESTINATION lib/python3.10/site-packages
 )
 
 # Install Python scripts

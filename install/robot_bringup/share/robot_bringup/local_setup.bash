@@ -1,1 +1,1 @@
-/root/Dojo/build/robot_bringup/ament_cmake_environment_hooks/local_setup.bash
+/root/Dojo/Dojo/build/robot_bringup/ament_cmake_environment_hooks/local_setup.bash

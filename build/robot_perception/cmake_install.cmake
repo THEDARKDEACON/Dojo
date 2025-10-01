@@ -1,8 +1,8 @@
-# Install script for directory: /root/Dojo/src/robot_perception
+# Install script for directory: /root/Dojo/Dojo/src/robot_perception
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/root/Dojo/install/robot_perception")
+  set(CMAKE_INSTALL_PREFIX "/root/Dojo/Dojo/install/robot_perception")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -43,62 +43,62 @@ if(NOT DEFINED CMAKE_OBJDUMP)
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/robot_perception/environment" TYPE FILE FILES "/root/Dojo/build/robot_perception/ament_cmake_environment_hooks/pythonpath.sh")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/robot_perception/environment" TYPE FILE FILES "/root/Dojo/Dojo/build/robot_perception/ament_cmake_environment_hooks/pythonpath.sh")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/robot_perception/environment" TYPE FILE FILES "/root/Dojo/build/robot_perception/ament_cmake_environment_hooks/pythonpath.dsv")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/robot_perception/environment" TYPE FILE FILES "/root/Dojo/Dojo/build/robot_perception/ament_cmake_environment_hooks/pythonpath.dsv")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/local/lib/python3.10/dist-packages/robot_perception-0.2.0-py3.10.egg-info" TYPE DIRECTORY FILES "/root/Dojo/build/robot_perception/ament_cmake_python/robot_perception/robot_perception.egg-info/")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/local/lib/python3.10/dist-packages/robot_perception-0.2.0-py3.10.egg-info" TYPE DIRECTORY FILES "/root/Dojo/Dojo/build/robot_perception/ament_cmake_python/robot_perception/robot_perception.egg-info/")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/local/lib/python3.10/dist-packages/robot_perception" TYPE DIRECTORY FILES "/root/Dojo/src/robot_perception/robot_perception/" REGEX "/[^/]*\\.pyc$" EXCLUDE REGEX "/\\_\\_pycache\\_\\_$" EXCLUDE)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/local/lib/python3.10/dist-packages/robot_perception" TYPE DIRECTORY FILES "/root/Dojo/Dojo/src/robot_perception/robot_perception/" REGEX "/[^/]*\\.pyc$" EXCLUDE REGEX "/\\_\\_pycache\\_\\_$" EXCLUDE)
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   execute_process(
         COMMAND
         "/usr/bin/python3" "-m" "compileall"
-        "/root/Dojo/install/robot_perception/local/lib/python3.10/dist-packages/robot_perception"
+        "/root/Dojo/Dojo/install/robot_perception/local/lib/python3.10/dist-packages/robot_perception"
       )
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/robot_perception/launch" TYPE DIRECTORY FILES "/root/Dojo/src/robot_perception/launch/" REGEX "/[^/]*\\.py$" REGEX "/\\_\\_pycache\\_\\_$" EXCLUDE)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/robot_perception/launch" TYPE DIRECTORY FILES "/root/Dojo/Dojo/src/robot_perception/launch/" REGEX "/[^/]*\\.py$" REGEX "/\\_\\_pycache\\_\\_$" EXCLUDE)
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/robot_perception/config" TYPE DIRECTORY FILES "/root/Dojo/src/robot_perception/config/")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/robot_perception/config" TYPE DIRECTORY FILES "/root/Dojo/Dojo/src/robot_perception/config/")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/robot_perception/rviz" TYPE DIRECTORY FILES "/root/Dojo/src/robot_perception/rviz/" REGEX "/[^/]*\\.rviz$")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/robot_perception/rviz" TYPE DIRECTORY FILES "/root/Dojo/Dojo/src/robot_perception/rviz/" REGEX "/[^/]*\\.rviz$")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/robot_perception/resource" TYPE DIRECTORY FILES "/root/Dojo/src/robot_perception/resource/")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/robot_perception/resource" TYPE DIRECTORY FILES "/root/Dojo/Dojo/src/robot_perception/resource/")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/robot_perception" TYPE FILE FILES
-    "/root/Dojo/src/robot_perception/CMakeLists.txt"
-    "/root/Dojo/src/robot_perception/package.xml"
+    "/root/Dojo/Dojo/src/robot_perception/CMakeLists.txt"
+    "/root/Dojo/Dojo/src/robot_perception/package.xml"
     )
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/local/lib/python3.10/dist-packages/robot_perception" TYPE PROGRAM FILES "/root/Dojo/src/robot_perception/setup.py")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/local/lib/python3.10/dist-packages/robot_perception" TYPE PROGRAM FILES "/root/Dojo/Dojo/src/robot_perception/setup.py")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/ament_index/resource_index/package_run_dependencies" TYPE FILE FILES "/root/Dojo/build/robot_perception/ament_cmake_index/share/ament_index/resource_index/package_run_dependencies/robot_perception")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/ament_index/resource_index/package_run_dependencies" TYPE FILE FILES "/root/Dojo/Dojo/build/robot_perception/ament_cmake_index/share/ament_index/resource_index/package_run_dependencies/robot_perception")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/ament_index/resource_index/parent_prefix_path" TYPE FILE FILES "/root/Dojo/build/robot_perception/ament_cmake_index/share/ament_index/resource_index/parent_prefix_path/robot_perception")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/ament_index/resource_index/parent_prefix_path" TYPE FILE FILES "/root/Dojo/Dojo/build/robot_perception/ament_cmake_index/share/ament_index/resource_index/parent_prefix_path/robot_perception")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
@@ -106,7 +106,7 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/robot_perception/environment" TYPE FILE FILES "/root/Dojo/build/robot_perception/ament_cmake_environment_hooks/ament_prefix_path.dsv")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/robot_perception/environment" TYPE FILE FILES "/root/Dojo/Dojo/build/robot_perception/ament_cmake_environment_hooks/ament_prefix_path.dsv")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
@@ -114,46 +114,46 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/robot_perception/environment" TYPE FILE FILES "/root/Dojo/build/robot_perception/ament_cmake_environment_hooks/path.dsv")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/robot_perception/environment" TYPE FILE FILES "/root/Dojo/Dojo/build/robot_perception/ament_cmake_environment_hooks/path.dsv")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/robot_perception" TYPE FILE FILES "/root/Dojo/build/robot_perception/ament_cmake_environment_hooks/local_setup.bash")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/robot_perception" TYPE FILE FILES "/root/Dojo/Dojo/build/robot_perception/ament_cmake_environment_hooks/local_setup.bash")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/robot_perception" TYPE FILE FILES "/root/Dojo/build/robot_perception/ament_cmake_environment_hooks/local_setup.sh")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/robot_perception" TYPE FILE FILES "/root/Dojo/Dojo/build/robot_perception/ament_cmake_environment_hooks/local_setup.sh")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/robot_perception" TYPE FILE FILES "/root/Dojo/build/robot_perception/ament_cmake_environment_hooks/local_setup.zsh")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/robot_perception" TYPE FILE FILES "/root/Dojo/Dojo/build/robot_perception/ament_cmake_environment_hooks/local_setup.zsh")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/robot_perception" TYPE FILE FILES "/root/Dojo/build/robot_perception/ament_cmake_environment_hooks/local_setup.dsv")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/robot_perception" TYPE FILE FILES "/root/Dojo/Dojo/build/robot_perception/ament_cmake_environment_hooks/local_setup.dsv")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/robot_perception" TYPE FILE FILES "/root/Dojo/build/robot_perception/ament_cmake_environment_hooks/package.dsv")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/robot_perception" TYPE FILE FILES "/root/Dojo/Dojo/build/robot_perception/ament_cmake_environment_hooks/package.dsv")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/ament_index/resource_index/packages" TYPE FILE FILES "/root/Dojo/build/robot_perception/ament_cmake_index/share/ament_index/resource_index/packages/robot_perception")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/ament_index/resource_index/packages" TYPE FILE FILES "/root/Dojo/Dojo/build/robot_perception/ament_cmake_index/share/ament_index/resource_index/packages/robot_perception")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/robot_perception/cmake" TYPE FILE FILES "/root/Dojo/build/robot_perception/ament_cmake_export_dependencies/ament_cmake_export_dependencies-extras.cmake")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/robot_perception/cmake" TYPE FILE FILES "/root/Dojo/Dojo/build/robot_perception/ament_cmake_export_dependencies/ament_cmake_export_dependencies-extras.cmake")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/robot_perception/cmake" TYPE FILE FILES
-    "/root/Dojo/build/robot_perception/ament_cmake_core/robot_perceptionConfig.cmake"
-    "/root/Dojo/build/robot_perception/ament_cmake_core/robot_perceptionConfig-version.cmake"
+    "/root/Dojo/Dojo/build/robot_perception/ament_cmake_core/robot_perceptionConfig.cmake"
+    "/root/Dojo/Dojo/build/robot_perception/ament_cmake_core/robot_perceptionConfig-version.cmake"
     )
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/robot_perception" TYPE FILE FILES "/root/Dojo/src/robot_perception/package.xml")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/robot_perception" TYPE FILE FILES "/root/Dojo/Dojo/src/robot_perception/package.xml")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT)
@@ -164,5 +164,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/root/Dojo/build/robot_perception/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/root/Dojo/Dojo/build/robot_perception/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

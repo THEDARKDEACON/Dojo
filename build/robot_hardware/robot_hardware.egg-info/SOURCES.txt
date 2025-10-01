@@ -2,7 +2,9 @@ package.xml
 setup.cfg
 setup.py
 config/hardware.yaml
+config/rosarduino_bridge.yaml
 launch/hardware.launch.py
+launch/rosarduino_bridge.launch.py
 resource/robot_hardware
 robot_hardware/__init__.py
 robot_hardware/hardware_manager.py

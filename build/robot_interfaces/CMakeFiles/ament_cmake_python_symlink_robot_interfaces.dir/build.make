@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /root/Dojo/src/robot_interfaces
+CMAKE_SOURCE_DIR = /root/Dojo/Dojo/src/robot_interfaces
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /root/Dojo/build/robot_interfaces
+CMAKE_BINARY_DIR = /root/Dojo/Dojo/build/robot_interfaces
 
 # Utility rule file for ament_cmake_python_symlink_robot_interfaces.
 
@@ -67,7 +67,7 @@ include CMakeFiles/ament_cmake_python_symlink_robot_interfaces.dir/compiler_depe
 include CMakeFiles/ament_cmake_python_symlink_robot_interfaces.dir/progress.make
 
 CMakeFiles/ament_cmake_python_symlink_robot_interfaces:
-	/usr/bin/cmake -E create_symlink /root/Dojo/build/robot_interfaces/rosidl_generator_py/robot_interfaces /root/Dojo/build/robot_interfaces/ament_cmake_python/robot_interfaces/robot_interfaces
+	/usr/bin/cmake -E create_symlink /root/Dojo/Dojo/build/robot_interfaces/rosidl_generator_py/robot_interfaces /root/Dojo/Dojo/build/robot_interfaces/ament_cmake_python/robot_interfaces/robot_interfaces
 
 ament_cmake_python_symlink_robot_interfaces: CMakeFiles/ament_cmake_python_symlink_robot_interfaces
 ament_cmake_python_symlink_robot_interfaces: CMakeFiles/ament_cmake_python_symlink_robot_interfaces.dir/build.make
@@ -82,6 +82,6 @@ CMakeFiles/ament_cmake_python_symlink_robot_interfaces.dir/clean:
 .PHONY : CMakeFiles/ament_cmake_python_symlink_robot_interfaces.dir/clean
 
 CMakeFiles/ament_cmake_python_symlink_robot_interfaces.dir/depend:
-	cd /root/Dojo/build/robot_interfaces && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /root/Dojo/src/robot_interfaces /root/Dojo/src/robot_interfaces /root/Dojo/build/robot_interfaces /root/Dojo/build/robot_interfaces /root/Dojo/build/robot_interfaces/CMakeFiles/ament_cmake_python_symlink_robot_interfaces.dir/DependInfo.cmake --color=$(COLOR)
+	cd /root/Dojo/Dojo/build/robot_interfaces && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /root/Dojo/Dojo/src/robot_interfaces /root/Dojo/Dojo/src/robot_interfaces /root/Dojo/Dojo/build/robot_interfaces /root/Dojo/Dojo/build/robot_interfaces /root/Dojo/Dojo/build/robot_interfaces/CMakeFiles/ament_cmake_python_symlink_robot_interfaces.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/ament_cmake_python_symlink_robot_interfaces.dir/depend
 

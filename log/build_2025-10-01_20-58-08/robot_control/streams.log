@@ -1,0 +1,61 @@
+[0.056s] Invoking command in '/root/Dojo/Dojo/build/robot_control': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/root/Dojo/install/robot_hardware:/opt/ros/humble /usr/bin/cmake /root/Dojo/Dojo/src/robot_control -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/root/Dojo/Dojo/install/robot_control
+[1.788s] -- Found ament_cmake: 1.3.12 (/opt/ros/humble/share/ament_cmake/cmake)
+[1.789s] -- Found Python3: /usr/bin/python3 (found version "3.10.12") found components: Interpreter 
+[1.789s] -- Override CMake install command with custom implementation using symlinks instead of copying resources
+[1.790s] -- Found rclcpp: 16.0.15 (/opt/ros/humble/share/rclcpp/cmake)
+[1.790s] -- Found rosidl_generator_c: 3.1.7 (/opt/ros/humble/share/rosidl_generator_c/cmake)
+[1.790s] -- Found rosidl_adapter: 3.1.7 (/opt/ros/humble/share/rosidl_adapter/cmake)
+[1.790s] -- Found rosidl_generator_cpp: 3.1.7 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)
+[1.790s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[1.790s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[1.790s] -- Found rmw_implementation_cmake: 6.1.2 (/opt/ros/humble/share/rmw_implementation_cmake/cmake)
+[1.790s] -- Found rmw_fastrtps_cpp: 6.2.8 (/opt/ros/humble/share/rmw_fastrtps_cpp/cmake)
+[1.790s] -- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[1.790s] -- Found rclpy: 3.3.17 (/opt/ros/humble/share/rclpy/cmake)
+[1.790s] -- Found geometry_msgs: 4.9.0 (/opt/ros/humble/share/geometry_msgs/cmake)
+[1.791s] -- Found sensor_msgs: 4.9.0 (/opt/ros/humble/share/sensor_msgs/cmake)
+[1.791s] -- Found nav_msgs: 4.9.0 (/opt/ros/humble/share/nav_msgs/cmake)
+[1.791s] -- Found tf2_ros: 0.25.16 (/opt/ros/humble/share/tf2_ros/cmake)
+[1.791s] -- Found tf2_geometry_msgs: 0.25.16 (/opt/ros/humble/share/tf2_geometry_msgs/cmake)
+[1.791s] -- Found eigen3_cmake_module: 0.1.1 (/opt/ros/humble/share/eigen3_cmake_module/cmake)
+[1.791s] -- Ensuring Eigen3 include directory is part of orocos-kdl CMake target
+[1.791s] -- Found controller_interface: 2.52.0 (/opt/ros/humble/share/controller_interface/cmake)
+[1.791s] -- Found controller_manager: 2.52.0 (/opt/ros/humble/share/controller_manager/cmake)
+[1.791s] -- Found diagnostic_updater: 4.0.6 (/opt/ros/humble/share/diagnostic_updater/cmake)
+[1.791s] -- Found Python3: /usr/bin/python3 (found version "3.10.12") found components: Interpreter Development Development.Module Development.Embed 
+[1.791s] -- Configuring done
+[1.791s] -- Generating done
+[1.791s] -- Build files have been written to: /root/Dojo/Dojo/build/robot_control
+[2.122s] Invoked command in '/root/Dojo/Dojo/build/robot_control' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/root/Dojo/install/robot_hardware:/opt/ros/humble /usr/bin/cmake /root/Dojo/Dojo/src/robot_control -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/root/Dojo/Dojo/install/robot_control
+[2.123s] Invoking command in '/root/Dojo/Dojo/build/robot_control': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/root/Dojo/install/robot_hardware:/opt/ros/humble /usr/bin/cmake --build /root/Dojo/Dojo/build/robot_control -- -j16 -l16
+[2.169s] Invoked command in '/root/Dojo/Dojo/build/robot_control' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/root/Dojo/install/robot_hardware:/opt/ros/humble /usr/bin/cmake --build /root/Dojo/Dojo/build/robot_control -- -j16 -l16
+[2.184s] Invoking command in '/root/Dojo/Dojo/build/robot_control': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/root/Dojo/install/robot_hardware:/opt/ros/humble /usr/bin/cmake --install /root/Dojo/Dojo/build/robot_control
+[2.193s] -- Install configuration: "Release"
+[2.194s] -- Execute custom install script
+[2.194s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_control/share/robot_control/launch/control.launch.py
+[2.194s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_control/share/robot_control/launch/robot_control.launch.py
+[2.196s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_control/share/robot_control/config/arduino.yaml
+[2.196s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_control/share/robot_control/config/controllers.yaml
+[2.196s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_control/share/robot_control/config/robot_control_params.yaml
+[2.197s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_control/share/robot_control/config/twist_mux.yaml
+[2.197s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_control/share/robot_control/package.xml
+[2.197s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_control/share/robot_control/setup.py
+[2.197s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_control/share/robot_control/setup.cfg
+[2.198s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_control/share/ament_index/resource_index/package_run_dependencies/robot_control
+[2.198s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_control/share/ament_index/resource_index/parent_prefix_path/robot_control
+[2.198s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_control/share/robot_control/environment/ament_prefix_path.sh
+[2.198s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_control/share/robot_control/environment/ament_prefix_path.dsv
+[2.198s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_control/share/robot_control/environment/path.sh
+[2.198s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_control/share/robot_control/environment/path.dsv
+[2.198s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_control/share/robot_control/local_setup.bash
+[2.199s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_control/share/robot_control/local_setup.sh
+[2.199s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_control/share/robot_control/local_setup.zsh
+[2.202s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_control/share/robot_control/local_setup.dsv
+[2.202s] -- Symlinking: /root/Dojo/Dojo/install/robot_control/share/robot_control/package.dsv
+[2.213s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_control/share/ament_index/resource_index/packages/robot_control
+[2.213s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_control/share/robot_control/cmake/robot_controlConfig.cmake
+[2.214s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_control/share/robot_control/cmake/robot_controlConfig-version.cmake
+[2.214s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_control/share/robot_control/package.xml
+[2.214s] -- Up-to-date: /robot_control
+[2.214s] -- Up-to-date: /robot_control/__init__.py
+[2.220s] Invoked command in '/root/Dojo/Dojo/build/robot_control' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/root/Dojo/install/robot_hardware:/opt/ros/humble /usr/bin/cmake --install /root/Dojo/Dojo/build/robot_control

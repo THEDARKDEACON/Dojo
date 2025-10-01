@@ -1,1 +1,1 @@
-/root/Dojo/build/robot_interfaces/rosidl_cmake/srv/SetMode_Request.msg
+/root/Dojo/Dojo/build/robot_interfaces/rosidl_cmake/srv/SetMode_Request.msg

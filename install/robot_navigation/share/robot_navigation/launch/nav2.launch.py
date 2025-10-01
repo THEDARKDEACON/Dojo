@@ -1,1 +1,1 @@
-/root/Dojo/src/robot_navigation/launch/nav2.launch.py
+/root/Dojo/Dojo/src/robot_navigation/launch/nav2.launch.py

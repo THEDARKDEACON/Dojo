@@ -23,7 +23,7 @@ function(ament_cmake_symlink_install_directory cmake_current_source_dir)
 
   # make destination absolute path and ensure that it exists
   if(NOT IS_ABSOLUTE "${ARG_DESTINATION}")
-    set(ARG_DESTINATION "/root/Dojo/install/robot_navigation/${ARG_DESTINATION}")
+    set(ARG_DESTINATION "/root/Dojo/Dojo/install/robot_navigation/${ARG_DESTINATION}")
   endif()
   if(NOT EXISTS "${ARG_DESTINATION}")
     file(MAKE_DIRECTORY "${ARG_DESTINATION}")
@@ -123,7 +123,7 @@ function(ament_cmake_symlink_install_files cmake_current_source_dir)
 
   # make destination an absolute path and ensure that it exists
   if(NOT IS_ABSOLUTE "${ARG_DESTINATION}")
-    set(ARG_DESTINATION "/root/Dojo/install/robot_navigation/${ARG_DESTINATION}")
+    set(ARG_DESTINATION "/root/Dojo/Dojo/install/robot_navigation/${ARG_DESTINATION}")
   endif()
   if(NOT EXISTS "${ARG_DESTINATION}")
     file(MAKE_DIRECTORY "${ARG_DESTINATION}")
@@ -181,7 +181,7 @@ function(ament_cmake_symlink_install_programs cmake_current_source_dir)
 
   # make destination an absolute path and ensure that it exists
   if(NOT IS_ABSOLUTE "${ARG_DESTINATION}")
-    set(ARG_DESTINATION "/root/Dojo/install/robot_navigation/${ARG_DESTINATION}")
+    set(ARG_DESTINATION "/root/Dojo/Dojo/install/robot_navigation/${ARG_DESTINATION}")
   endif()
   if(NOT EXISTS "${ARG_DESTINATION}")
     file(MAKE_DIRECTORY "${ARG_DESTINATION}")
@@ -251,7 +251,7 @@ function(ament_cmake_symlink_install_targets)
 
     # make destination an absolute path and ensure that it exists
     if(NOT IS_ABSOLUTE "${destination}")
-      set(destination "/root/Dojo/install/robot_navigation/${destination}")
+      set(destination "/root/Dojo/Dojo/install/robot_navigation/${destination}")
     endif()
     if(NOT EXISTS "${destination}")
       file(MAKE_DIRECTORY "${destination}")
@@ -311,61 +311,61 @@ message(STATUS "Execute custom install script")
 # begin of custom install code
 
 # install(DIRECTORY "launch/" "DESTINATION" "share/robot_navigation/launch" "PATTERN" "*.launch.py" "PATTERN" "*.launch")
-ament_cmake_symlink_install_directory("/root/Dojo/src/robot_navigation" DIRECTORY "launch/" "DESTINATION" "share/robot_navigation/launch" "PATTERN" "*.launch.py" "PATTERN" "*.launch")
+ament_cmake_symlink_install_directory("/root/Dojo/Dojo/src/robot_navigation" DIRECTORY "launch/" "DESTINATION" "share/robot_navigation/launch" "PATTERN" "*.launch.py" "PATTERN" "*.launch")
 
 # install(DIRECTORY "config/" "DESTINATION" "share/robot_navigation/config" "PATTERN" "*.yaml" "PATTERN" "*.yml" "PATTERN" "*.rviz")
-ament_cmake_symlink_install_directory("/root/Dojo/src/robot_navigation" DIRECTORY "config/" "DESTINATION" "share/robot_navigation/config" "PATTERN" "*.yaml" "PATTERN" "*.yml" "PATTERN" "*.rviz")
+ament_cmake_symlink_install_directory("/root/Dojo/Dojo/src/robot_navigation" DIRECTORY "config/" "DESTINATION" "share/robot_navigation/config" "PATTERN" "*.yaml" "PATTERN" "*.yml" "PATTERN" "*.rviz")
 
 # install(FILES "package.xml" "setup.py" "setup.cfg" "DESTINATION" "share/robot_navigation")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_navigation" FILES "package.xml" "setup.py" "setup.cfg" "DESTINATION" "share/robot_navigation")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_navigation" FILES "package.xml" "setup.py" "setup.cfg" "DESTINATION" "share/robot_navigation")
 
 # install(DIRECTORY "launch" "DESTINATION" "share/robot_navigation")
-ament_cmake_symlink_install_directory("/root/Dojo/src/robot_navigation" DIRECTORY "launch" "DESTINATION" "share/robot_navigation")
+ament_cmake_symlink_install_directory("/root/Dojo/Dojo/src/robot_navigation" DIRECTORY "launch" "DESTINATION" "share/robot_navigation")
 
-# install(FILES "/root/Dojo/build/robot_navigation/ament_cmake_index/share/ament_index/resource_index/package_run_dependencies/robot_navigation" "DESTINATION" "share/ament_index/resource_index/package_run_dependencies")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_navigation" FILES "/root/Dojo/build/robot_navigation/ament_cmake_index/share/ament_index/resource_index/package_run_dependencies/robot_navigation" "DESTINATION" "share/ament_index/resource_index/package_run_dependencies")
+# install(FILES "/root/Dojo/Dojo/build/robot_navigation/ament_cmake_index/share/ament_index/resource_index/package_run_dependencies/robot_navigation" "DESTINATION" "share/ament_index/resource_index/package_run_dependencies")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_navigation" FILES "/root/Dojo/Dojo/build/robot_navigation/ament_cmake_index/share/ament_index/resource_index/package_run_dependencies/robot_navigation" "DESTINATION" "share/ament_index/resource_index/package_run_dependencies")
 
-# install(FILES "/root/Dojo/build/robot_navigation/ament_cmake_index/share/ament_index/resource_index/parent_prefix_path/robot_navigation" "DESTINATION" "share/ament_index/resource_index/parent_prefix_path")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_navigation" FILES "/root/Dojo/build/robot_navigation/ament_cmake_index/share/ament_index/resource_index/parent_prefix_path/robot_navigation" "DESTINATION" "share/ament_index/resource_index/parent_prefix_path")
+# install(FILES "/root/Dojo/Dojo/build/robot_navigation/ament_cmake_index/share/ament_index/resource_index/parent_prefix_path/robot_navigation" "DESTINATION" "share/ament_index/resource_index/parent_prefix_path")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_navigation" FILES "/root/Dojo/Dojo/build/robot_navigation/ament_cmake_index/share/ament_index/resource_index/parent_prefix_path/robot_navigation" "DESTINATION" "share/ament_index/resource_index/parent_prefix_path")
 
 # install(FILES "/opt/ros/humble/share/ament_cmake_core/cmake/environment_hooks/environment/ament_prefix_path.sh" "DESTINATION" "share/robot_navigation/environment")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_navigation" FILES "/opt/ros/humble/share/ament_cmake_core/cmake/environment_hooks/environment/ament_prefix_path.sh" "DESTINATION" "share/robot_navigation/environment")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_navigation" FILES "/opt/ros/humble/share/ament_cmake_core/cmake/environment_hooks/environment/ament_prefix_path.sh" "DESTINATION" "share/robot_navigation/environment")
 
-# install(FILES "/root/Dojo/build/robot_navigation/ament_cmake_environment_hooks/ament_prefix_path.dsv" "DESTINATION" "share/robot_navigation/environment")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_navigation" FILES "/root/Dojo/build/robot_navigation/ament_cmake_environment_hooks/ament_prefix_path.dsv" "DESTINATION" "share/robot_navigation/environment")
+# install(FILES "/root/Dojo/Dojo/build/robot_navigation/ament_cmake_environment_hooks/ament_prefix_path.dsv" "DESTINATION" "share/robot_navigation/environment")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_navigation" FILES "/root/Dojo/Dojo/build/robot_navigation/ament_cmake_environment_hooks/ament_prefix_path.dsv" "DESTINATION" "share/robot_navigation/environment")
 
 # install(FILES "/opt/ros/humble/share/ament_cmake_core/cmake/environment_hooks/environment/path.sh" "DESTINATION" "share/robot_navigation/environment")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_navigation" FILES "/opt/ros/humble/share/ament_cmake_core/cmake/environment_hooks/environment/path.sh" "DESTINATION" "share/robot_navigation/environment")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_navigation" FILES "/opt/ros/humble/share/ament_cmake_core/cmake/environment_hooks/environment/path.sh" "DESTINATION" "share/robot_navigation/environment")
 
-# install(FILES "/root/Dojo/build/robot_navigation/ament_cmake_environment_hooks/path.dsv" "DESTINATION" "share/robot_navigation/environment")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_navigation" FILES "/root/Dojo/build/robot_navigation/ament_cmake_environment_hooks/path.dsv" "DESTINATION" "share/robot_navigation/environment")
+# install(FILES "/root/Dojo/Dojo/build/robot_navigation/ament_cmake_environment_hooks/path.dsv" "DESTINATION" "share/robot_navigation/environment")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_navigation" FILES "/root/Dojo/Dojo/build/robot_navigation/ament_cmake_environment_hooks/path.dsv" "DESTINATION" "share/robot_navigation/environment")
 
-# install(FILES "/root/Dojo/build/robot_navigation/ament_cmake_environment_hooks/local_setup.bash" "DESTINATION" "share/robot_navigation")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_navigation" FILES "/root/Dojo/build/robot_navigation/ament_cmake_environment_hooks/local_setup.bash" "DESTINATION" "share/robot_navigation")
+# install(FILES "/root/Dojo/Dojo/build/robot_navigation/ament_cmake_environment_hooks/local_setup.bash" "DESTINATION" "share/robot_navigation")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_navigation" FILES "/root/Dojo/Dojo/build/robot_navigation/ament_cmake_environment_hooks/local_setup.bash" "DESTINATION" "share/robot_navigation")
 
-# install(FILES "/root/Dojo/build/robot_navigation/ament_cmake_environment_hooks/local_setup.sh" "DESTINATION" "share/robot_navigation")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_navigation" FILES "/root/Dojo/build/robot_navigation/ament_cmake_environment_hooks/local_setup.sh" "DESTINATION" "share/robot_navigation")
+# install(FILES "/root/Dojo/Dojo/build/robot_navigation/ament_cmake_environment_hooks/local_setup.sh" "DESTINATION" "share/robot_navigation")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_navigation" FILES "/root/Dojo/Dojo/build/robot_navigation/ament_cmake_environment_hooks/local_setup.sh" "DESTINATION" "share/robot_navigation")
 
-# install(FILES "/root/Dojo/build/robot_navigation/ament_cmake_environment_hooks/local_setup.zsh" "DESTINATION" "share/robot_navigation")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_navigation" FILES "/root/Dojo/build/robot_navigation/ament_cmake_environment_hooks/local_setup.zsh" "DESTINATION" "share/robot_navigation")
+# install(FILES "/root/Dojo/Dojo/build/robot_navigation/ament_cmake_environment_hooks/local_setup.zsh" "DESTINATION" "share/robot_navigation")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_navigation" FILES "/root/Dojo/Dojo/build/robot_navigation/ament_cmake_environment_hooks/local_setup.zsh" "DESTINATION" "share/robot_navigation")
 
-# install(FILES "/root/Dojo/build/robot_navigation/ament_cmake_environment_hooks/local_setup.dsv" "DESTINATION" "share/robot_navigation")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_navigation" FILES "/root/Dojo/build/robot_navigation/ament_cmake_environment_hooks/local_setup.dsv" "DESTINATION" "share/robot_navigation")
+# install(FILES "/root/Dojo/Dojo/build/robot_navigation/ament_cmake_environment_hooks/local_setup.dsv" "DESTINATION" "share/robot_navigation")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_navigation" FILES "/root/Dojo/Dojo/build/robot_navigation/ament_cmake_environment_hooks/local_setup.dsv" "DESTINATION" "share/robot_navigation")
 
-# install(FILES "/root/Dojo/build/robot_navigation/ament_cmake_environment_hooks/package.dsv" "DESTINATION" "share/robot_navigation")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_navigation" FILES "/root/Dojo/build/robot_navigation/ament_cmake_environment_hooks/package.dsv" "DESTINATION" "share/robot_navigation")
+# install(FILES "/root/Dojo/Dojo/build/robot_navigation/ament_cmake_environment_hooks/package.dsv" "DESTINATION" "share/robot_navigation")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_navigation" FILES "/root/Dojo/Dojo/build/robot_navigation/ament_cmake_environment_hooks/package.dsv" "DESTINATION" "share/robot_navigation")
 
-# install(FILES "/root/Dojo/build/robot_navigation/ament_cmake_index/share/ament_index/resource_index/packages/robot_navigation" "DESTINATION" "share/ament_index/resource_index/packages")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_navigation" FILES "/root/Dojo/build/robot_navigation/ament_cmake_index/share/ament_index/resource_index/packages/robot_navigation" "DESTINATION" "share/ament_index/resource_index/packages")
+# install(FILES "/root/Dojo/Dojo/build/robot_navigation/ament_cmake_index/share/ament_index/resource_index/packages/robot_navigation" "DESTINATION" "share/ament_index/resource_index/packages")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_navigation" FILES "/root/Dojo/Dojo/build/robot_navigation/ament_cmake_index/share/ament_index/resource_index/packages/robot_navigation" "DESTINATION" "share/ament_index/resource_index/packages")
 
-# install(FILES "/root/Dojo/build/robot_navigation/ament_cmake_export_include_directories/ament_cmake_export_include_directories-extras.cmake" "DESTINATION" "share/robot_navigation/cmake")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_navigation" FILES "/root/Dojo/build/robot_navigation/ament_cmake_export_include_directories/ament_cmake_export_include_directories-extras.cmake" "DESTINATION" "share/robot_navigation/cmake")
+# install(FILES "/root/Dojo/Dojo/build/robot_navigation/ament_cmake_export_include_directories/ament_cmake_export_include_directories-extras.cmake" "DESTINATION" "share/robot_navigation/cmake")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_navigation" FILES "/root/Dojo/Dojo/build/robot_navigation/ament_cmake_export_include_directories/ament_cmake_export_include_directories-extras.cmake" "DESTINATION" "share/robot_navigation/cmake")
 
-# install(FILES "/root/Dojo/build/robot_navigation/ament_cmake_export_dependencies/ament_cmake_export_dependencies-extras.cmake" "DESTINATION" "share/robot_navigation/cmake")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_navigation" FILES "/root/Dojo/build/robot_navigation/ament_cmake_export_dependencies/ament_cmake_export_dependencies-extras.cmake" "DESTINATION" "share/robot_navigation/cmake")
+# install(FILES "/root/Dojo/Dojo/build/robot_navigation/ament_cmake_export_dependencies/ament_cmake_export_dependencies-extras.cmake" "DESTINATION" "share/robot_navigation/cmake")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_navigation" FILES "/root/Dojo/Dojo/build/robot_navigation/ament_cmake_export_dependencies/ament_cmake_export_dependencies-extras.cmake" "DESTINATION" "share/robot_navigation/cmake")
 
-# install(FILES "/root/Dojo/build/robot_navigation/ament_cmake_core/robot_navigationConfig.cmake" "/root/Dojo/build/robot_navigation/ament_cmake_core/robot_navigationConfig-version.cmake" "DESTINATION" "share/robot_navigation/cmake")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_navigation" FILES "/root/Dojo/build/robot_navigation/ament_cmake_core/robot_navigationConfig.cmake" "/root/Dojo/build/robot_navigation/ament_cmake_core/robot_navigationConfig-version.cmake" "DESTINATION" "share/robot_navigation/cmake")
+# install(FILES "/root/Dojo/Dojo/build/robot_navigation/ament_cmake_core/robot_navigationConfig.cmake" "/root/Dojo/Dojo/build/robot_navigation/ament_cmake_core/robot_navigationConfig-version.cmake" "DESTINATION" "share/robot_navigation/cmake")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_navigation" FILES "/root/Dojo/Dojo/build/robot_navigation/ament_cmake_core/robot_navigationConfig.cmake" "/root/Dojo/Dojo/build/robot_navigation/ament_cmake_core/robot_navigationConfig-version.cmake" "DESTINATION" "share/robot_navigation/cmake")
 
-# install(FILES "/root/Dojo/src/robot_navigation/package.xml" "DESTINATION" "share/robot_navigation")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_navigation" FILES "/root/Dojo/src/robot_navigation/package.xml" "DESTINATION" "share/robot_navigation")
+# install(FILES "/root/Dojo/Dojo/src/robot_navigation/package.xml" "DESTINATION" "share/robot_navigation")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_navigation" FILES "/root/Dojo/Dojo/src/robot_navigation/package.xml" "DESTINATION" "share/robot_navigation")

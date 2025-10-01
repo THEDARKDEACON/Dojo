@@ -1,1 +1,1 @@
-/root/Dojo/src/robot_hardware/launch/hardware.launch.py
+/root/Dojo/Dojo/src/robot_hardware/launch/hardware.launch.py

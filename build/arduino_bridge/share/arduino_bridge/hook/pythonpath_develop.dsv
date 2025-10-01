@@ -1,1 +1,1 @@
-prepend-non-duplicate;PYTHONPATH;/root/Dojo/build/arduino_bridge
+prepend-non-duplicate;PYTHONPATH;/root/Dojo/Dojo/build/arduino_bridge

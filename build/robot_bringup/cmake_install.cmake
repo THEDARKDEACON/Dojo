@@ -1,8 +1,8 @@
-# Install script for directory: /root/Dojo/src/robot_bringup
+# Install script for directory: /root/Dojo/Dojo/src/robot_bringup
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/root/Dojo/install/robot_bringup")
+  set(CMAKE_INSTALL_PREFIX "/root/Dojo/Dojo/install/robot_bringup")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -43,7 +43,7 @@ if(NOT DEFINED CMAKE_OBJDUMP)
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  include("/root/Dojo/build/robot_bringup/ament_cmake_symlink_install/ament_cmake_symlink_install.cmake")
+  include("/root/Dojo/Dojo/build/robot_bringup/ament_cmake_symlink_install/ament_cmake_symlink_install.cmake")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT)
@@ -54,5 +54,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/root/Dojo/build/robot_bringup/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/root/Dojo/Dojo/build/robot_bringup/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

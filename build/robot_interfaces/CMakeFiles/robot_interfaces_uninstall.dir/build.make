@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /root/Dojo/src/robot_interfaces
+CMAKE_SOURCE_DIR = /root/Dojo/Dojo/src/robot_interfaces
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /root/Dojo/build/robot_interfaces
+CMAKE_BINARY_DIR = /root/Dojo/Dojo/build/robot_interfaces
 
 # Utility rule file for robot_interfaces_uninstall.
 
@@ -67,7 +67,7 @@ include CMakeFiles/robot_interfaces_uninstall.dir/compiler_depend.make
 include CMakeFiles/robot_interfaces_uninstall.dir/progress.make
 
 CMakeFiles/robot_interfaces_uninstall:
-	/usr/bin/cmake -P /root/Dojo/build/robot_interfaces/ament_cmake_uninstall_target/ament_cmake_uninstall_target.cmake
+	/usr/bin/cmake -P /root/Dojo/Dojo/build/robot_interfaces/ament_cmake_uninstall_target/ament_cmake_uninstall_target.cmake
 
 robot_interfaces_uninstall: CMakeFiles/robot_interfaces_uninstall
 robot_interfaces_uninstall: CMakeFiles/robot_interfaces_uninstall.dir/build.make
@@ -82,6 +82,6 @@ CMakeFiles/robot_interfaces_uninstall.dir/clean:
 .PHONY : CMakeFiles/robot_interfaces_uninstall.dir/clean
 
 CMakeFiles/robot_interfaces_uninstall.dir/depend:
-	cd /root/Dojo/build/robot_interfaces && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /root/Dojo/src/robot_interfaces /root/Dojo/src/robot_interfaces /root/Dojo/build/robot_interfaces /root/Dojo/build/robot_interfaces /root/Dojo/build/robot_interfaces/CMakeFiles/robot_interfaces_uninstall.dir/DependInfo.cmake --color=$(COLOR)
+	cd /root/Dojo/Dojo/build/robot_interfaces && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /root/Dojo/Dojo/src/robot_interfaces /root/Dojo/Dojo/src/robot_interfaces /root/Dojo/Dojo/build/robot_interfaces /root/Dojo/Dojo/build/robot_interfaces /root/Dojo/Dojo/build/robot_interfaces/CMakeFiles/robot_interfaces_uninstall.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/robot_interfaces_uninstall.dir/depend
 

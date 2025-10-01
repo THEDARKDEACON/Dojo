@@ -1,1 +1,1 @@
-/root/Dojo/src/robot_interfaces/msg/MotorCommand.msg
+/root/Dojo/Dojo/src/robot_interfaces/msg/MotorCommand.msg

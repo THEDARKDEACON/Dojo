@@ -1,1 +1,1 @@
-/root/Dojo/src/robot_interfaces/msg/HardwareStatus.msg
+/root/Dojo/Dojo/src/robot_interfaces/msg/HardwareStatus.msg

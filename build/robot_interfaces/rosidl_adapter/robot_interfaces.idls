@@ -1,7 +1,7 @@
-/root/Dojo/build/robot_interfaces/rosidl_adapter/robot_interfaces:msg/HardwareStatus.idl
-/root/Dojo/build/robot_interfaces/rosidl_adapter/robot_interfaces:msg/SensorData.idl
-/root/Dojo/build/robot_interfaces/rosidl_adapter/robot_interfaces:msg/MotorCommand.idl
-/root/Dojo/build/robot_interfaces/rosidl_adapter/robot_interfaces:msg/RobotState.idl
-/root/Dojo/build/robot_interfaces/rosidl_adapter/robot_interfaces:srv/Calibration.idl
-/root/Dojo/build/robot_interfaces/rosidl_adapter/robot_interfaces:srv/SetMode.idl
-/root/Dojo/build/robot_interfaces/rosidl_adapter/robot_interfaces:action/Navigation.idl
+/root/Dojo/Dojo/build/robot_interfaces/rosidl_adapter/robot_interfaces:msg/HardwareStatus.idl
+/root/Dojo/Dojo/build/robot_interfaces/rosidl_adapter/robot_interfaces:msg/SensorData.idl
+/root/Dojo/Dojo/build/robot_interfaces/rosidl_adapter/robot_interfaces:msg/MotorCommand.idl
+/root/Dojo/Dojo/build/robot_interfaces/rosidl_adapter/robot_interfaces:msg/RobotState.idl
+/root/Dojo/Dojo/build/robot_interfaces/rosidl_adapter/robot_interfaces:srv/Calibration.idl
+/root/Dojo/Dojo/build/robot_interfaces/rosidl_adapter/robot_interfaces:srv/SetMode.idl
+/root/Dojo/Dojo/build/robot_interfaces/rosidl_adapter/robot_interfaces:action/Navigation.idl

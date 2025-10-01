@@ -1,1 +1,1 @@
-prepend-non-duplicate;PYTHONPATH;/root/Dojo/build/robot_launch
+prepend-non-duplicate;PYTHONPATH;/root/Dojo/Dojo/build/robot_launch

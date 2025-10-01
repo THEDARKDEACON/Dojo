@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /root/Dojo/src/robot_perception
+CMAKE_SOURCE_DIR = /root/Dojo/Dojo/src/robot_perception
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /root/Dojo/build/robot_perception
+CMAKE_BINARY_DIR = /root/Dojo/Dojo/build/robot_perception
 
 # Utility rule file for uninstall.
 
@@ -78,6 +78,6 @@ CMakeFiles/uninstall.dir/clean:
 .PHONY : CMakeFiles/uninstall.dir/clean
 
 CMakeFiles/uninstall.dir/depend:
-	cd /root/Dojo/build/robot_perception && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /root/Dojo/src/robot_perception /root/Dojo/src/robot_perception /root/Dojo/build/robot_perception /root/Dojo/build/robot_perception /root/Dojo/build/robot_perception/CMakeFiles/uninstall.dir/DependInfo.cmake --color=$(COLOR)
+	cd /root/Dojo/Dojo/build/robot_perception && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /root/Dojo/Dojo/src/robot_perception /root/Dojo/Dojo/src/robot_perception /root/Dojo/Dojo/build/robot_perception /root/Dojo/Dojo/build/robot_perception /root/Dojo/Dojo/build/robot_perception/CMakeFiles/uninstall.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/uninstall.dir/depend
 

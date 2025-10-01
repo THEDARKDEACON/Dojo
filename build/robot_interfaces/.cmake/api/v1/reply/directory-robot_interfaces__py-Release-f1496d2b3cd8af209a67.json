@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "robot_interfaces__py",
+		"source" : "/root/Dojo/Dojo/build/robot_interfaces/robot_interfaces__py"
+	}
+}

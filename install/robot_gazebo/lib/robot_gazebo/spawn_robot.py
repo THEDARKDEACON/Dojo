@@ -1,1 +1,1 @@
-/root/Dojo/src/robot_gazebo/scripts/spawn_robot.py
+/root/Dojo/Dojo/src/robot_gazebo/scripts/spawn_robot.py

@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /root/Dojo/src/robot_perception
+CMAKE_SOURCE_DIR = /root/Dojo/Dojo/src/robot_perception
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /root/Dojo/build/robot_perception
+CMAKE_BINARY_DIR = /root/Dojo/Dojo/build/robot_perception
 
 # Utility rule file for ament_cmake_python_copy_robot_perception_setup.
 
@@ -67,7 +67,7 @@ include CMakeFiles/ament_cmake_python_copy_robot_perception_setup.dir/compiler_d
 include CMakeFiles/ament_cmake_python_copy_robot_perception_setup.dir/progress.make
 
 CMakeFiles/ament_cmake_python_copy_robot_perception_setup:
-	/usr/bin/cmake -E copy /root/Dojo/src/robot_perception/setup.cfg /root/Dojo/build/robot_perception/ament_cmake_python/robot_perception/setup.cfg
+	/usr/bin/cmake -E copy /root/Dojo/Dojo/src/robot_perception/setup.cfg /root/Dojo/Dojo/build/robot_perception/ament_cmake_python/robot_perception/setup.cfg
 
 ament_cmake_python_copy_robot_perception_setup: CMakeFiles/ament_cmake_python_copy_robot_perception_setup
 ament_cmake_python_copy_robot_perception_setup: CMakeFiles/ament_cmake_python_copy_robot_perception_setup.dir/build.make
@@ -82,6 +82,6 @@ CMakeFiles/ament_cmake_python_copy_robot_perception_setup.dir/clean:
 .PHONY : CMakeFiles/ament_cmake_python_copy_robot_perception_setup.dir/clean
 
 CMakeFiles/ament_cmake_python_copy_robot_perception_setup.dir/depend:
-	cd /root/Dojo/build/robot_perception && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /root/Dojo/src/robot_perception /root/Dojo/src/robot_perception /root/Dojo/build/robot_perception /root/Dojo/build/robot_perception /root/Dojo/build/robot_perception/CMakeFiles/ament_cmake_python_copy_robot_perception_setup.dir/DependInfo.cmake --color=$(COLOR)
+	cd /root/Dojo/Dojo/build/robot_perception && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /root/Dojo/Dojo/src/robot_perception /root/Dojo/Dojo/src/robot_perception /root/Dojo/Dojo/build/robot_perception /root/Dojo/Dojo/build/robot_perception /root/Dojo/Dojo/build/robot_perception/CMakeFiles/ament_cmake_python_copy_robot_perception_setup.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/ament_cmake_python_copy_robot_perception_setup.dir/depend
 

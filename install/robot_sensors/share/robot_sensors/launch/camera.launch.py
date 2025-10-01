@@ -1,1 +1,1 @@
-/root/Dojo/build/robot_sensors/launch/camera.launch.py
+/root/Dojo/Dojo/build/robot_sensors/launch/camera.launch.py

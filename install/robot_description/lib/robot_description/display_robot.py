@@ -1,1 +1,1 @@
-/root/Dojo/src/robot_description/scripts/display_robot.py
+/root/Dojo/Dojo/src/robot_description/scripts/display_robot.py

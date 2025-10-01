@@ -1,0 +1,30 @@
+arduino_driver:
+  ros__parameters:
+    # Serial connection
+    port: "/dev/ttyACM0"
+    baud_rate: 57600  # ROSArduinoBridge default
+    timeout: 1.0
+    write_timeout: 1.0
+    debug: true
+    reconnect_interval: 5.0
+    
+    # Protocol configuration
+    use_rosarduino_bridge: true
+    
+    # Robot geometry (must match Arduino sketch)
+    wheel_base: 0.2      # meters between wheels
+    wheel_radius: 0.033  # meters
+    wheel_circumference: 0.207  # 2 * pi * wheel_radius
+    
+    # Encoder configuration (must match Arduino)
+    encoder_ticks_per_rev: 20
+    
+    # Motor limits
+    motor_max: 255
+    motor_min: 0
+    
+    # PID parameters (can be updated via ROS service)
+    pid_kp: 20
+    pid_kd: 12
+    pid_ki: 0
+    pid_ko: 50

@@ -33,6 +33,12 @@ class ArduinoDriver(Node):
         # Declare parameters with defaults
         self._declare_parameters()
         
+        # ROSArduinoBridge protocol state
+        self.encoder_left = 0
+        self.encoder_right = 0
+        self.last_encoder_left = 0
+        self.last_encoder_right = 0
+        
         # Initialize hardware connection
         self.serial_conn = None
         self.connected = False
@@ -53,16 +59,13 @@ class ArduinoDriver(Node):
     def _declare_parameters(self):
         """Declare all ROS parameters"""
         self.declare_parameter('port', '/dev/ttyACM0')
-        self.declare_parameter('baud_rate', 115200)
+        self.declare_parameter('baud_rate', 57600)  # ROSArduinoBridge uses 57600
         self.declare_parameter('timeout', 1.0)
         self.declare_parameter('write_timeout', 1.0)
-        self.declare_parameter('start_delimiter', '<')
-        self.declare_parameter('end_delimiter', '>')
-        self.declare_parameter('field_separator', ',')
         self.declare_parameter('debug', True)
         self.declare_parameter('reconnect_interval', 5.0)
-        # Protocol mode: False = legacy PWM with bracketed lines, True = speed commands with 'M' and 'E' telemetry
-        self.declare_parameter('use_speed_commands', False)
+        # ROSArduinoBridge protocol - always uses single-letter commands
+        self.declare_parameter('use_rosarduino_bridge', True)
         
         # Motor parameters
         self.declare_parameter('motor_max', 255)
@@ -72,7 +75,13 @@ class ArduinoDriver(Node):
         
         # Encoder parameters  
         self.declare_parameter('encoder_ticks_per_rev', 20)
-        self.declare_parameter('wheel_circumference', 0.314) 
+        self.declare_parameter('wheel_circumference', 0.314)
+        
+        # ROSArduinoBridge PID parameters
+        self.declare_parameter('pid_kp', 20)
+        self.declare_parameter('pid_kd', 12)
+        self.declare_parameter('pid_ki', 0)
+        self.declare_parameter('pid_ko', 50) 
    
     def _init_data_storage(self):
         """Initialize data storage variables"""
@@ -103,10 +112,15 @@ class ArduinoDriver(Node):
         self.connection_thread.daemon = True
         self.connection_thread.start()
         
-        # Data reading thread
-        self.read_thread = threading.Thread(target=self._read_data_loop)
+        # Data reading thread for ROSArduinoBridge
+        self.read_thread = threading.Thread(target=self._rosarduino_read_loop)
         self.read_thread.daemon = True
         self.read_thread.start()
+        
+        # Encoder polling thread for ROSArduinoBridge
+        self.encoder_thread = threading.Thread(target=self._encoder_polling_loop)
+        self.encoder_thread.daemon = True
+        self.encoder_thread.start()
         
     def _manage_connection(self):
         """Manage Arduino connection with auto-reconnect"""
@@ -142,130 +156,107 @@ class ArduinoDriver(Node):
             self.get_logger().warn(f'Failed to connect to Arduino: {e}')
             self._publish_status('DISCONNECTED')  
   
-    def _read_data_loop(self):
-        """Main data reading loop"""
+    def _rosarduino_read_loop(self):
+        """Read responses from ROSArduinoBridge"""
         while rclpy.ok():
             if self.connected and self.serial_conn:
                 try:
-                    self._read_arduino_data()
+                    if self.serial_conn.in_waiting:
+                        raw = self.serial_conn.readline()
+                        line = raw.decode('utf-8', errors='ignore').strip()
+                        if line and self.get_parameter('debug').value:
+                            self.get_logger().debug(f'Arduino response: {line}')
                 except Exception as e:
-                    self.get_logger().error(f'Error reading Arduino data: {e}')
+                    self.get_logger().error(f'Error reading Arduino: {e}')
                     self.connected = False
-            time.sleep(0.01)  # 100Hz reading rate
+            time.sleep(0.01)
     
-    def _read_arduino_data(self):
-        """Read and parse data from Arduino"""
-        if not self.serial_conn or not self.serial_conn.in_waiting:
-            return
-
+    def _encoder_polling_loop(self):
+        """Poll encoders from ROSArduinoBridge at regular intervals"""
+        while rclpy.ok():
+            if self.connected:
+                try:
+                    self._read_encoders()
+                except Exception as e:
+                    self.get_logger().error(f'Error reading encoders: {e}')
+                    self.connected = False
+            time.sleep(0.05)  # 20Hz encoder polling
+    
+    def _send_command(self, command):
+        """Send command to ROSArduinoBridge and get response"""
+        if not self.connected or not self.serial_conn:
+            return ""
+            
         try:
-            raw = self.serial_conn.readline()
-            line = raw.decode('utf-8', errors='ignore').strip()
-            if not line:
-                return
-
-            # Handle debug lines from firmware (prefixed with 'D')
-            if line.startswith('D'):
-                if self.get_parameter('debug').value:
-                    self.get_logger().debug(f'Arduino: {line[1:]}')
-                return
-
-            # New telemetry protocol: lines starting with 'E'
-            if line.startswith('E'):
-                payload = line[1:]
-                self._parse_e_telemetry(payload)
-                return
-
-            # Legacy bracketed protocol: <...>
-            if line.startswith(self.get_parameter('start_delimiter').value) and \
-               line.endswith(self.get_parameter('end_delimiter').value):
-                data_str = line[1:-1]
-                self._parse_sensor_data(data_str)
-                return
-
-            # Unknown line format: ignore quietly
-            if self.get_parameter('debug').value:
-                self.get_logger().debug(f'Unknown line format: {line}')
-
+            with self.connection_lock:
+                self.serial_conn.write(command.encode('utf-8'))
+                time.sleep(0.01)  # Small delay for Arduino processing
+                response = self.serial_conn.readline().decode('utf-8', errors='ignore').strip()
+                return response
         except Exception as e:
-            self.get_logger().debug(f'Parse error: {e}')
+            self.get_logger().error(f'Command failed: {e}')
+            self.connected = False
+            return ""
     
-    def _parse_sensor_data(self, data_str):
-        """Parse sensor data from Arduino"""
-        try:
-            separator = self.get_parameter('field_separator').value
-            fields = data_str.split(separator)
-            
-            if len(fields) >= 4:
-                # Expected format: <encoder_left,encoder_right,ultrasonic,imu_data>
-                encoder_left = int(fields[0])
-                encoder_right = int(fields[1])
-                ultrasonic = float(fields[2])
-                
-                # Update encoder data
-                self._update_encoders(encoder_left, encoder_right)
-                
-                # Publish ultrasonic data
-                self._publish_ultrasonic(ultrasonic)
-                
-                # Parse additional IMU data if available
-                if len(fields) > 3:
-                    self._parse_imu_data(fields[3:])
+    def _read_encoders(self):
+        """Read encoder values using ROSArduinoBridge 'e' command"""
+        response = self._send_command("e\r")
+        if response:
+            try:
+                parts = response.split(' ')
+                if len(parts) >= 2:
+                    left_ticks = int(parts[0])
+                    right_ticks = int(parts[1])
                     
-        except (ValueError, IndexError) as e:
-            self.get_logger().debug(f'Data parsing error: {e}')
-
-    def _parse_e_telemetry(self, payload):
-      """Parse 'E' telemetry lines: left_ticks,right_ticks,left_rad,right_rad,left_pos,right_pos"""
-      try:
-          parts = payload.split(',')
-          if len(parts) < 6:
-              return
-
-          left_ticks = int(parts[0])
-          right_ticks = int(parts[1])
-          left_rad = float(parts[2])
-          right_rad = float(parts[3])
-          # left_pos = float(parts[4])  # meters (optional use)
-          # right_pos = float(parts[5])
-
-          # Update internal encoder tick counters
-          self.encoder_data['left'] = left_ticks
-          self.encoder_data['right'] = right_ticks
-
-          # Compute odometry from wheel angular velocities
-          wheel_radius = self.get_parameter('wheel_radius').value
-          wheel_base = self.get_parameter('wheel_base').value
-          v_left = left_rad * wheel_radius
-          v_right = right_rad * wheel_radius
-          # _publish_odometry expects left/right wheel linear velocities
-          self._publish_odometry(v_left, v_right, time.time())
-      except Exception as e:
-          self.get_logger().debug(f'E-telemetry parse error: {e}')
+                    # Calculate velocities and publish odometry
+                    current_time = time.time()
+                    dt = current_time - self.last_encoder_time
+                    
+                    if dt > 0 and hasattr(self, 'last_encoder_time'):
+                        # Calculate wheel velocities
+                        ticks_per_rev = self.get_parameter('encoder_ticks_per_rev').value
+                        wheel_circumference = self.get_parameter('wheel_circumference').value
+                        
+                        left_delta = left_ticks - self.encoder_left
+                        right_delta = right_ticks - self.encoder_right
+                        
+                        left_velocity = (left_delta / ticks_per_rev) * wheel_circumference / dt
+                        right_velocity = (right_delta / ticks_per_rev) * wheel_circumference / dt
+                        
+                        # Publish odometry
+                        self._publish_odometry(left_velocity, right_velocity, current_time)
+                    
+                    # Update stored values
+                    self.encoder_left = left_ticks
+                    self.encoder_right = right_ticks
+                    self.last_encoder_time = current_time
+                    
+            except (ValueError, IndexError) as e:
+                self.get_logger().debug(f'Encoder parsing error: {e}')
     
-    def _update_encoders(self, left_ticks, right_ticks):
-        """Update encoder data and publish odometry"""
-        current_time = time.time()
-        dt = current_time - self.last_encoder_time
-        
-        if dt > 0:
-            # Calculate wheel velocities
-            ticks_per_rev = self.get_parameter('encoder_ticks_per_rev').value
-            wheel_circumference = self.get_parameter('wheel_circumference').value
-            
-            left_delta = left_ticks - self.encoder_data['left']
-            right_delta = right_ticks - self.encoder_data['right']
-            
-            left_velocity = (left_delta / ticks_per_rev) * wheel_circumference / dt
-            right_velocity = (right_delta / ticks_per_rev) * wheel_circumference / dt
-            
-            # Update stored values
-            self.encoder_data['left'] = left_ticks
-            self.encoder_data['right'] = right_ticks
-            self.last_encoder_time = current_time
-            
-            # Publish odometry
-            self._publish_odometry(left_velocity, right_velocity, current_time) 
+    def get_baud_rate(self):
+        """Get Arduino baud rate"""
+        response = self._send_command("b\r")
+        try:
+            return int(response)
+        except ValueError:
+            return None
+    
+    def read_analog_pin(self, pin):
+        """Read analog pin value"""
+        response = self._send_command(f"a {pin}\r")
+        try:
+            return int(response)
+        except ValueError:
+            return None
+    
+    def read_digital_pin(self, pin):
+        """Read digital pin value"""
+        response = self._send_command(f"d {pin}\r")
+        try:
+            return int(response)
+        except ValueError:
+            return None 
    
     def _publish_odometry(self, left_vel, right_vel, timestamp):
         """Publish odometry data"""
@@ -326,36 +317,25 @@ class ArduinoDriver(Node):
         left_lin = linear - (angular * wheel_base / 2.0)
         right_lin = linear + (angular * wheel_base / 2.0)
 
-        if self.get_parameter('use_speed_commands').value:
-            # Send target wheel speeds in rad/s using 'M<left>,<right>'
-            left_rad = left_lin / wheel_radius
-            right_rad = right_lin / wheel_radius
-            self._send_motor_commands(left_rad, right_rad)
-        else:
-            # Legacy: scale to PWM range
-            motor_max = self.get_parameter('motor_max').value
-            left_pwm = int(max(-motor_max, min(motor_max, left_lin * 100)))
-            right_pwm = int(max(-motor_max, min(motor_max, right_lin * 100)))
-            self._send_motor_commands(left_pwm, right_pwm)
+        # Convert to ticks per frame for ROSArduinoBridge
+        # ROSArduinoBridge PID runs at 30Hz, so frame = 1/30 second
+        ticks_per_rev = self.get_parameter('encoder_ticks_per_rev').value
+        wheel_circumference = self.get_parameter('wheel_circumference').value
+        
+        # Convert linear velocity to ticks per frame
+        left_ticks_per_frame = int((left_lin / wheel_circumference) * ticks_per_rev / 30.0)
+        right_ticks_per_frame = int((right_lin / wheel_circumference) * ticks_per_rev / 30.0)
+        
+        self._send_motor_commands(left_ticks_per_frame, right_ticks_per_frame)
 
-    def _send_motor_commands(self, left_value, right_value):
-        """Send motor commands to Arduino.
-        When use_speed_commands=true, values are wheel speeds (rad/s) and the command is 'M<left>,<right>\n'.
-        Otherwise, values are PWM and the command is '<left,right>\n' using configured delimiters.
-        """
+    def _send_motor_commands(self, left_ticks, right_ticks):
+        """Send motor commands to ROSArduinoBridge using 'm' command"""
         if not self.connected or not self.serial_conn:
             return
             
         try:
-            start_delim = self.get_parameter('start_delimiter').value
-            end_delim = self.get_parameter('end_delimiter').value
-            separator = self.get_parameter('field_separator').value
-            
-            if self.get_parameter('use_speed_commands').value:
-                # Send rad/s with limited precision to reduce bandwidth
-                command = f"M{left_value:.3f}{separator}{right_value:.3f}\n"
-            else:
-                command = f"{start_delim}{left_value}{separator}{right_value}{end_delim}\n"
+            # ROSArduinoBridge expects: "m <left_ticks> <right_ticks>\r"
+            command = f"m {left_ticks} {right_ticks}\r"
             
             with self.connection_lock:
                 self.serial_conn.write(command.encode('utf-8'))
@@ -366,6 +346,32 @@ class ArduinoDriver(Node):
         except Exception as e:
             self.get_logger().error(f'Failed to send motor commands: {e}')
             self.connected = False
+    
+    def reset_encoders(self):
+        """Reset encoder counts to zero"""
+        response = self._send_command("r\r")
+        if "OK" in response:
+            self.encoder_left = 0
+            self.encoder_right = 0
+            self.get_logger().info("Encoders reset")
+    
+    def set_pid_parameters(self, kp=None, kd=None, ki=None, ko=None):
+        """Update PID parameters on Arduino"""
+        if kp is None:
+            kp = self.get_parameter('pid_kp').value
+        if kd is None:
+            kd = self.get_parameter('pid_kd').value
+        if ki is None:
+            ki = self.get_parameter('pid_ki').value
+        if ko is None:
+            ko = self.get_parameter('pid_ko').value
+            
+        command = f"u {kp}:{kd}:{ki}:{ko}\r"
+        response = self._send_command(command)
+        if "OK" in response:
+            self.get_logger().info(f"PID updated: Kp={kp}, Kd={kd}, Ki={ki}, Ko={ko}")
+        else:
+            self.get_logger().warn("Failed to update PID parameters")
     
     def cleanup(self):
         """Cleanup resources"""

@@ -23,7 +23,7 @@ function(ament_cmake_symlink_install_directory cmake_current_source_dir)
 
   # make destination absolute path and ensure that it exists
   if(NOT IS_ABSOLUTE "${ARG_DESTINATION}")
-    set(ARG_DESTINATION "/root/Dojo/install/robot_interfaces/${ARG_DESTINATION}")
+    set(ARG_DESTINATION "/root/Dojo/Dojo/install/robot_interfaces/${ARG_DESTINATION}")
   endif()
   if(NOT EXISTS "${ARG_DESTINATION}")
     file(MAKE_DIRECTORY "${ARG_DESTINATION}")
@@ -123,7 +123,7 @@ function(ament_cmake_symlink_install_files cmake_current_source_dir)
 
   # make destination an absolute path and ensure that it exists
   if(NOT IS_ABSOLUTE "${ARG_DESTINATION}")
-    set(ARG_DESTINATION "/root/Dojo/install/robot_interfaces/${ARG_DESTINATION}")
+    set(ARG_DESTINATION "/root/Dojo/Dojo/install/robot_interfaces/${ARG_DESTINATION}")
   endif()
   if(NOT EXISTS "${ARG_DESTINATION}")
     file(MAKE_DIRECTORY "${ARG_DESTINATION}")
@@ -181,7 +181,7 @@ function(ament_cmake_symlink_install_programs cmake_current_source_dir)
 
   # make destination an absolute path and ensure that it exists
   if(NOT IS_ABSOLUTE "${ARG_DESTINATION}")
-    set(ARG_DESTINATION "/root/Dojo/install/robot_interfaces/${ARG_DESTINATION}")
+    set(ARG_DESTINATION "/root/Dojo/Dojo/install/robot_interfaces/${ARG_DESTINATION}")
   endif()
   if(NOT EXISTS "${ARG_DESTINATION}")
     file(MAKE_DIRECTORY "${ARG_DESTINATION}")
@@ -251,7 +251,7 @@ function(ament_cmake_symlink_install_targets)
 
     # make destination an absolute path and ensure that it exists
     if(NOT IS_ABSOLUTE "${destination}")
-      set(destination "/root/Dojo/install/robot_interfaces/${destination}")
+      set(destination "/root/Dojo/Dojo/install/robot_interfaces/${destination}")
     endif()
     if(NOT EXISTS "${destination}")
       file(MAKE_DIRECTORY "${destination}")
@@ -310,167 +310,167 @@ message(STATUS "Execute custom install script")
 
 # begin of custom install code
 
-# install(FILES "/root/Dojo/build/robot_interfaces/ament_cmake_index/share/ament_index/resource_index/rosidl_interfaces/robot_interfaces" "DESTINATION" "share/ament_index/resource_index/rosidl_interfaces")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_interfaces" FILES "/root/Dojo/build/robot_interfaces/ament_cmake_index/share/ament_index/resource_index/rosidl_interfaces/robot_interfaces" "DESTINATION" "share/ament_index/resource_index/rosidl_interfaces")
+# install(FILES "/root/Dojo/Dojo/build/robot_interfaces/ament_cmake_index/share/ament_index/resource_index/rosidl_interfaces/robot_interfaces" "DESTINATION" "share/ament_index/resource_index/rosidl_interfaces")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_interfaces" FILES "/root/Dojo/Dojo/build/robot_interfaces/ament_cmake_index/share/ament_index/resource_index/rosidl_interfaces/robot_interfaces" "DESTINATION" "share/ament_index/resource_index/rosidl_interfaces")
 
-# install(DIRECTORY "/root/Dojo/build/robot_interfaces/rosidl_generator_c/robot_interfaces/" "DESTINATION" "include/robot_interfaces/robot_interfaces" "PATTERN" "*.h")
-ament_cmake_symlink_install_directory("/root/Dojo/src/robot_interfaces" DIRECTORY "/root/Dojo/build/robot_interfaces/rosidl_generator_c/robot_interfaces/" "DESTINATION" "include/robot_interfaces/robot_interfaces" "PATTERN" "*.h")
+# install(DIRECTORY "/root/Dojo/Dojo/build/robot_interfaces/rosidl_generator_c/robot_interfaces/" "DESTINATION" "include/robot_interfaces/robot_interfaces" "PATTERN" "*.h")
+ament_cmake_symlink_install_directory("/root/Dojo/Dojo/src/robot_interfaces" DIRECTORY "/root/Dojo/Dojo/build/robot_interfaces/rosidl_generator_c/robot_interfaces/" "DESTINATION" "include/robot_interfaces/robot_interfaces" "PATTERN" "*.h")
 
 # install(FILES "/opt/ros/humble/lib/python3.10/site-packages/ament_package/template/environment_hook/library_path.sh" "DESTINATION" "share/robot_interfaces/environment")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_interfaces" FILES "/opt/ros/humble/lib/python3.10/site-packages/ament_package/template/environment_hook/library_path.sh" "DESTINATION" "share/robot_interfaces/environment")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_interfaces" FILES "/opt/ros/humble/lib/python3.10/site-packages/ament_package/template/environment_hook/library_path.sh" "DESTINATION" "share/robot_interfaces/environment")
 
-# install(FILES "/root/Dojo/build/robot_interfaces/ament_cmake_environment_hooks/library_path.dsv" "DESTINATION" "share/robot_interfaces/environment")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_interfaces" FILES "/root/Dojo/build/robot_interfaces/ament_cmake_environment_hooks/library_path.dsv" "DESTINATION" "share/robot_interfaces/environment")
+# install(FILES "/root/Dojo/Dojo/build/robot_interfaces/ament_cmake_environment_hooks/library_path.dsv" "DESTINATION" "share/robot_interfaces/environment")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_interfaces" FILES "/root/Dojo/Dojo/build/robot_interfaces/ament_cmake_environment_hooks/library_path.dsv" "DESTINATION" "share/robot_interfaces/environment")
 
-# install(DIRECTORY "/root/Dojo/build/robot_interfaces/rosidl_typesupport_fastrtps_c/robot_interfaces/" "DESTINATION" "include/robot_interfaces/robot_interfaces" "PATTERN_EXCLUDE" "*.cpp")
-ament_cmake_symlink_install_directory("/root/Dojo/src/robot_interfaces" DIRECTORY "/root/Dojo/build/robot_interfaces/rosidl_typesupport_fastrtps_c/robot_interfaces/" "DESTINATION" "include/robot_interfaces/robot_interfaces" "PATTERN_EXCLUDE" "*.cpp")
+# install(DIRECTORY "/root/Dojo/Dojo/build/robot_interfaces/rosidl_typesupport_fastrtps_c/robot_interfaces/" "DESTINATION" "include/robot_interfaces/robot_interfaces" "PATTERN_EXCLUDE" "*.cpp")
+ament_cmake_symlink_install_directory("/root/Dojo/Dojo/src/robot_interfaces" DIRECTORY "/root/Dojo/Dojo/build/robot_interfaces/rosidl_typesupport_fastrtps_c/robot_interfaces/" "DESTINATION" "include/robot_interfaces/robot_interfaces" "PATTERN_EXCLUDE" "*.cpp")
 
-# install(DIRECTORY "/root/Dojo/build/robot_interfaces/rosidl_generator_cpp/robot_interfaces/" "DESTINATION" "include/robot_interfaces/robot_interfaces" "PATTERN" "*.hpp")
-ament_cmake_symlink_install_directory("/root/Dojo/src/robot_interfaces" DIRECTORY "/root/Dojo/build/robot_interfaces/rosidl_generator_cpp/robot_interfaces/" "DESTINATION" "include/robot_interfaces/robot_interfaces" "PATTERN" "*.hpp")
+# install(DIRECTORY "/root/Dojo/Dojo/build/robot_interfaces/rosidl_generator_cpp/robot_interfaces/" "DESTINATION" "include/robot_interfaces/robot_interfaces" "PATTERN" "*.hpp")
+ament_cmake_symlink_install_directory("/root/Dojo/Dojo/src/robot_interfaces" DIRECTORY "/root/Dojo/Dojo/build/robot_interfaces/rosidl_generator_cpp/robot_interfaces/" "DESTINATION" "include/robot_interfaces/robot_interfaces" "PATTERN" "*.hpp")
 
-# install(DIRECTORY "/root/Dojo/build/robot_interfaces/rosidl_typesupport_fastrtps_cpp/robot_interfaces/" "DESTINATION" "include/robot_interfaces/robot_interfaces" "PATTERN_EXCLUDE" "*.cpp")
-ament_cmake_symlink_install_directory("/root/Dojo/src/robot_interfaces" DIRECTORY "/root/Dojo/build/robot_interfaces/rosidl_typesupport_fastrtps_cpp/robot_interfaces/" "DESTINATION" "include/robot_interfaces/robot_interfaces" "PATTERN_EXCLUDE" "*.cpp")
+# install(DIRECTORY "/root/Dojo/Dojo/build/robot_interfaces/rosidl_typesupport_fastrtps_cpp/robot_interfaces/" "DESTINATION" "include/robot_interfaces/robot_interfaces" "PATTERN_EXCLUDE" "*.cpp")
+ament_cmake_symlink_install_directory("/root/Dojo/Dojo/src/robot_interfaces" DIRECTORY "/root/Dojo/Dojo/build/robot_interfaces/rosidl_typesupport_fastrtps_cpp/robot_interfaces/" "DESTINATION" "include/robot_interfaces/robot_interfaces" "PATTERN_EXCLUDE" "*.cpp")
 
-# install(DIRECTORY "/root/Dojo/build/robot_interfaces/rosidl_typesupport_introspection_c/robot_interfaces/" "DESTINATION" "include/robot_interfaces/robot_interfaces" "PATTERN" "*.h")
-ament_cmake_symlink_install_directory("/root/Dojo/src/robot_interfaces" DIRECTORY "/root/Dojo/build/robot_interfaces/rosidl_typesupport_introspection_c/robot_interfaces/" "DESTINATION" "include/robot_interfaces/robot_interfaces" "PATTERN" "*.h")
+# install(DIRECTORY "/root/Dojo/Dojo/build/robot_interfaces/rosidl_typesupport_introspection_c/robot_interfaces/" "DESTINATION" "include/robot_interfaces/robot_interfaces" "PATTERN" "*.h")
+ament_cmake_symlink_install_directory("/root/Dojo/Dojo/src/robot_interfaces" DIRECTORY "/root/Dojo/Dojo/build/robot_interfaces/rosidl_typesupport_introspection_c/robot_interfaces/" "DESTINATION" "include/robot_interfaces/robot_interfaces" "PATTERN" "*.h")
 
-# install(DIRECTORY "/root/Dojo/build/robot_interfaces/rosidl_typesupport_introspection_cpp/robot_interfaces/" "DESTINATION" "include/robot_interfaces/robot_interfaces" "PATTERN" "*.hpp")
-ament_cmake_symlink_install_directory("/root/Dojo/src/robot_interfaces" DIRECTORY "/root/Dojo/build/robot_interfaces/rosidl_typesupport_introspection_cpp/robot_interfaces/" "DESTINATION" "include/robot_interfaces/robot_interfaces" "PATTERN" "*.hpp")
+# install(DIRECTORY "/root/Dojo/Dojo/build/robot_interfaces/rosidl_typesupport_introspection_cpp/robot_interfaces/" "DESTINATION" "include/robot_interfaces/robot_interfaces" "PATTERN" "*.hpp")
+ament_cmake_symlink_install_directory("/root/Dojo/Dojo/src/robot_interfaces" DIRECTORY "/root/Dojo/Dojo/build/robot_interfaces/rosidl_typesupport_introspection_cpp/robot_interfaces/" "DESTINATION" "include/robot_interfaces/robot_interfaces" "PATTERN" "*.hpp")
 
-# install(FILES "/root/Dojo/build/robot_interfaces/ament_cmake_environment_hooks/pythonpath.sh" "DESTINATION" "share/robot_interfaces/environment")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_interfaces" FILES "/root/Dojo/build/robot_interfaces/ament_cmake_environment_hooks/pythonpath.sh" "DESTINATION" "share/robot_interfaces/environment")
+# install(FILES "/root/Dojo/Dojo/build/robot_interfaces/ament_cmake_environment_hooks/pythonpath.sh" "DESTINATION" "share/robot_interfaces/environment")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_interfaces" FILES "/root/Dojo/Dojo/build/robot_interfaces/ament_cmake_environment_hooks/pythonpath.sh" "DESTINATION" "share/robot_interfaces/environment")
 
-# install(FILES "/root/Dojo/build/robot_interfaces/ament_cmake_environment_hooks/pythonpath.dsv" "DESTINATION" "share/robot_interfaces/environment")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_interfaces" FILES "/root/Dojo/build/robot_interfaces/ament_cmake_environment_hooks/pythonpath.dsv" "DESTINATION" "share/robot_interfaces/environment")
+# install(FILES "/root/Dojo/Dojo/build/robot_interfaces/ament_cmake_environment_hooks/pythonpath.dsv" "DESTINATION" "share/robot_interfaces/environment")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_interfaces" FILES "/root/Dojo/Dojo/build/robot_interfaces/ament_cmake_environment_hooks/pythonpath.dsv" "DESTINATION" "share/robot_interfaces/environment")
 
-# install(DIRECTORY "/root/Dojo/build/robot_interfaces/ament_cmake_python/robot_interfaces/robot_interfaces.egg-info/" "DESTINATION" "local/lib/python3.10/dist-packages/robot_interfaces-1.0.0-py3.10.egg-info")
-ament_cmake_symlink_install_directory("/root/Dojo/src/robot_interfaces" DIRECTORY "/root/Dojo/build/robot_interfaces/ament_cmake_python/robot_interfaces/robot_interfaces.egg-info/" "DESTINATION" "local/lib/python3.10/dist-packages/robot_interfaces-1.0.0-py3.10.egg-info")
+# install(DIRECTORY "/root/Dojo/Dojo/build/robot_interfaces/ament_cmake_python/robot_interfaces/robot_interfaces.egg-info/" "DESTINATION" "local/lib/python3.10/dist-packages/robot_interfaces-1.0.0-py3.10.egg-info")
+ament_cmake_symlink_install_directory("/root/Dojo/Dojo/src/robot_interfaces" DIRECTORY "/root/Dojo/Dojo/build/robot_interfaces/ament_cmake_python/robot_interfaces/robot_interfaces.egg-info/" "DESTINATION" "local/lib/python3.10/dist-packages/robot_interfaces-1.0.0-py3.10.egg-info")
 
-# install(DIRECTORY "/root/Dojo/build/robot_interfaces/rosidl_generator_py/robot_interfaces/" "DESTINATION" "local/lib/python3.10/dist-packages/robot_interfaces" "PATTERN_EXCLUDE" "*.pyc" "PATTERN_EXCLUDE" "__pycache__")
-ament_cmake_symlink_install_directory("/root/Dojo/src/robot_interfaces" DIRECTORY "/root/Dojo/build/robot_interfaces/rosidl_generator_py/robot_interfaces/" "DESTINATION" "local/lib/python3.10/dist-packages/robot_interfaces" "PATTERN_EXCLUDE" "*.pyc" "PATTERN_EXCLUDE" "__pycache__")
+# install(DIRECTORY "/root/Dojo/Dojo/build/robot_interfaces/rosidl_generator_py/robot_interfaces/" "DESTINATION" "local/lib/python3.10/dist-packages/robot_interfaces" "PATTERN_EXCLUDE" "*.pyc" "PATTERN_EXCLUDE" "__pycache__")
+ament_cmake_symlink_install_directory("/root/Dojo/Dojo/src/robot_interfaces" DIRECTORY "/root/Dojo/Dojo/build/robot_interfaces/rosidl_generator_py/robot_interfaces/" "DESTINATION" "local/lib/python3.10/dist-packages/robot_interfaces" "PATTERN_EXCLUDE" "*.pyc" "PATTERN_EXCLUDE" "__pycache__")
 
 # install("TARGETS" "robot_interfaces__rosidl_typesupport_fastrtps_c__pyext" "DESTINATION" "local/lib/python3.10/dist-packages/robot_interfaces")
-include("/root/Dojo/build/robot_interfaces/ament_cmake_symlink_install_targets_0_${CMAKE_INSTALL_CONFIG_NAME}.cmake")
+include("/root/Dojo/Dojo/build/robot_interfaces/ament_cmake_symlink_install_targets_0_${CMAKE_INSTALL_CONFIG_NAME}.cmake")
 
 # install("TARGETS" "robot_interfaces__rosidl_typesupport_introspection_c__pyext" "DESTINATION" "local/lib/python3.10/dist-packages/robot_interfaces")
-include("/root/Dojo/build/robot_interfaces/ament_cmake_symlink_install_targets_1_${CMAKE_INSTALL_CONFIG_NAME}.cmake")
+include("/root/Dojo/Dojo/build/robot_interfaces/ament_cmake_symlink_install_targets_1_${CMAKE_INSTALL_CONFIG_NAME}.cmake")
 
 # install("TARGETS" "robot_interfaces__rosidl_typesupport_c__pyext" "DESTINATION" "local/lib/python3.10/dist-packages/robot_interfaces")
-include("/root/Dojo/build/robot_interfaces/ament_cmake_symlink_install_targets_2_${CMAKE_INSTALL_CONFIG_NAME}.cmake")
+include("/root/Dojo/Dojo/build/robot_interfaces/ament_cmake_symlink_install_targets_2_${CMAKE_INSTALL_CONFIG_NAME}.cmake")
 
-# install(FILES "/root/Dojo/build/robot_interfaces/rosidl_adapter/robot_interfaces/msg/HardwareStatus.idl" "DESTINATION" "share/robot_interfaces/msg")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_interfaces" FILES "/root/Dojo/build/robot_interfaces/rosidl_adapter/robot_interfaces/msg/HardwareStatus.idl" "DESTINATION" "share/robot_interfaces/msg")
+# install(FILES "/root/Dojo/Dojo/build/robot_interfaces/rosidl_adapter/robot_interfaces/msg/HardwareStatus.idl" "DESTINATION" "share/robot_interfaces/msg")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_interfaces" FILES "/root/Dojo/Dojo/build/robot_interfaces/rosidl_adapter/robot_interfaces/msg/HardwareStatus.idl" "DESTINATION" "share/robot_interfaces/msg")
 
-# install(FILES "/root/Dojo/build/robot_interfaces/rosidl_adapter/robot_interfaces/msg/SensorData.idl" "DESTINATION" "share/robot_interfaces/msg")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_interfaces" FILES "/root/Dojo/build/robot_interfaces/rosidl_adapter/robot_interfaces/msg/SensorData.idl" "DESTINATION" "share/robot_interfaces/msg")
+# install(FILES "/root/Dojo/Dojo/build/robot_interfaces/rosidl_adapter/robot_interfaces/msg/SensorData.idl" "DESTINATION" "share/robot_interfaces/msg")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_interfaces" FILES "/root/Dojo/Dojo/build/robot_interfaces/rosidl_adapter/robot_interfaces/msg/SensorData.idl" "DESTINATION" "share/robot_interfaces/msg")
 
-# install(FILES "/root/Dojo/build/robot_interfaces/rosidl_adapter/robot_interfaces/msg/MotorCommand.idl" "DESTINATION" "share/robot_interfaces/msg")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_interfaces" FILES "/root/Dojo/build/robot_interfaces/rosidl_adapter/robot_interfaces/msg/MotorCommand.idl" "DESTINATION" "share/robot_interfaces/msg")
+# install(FILES "/root/Dojo/Dojo/build/robot_interfaces/rosidl_adapter/robot_interfaces/msg/MotorCommand.idl" "DESTINATION" "share/robot_interfaces/msg")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_interfaces" FILES "/root/Dojo/Dojo/build/robot_interfaces/rosidl_adapter/robot_interfaces/msg/MotorCommand.idl" "DESTINATION" "share/robot_interfaces/msg")
 
-# install(FILES "/root/Dojo/build/robot_interfaces/rosidl_adapter/robot_interfaces/msg/RobotState.idl" "DESTINATION" "share/robot_interfaces/msg")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_interfaces" FILES "/root/Dojo/build/robot_interfaces/rosidl_adapter/robot_interfaces/msg/RobotState.idl" "DESTINATION" "share/robot_interfaces/msg")
+# install(FILES "/root/Dojo/Dojo/build/robot_interfaces/rosidl_adapter/robot_interfaces/msg/RobotState.idl" "DESTINATION" "share/robot_interfaces/msg")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_interfaces" FILES "/root/Dojo/Dojo/build/robot_interfaces/rosidl_adapter/robot_interfaces/msg/RobotState.idl" "DESTINATION" "share/robot_interfaces/msg")
 
-# install(FILES "/root/Dojo/build/robot_interfaces/rosidl_adapter/robot_interfaces/srv/Calibration.idl" "DESTINATION" "share/robot_interfaces/srv")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_interfaces" FILES "/root/Dojo/build/robot_interfaces/rosidl_adapter/robot_interfaces/srv/Calibration.idl" "DESTINATION" "share/robot_interfaces/srv")
+# install(FILES "/root/Dojo/Dojo/build/robot_interfaces/rosidl_adapter/robot_interfaces/srv/Calibration.idl" "DESTINATION" "share/robot_interfaces/srv")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_interfaces" FILES "/root/Dojo/Dojo/build/robot_interfaces/rosidl_adapter/robot_interfaces/srv/Calibration.idl" "DESTINATION" "share/robot_interfaces/srv")
 
-# install(FILES "/root/Dojo/build/robot_interfaces/rosidl_adapter/robot_interfaces/srv/SetMode.idl" "DESTINATION" "share/robot_interfaces/srv")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_interfaces" FILES "/root/Dojo/build/robot_interfaces/rosidl_adapter/robot_interfaces/srv/SetMode.idl" "DESTINATION" "share/robot_interfaces/srv")
+# install(FILES "/root/Dojo/Dojo/build/robot_interfaces/rosidl_adapter/robot_interfaces/srv/SetMode.idl" "DESTINATION" "share/robot_interfaces/srv")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_interfaces" FILES "/root/Dojo/Dojo/build/robot_interfaces/rosidl_adapter/robot_interfaces/srv/SetMode.idl" "DESTINATION" "share/robot_interfaces/srv")
 
-# install(FILES "/root/Dojo/build/robot_interfaces/rosidl_adapter/robot_interfaces/action/Navigation.idl" "DESTINATION" "share/robot_interfaces/action")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_interfaces" FILES "/root/Dojo/build/robot_interfaces/rosidl_adapter/robot_interfaces/action/Navigation.idl" "DESTINATION" "share/robot_interfaces/action")
+# install(FILES "/root/Dojo/Dojo/build/robot_interfaces/rosidl_adapter/robot_interfaces/action/Navigation.idl" "DESTINATION" "share/robot_interfaces/action")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_interfaces" FILES "/root/Dojo/Dojo/build/robot_interfaces/rosidl_adapter/robot_interfaces/action/Navigation.idl" "DESTINATION" "share/robot_interfaces/action")
 
-# install(FILES "/root/Dojo/src/robot_interfaces/msg/HardwareStatus.msg" "DESTINATION" "share/robot_interfaces/msg")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_interfaces" FILES "/root/Dojo/src/robot_interfaces/msg/HardwareStatus.msg" "DESTINATION" "share/robot_interfaces/msg")
+# install(FILES "/root/Dojo/Dojo/src/robot_interfaces/msg/HardwareStatus.msg" "DESTINATION" "share/robot_interfaces/msg")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_interfaces" FILES "/root/Dojo/Dojo/src/robot_interfaces/msg/HardwareStatus.msg" "DESTINATION" "share/robot_interfaces/msg")
 
-# install(FILES "/root/Dojo/src/robot_interfaces/msg/SensorData.msg" "DESTINATION" "share/robot_interfaces/msg")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_interfaces" FILES "/root/Dojo/src/robot_interfaces/msg/SensorData.msg" "DESTINATION" "share/robot_interfaces/msg")
+# install(FILES "/root/Dojo/Dojo/src/robot_interfaces/msg/SensorData.msg" "DESTINATION" "share/robot_interfaces/msg")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_interfaces" FILES "/root/Dojo/Dojo/src/robot_interfaces/msg/SensorData.msg" "DESTINATION" "share/robot_interfaces/msg")
 
-# install(FILES "/root/Dojo/src/robot_interfaces/msg/MotorCommand.msg" "DESTINATION" "share/robot_interfaces/msg")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_interfaces" FILES "/root/Dojo/src/robot_interfaces/msg/MotorCommand.msg" "DESTINATION" "share/robot_interfaces/msg")
+# install(FILES "/root/Dojo/Dojo/src/robot_interfaces/msg/MotorCommand.msg" "DESTINATION" "share/robot_interfaces/msg")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_interfaces" FILES "/root/Dojo/Dojo/src/robot_interfaces/msg/MotorCommand.msg" "DESTINATION" "share/robot_interfaces/msg")
 
-# install(FILES "/root/Dojo/src/robot_interfaces/msg/RobotState.msg" "DESTINATION" "share/robot_interfaces/msg")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_interfaces" FILES "/root/Dojo/src/robot_interfaces/msg/RobotState.msg" "DESTINATION" "share/robot_interfaces/msg")
+# install(FILES "/root/Dojo/Dojo/src/robot_interfaces/msg/RobotState.msg" "DESTINATION" "share/robot_interfaces/msg")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_interfaces" FILES "/root/Dojo/Dojo/src/robot_interfaces/msg/RobotState.msg" "DESTINATION" "share/robot_interfaces/msg")
 
-# install(FILES "/root/Dojo/src/robot_interfaces/srv/Calibration.srv" "DESTINATION" "share/robot_interfaces/srv")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_interfaces" FILES "/root/Dojo/src/robot_interfaces/srv/Calibration.srv" "DESTINATION" "share/robot_interfaces/srv")
+# install(FILES "/root/Dojo/Dojo/src/robot_interfaces/srv/Calibration.srv" "DESTINATION" "share/robot_interfaces/srv")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_interfaces" FILES "/root/Dojo/Dojo/src/robot_interfaces/srv/Calibration.srv" "DESTINATION" "share/robot_interfaces/srv")
 
-# install(FILES "/root/Dojo/build/robot_interfaces/rosidl_cmake/srv/Calibration_Request.msg" "DESTINATION" "share/robot_interfaces/srv")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_interfaces" FILES "/root/Dojo/build/robot_interfaces/rosidl_cmake/srv/Calibration_Request.msg" "DESTINATION" "share/robot_interfaces/srv")
+# install(FILES "/root/Dojo/Dojo/build/robot_interfaces/rosidl_cmake/srv/Calibration_Request.msg" "DESTINATION" "share/robot_interfaces/srv")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_interfaces" FILES "/root/Dojo/Dojo/build/robot_interfaces/rosidl_cmake/srv/Calibration_Request.msg" "DESTINATION" "share/robot_interfaces/srv")
 
-# install(FILES "/root/Dojo/build/robot_interfaces/rosidl_cmake/srv/Calibration_Response.msg" "DESTINATION" "share/robot_interfaces/srv")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_interfaces" FILES "/root/Dojo/build/robot_interfaces/rosidl_cmake/srv/Calibration_Response.msg" "DESTINATION" "share/robot_interfaces/srv")
+# install(FILES "/root/Dojo/Dojo/build/robot_interfaces/rosidl_cmake/srv/Calibration_Response.msg" "DESTINATION" "share/robot_interfaces/srv")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_interfaces" FILES "/root/Dojo/Dojo/build/robot_interfaces/rosidl_cmake/srv/Calibration_Response.msg" "DESTINATION" "share/robot_interfaces/srv")
 
-# install(FILES "/root/Dojo/src/robot_interfaces/srv/SetMode.srv" "DESTINATION" "share/robot_interfaces/srv")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_interfaces" FILES "/root/Dojo/src/robot_interfaces/srv/SetMode.srv" "DESTINATION" "share/robot_interfaces/srv")
+# install(FILES "/root/Dojo/Dojo/src/robot_interfaces/srv/SetMode.srv" "DESTINATION" "share/robot_interfaces/srv")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_interfaces" FILES "/root/Dojo/Dojo/src/robot_interfaces/srv/SetMode.srv" "DESTINATION" "share/robot_interfaces/srv")
 
-# install(FILES "/root/Dojo/build/robot_interfaces/rosidl_cmake/srv/SetMode_Request.msg" "DESTINATION" "share/robot_interfaces/srv")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_interfaces" FILES "/root/Dojo/build/robot_interfaces/rosidl_cmake/srv/SetMode_Request.msg" "DESTINATION" "share/robot_interfaces/srv")
+# install(FILES "/root/Dojo/Dojo/build/robot_interfaces/rosidl_cmake/srv/SetMode_Request.msg" "DESTINATION" "share/robot_interfaces/srv")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_interfaces" FILES "/root/Dojo/Dojo/build/robot_interfaces/rosidl_cmake/srv/SetMode_Request.msg" "DESTINATION" "share/robot_interfaces/srv")
 
-# install(FILES "/root/Dojo/build/robot_interfaces/rosidl_cmake/srv/SetMode_Response.msg" "DESTINATION" "share/robot_interfaces/srv")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_interfaces" FILES "/root/Dojo/build/robot_interfaces/rosidl_cmake/srv/SetMode_Response.msg" "DESTINATION" "share/robot_interfaces/srv")
+# install(FILES "/root/Dojo/Dojo/build/robot_interfaces/rosidl_cmake/srv/SetMode_Response.msg" "DESTINATION" "share/robot_interfaces/srv")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_interfaces" FILES "/root/Dojo/Dojo/build/robot_interfaces/rosidl_cmake/srv/SetMode_Response.msg" "DESTINATION" "share/robot_interfaces/srv")
 
-# install(FILES "/root/Dojo/src/robot_interfaces/action/Navigation.action" "DESTINATION" "share/robot_interfaces/action")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_interfaces" FILES "/root/Dojo/src/robot_interfaces/action/Navigation.action" "DESTINATION" "share/robot_interfaces/action")
+# install(FILES "/root/Dojo/Dojo/src/robot_interfaces/action/Navigation.action" "DESTINATION" "share/robot_interfaces/action")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_interfaces" FILES "/root/Dojo/Dojo/src/robot_interfaces/action/Navigation.action" "DESTINATION" "share/robot_interfaces/action")
 
-# install(FILES "/root/Dojo/build/robot_interfaces/ament_cmake_index/share/ament_index/resource_index/package_run_dependencies/robot_interfaces" "DESTINATION" "share/ament_index/resource_index/package_run_dependencies")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_interfaces" FILES "/root/Dojo/build/robot_interfaces/ament_cmake_index/share/ament_index/resource_index/package_run_dependencies/robot_interfaces" "DESTINATION" "share/ament_index/resource_index/package_run_dependencies")
+# install(FILES "/root/Dojo/Dojo/build/robot_interfaces/ament_cmake_index/share/ament_index/resource_index/package_run_dependencies/robot_interfaces" "DESTINATION" "share/ament_index/resource_index/package_run_dependencies")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_interfaces" FILES "/root/Dojo/Dojo/build/robot_interfaces/ament_cmake_index/share/ament_index/resource_index/package_run_dependencies/robot_interfaces" "DESTINATION" "share/ament_index/resource_index/package_run_dependencies")
 
-# install(FILES "/root/Dojo/build/robot_interfaces/ament_cmake_index/share/ament_index/resource_index/parent_prefix_path/robot_interfaces" "DESTINATION" "share/ament_index/resource_index/parent_prefix_path")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_interfaces" FILES "/root/Dojo/build/robot_interfaces/ament_cmake_index/share/ament_index/resource_index/parent_prefix_path/robot_interfaces" "DESTINATION" "share/ament_index/resource_index/parent_prefix_path")
+# install(FILES "/root/Dojo/Dojo/build/robot_interfaces/ament_cmake_index/share/ament_index/resource_index/parent_prefix_path/robot_interfaces" "DESTINATION" "share/ament_index/resource_index/parent_prefix_path")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_interfaces" FILES "/root/Dojo/Dojo/build/robot_interfaces/ament_cmake_index/share/ament_index/resource_index/parent_prefix_path/robot_interfaces" "DESTINATION" "share/ament_index/resource_index/parent_prefix_path")
 
 # install(FILES "/opt/ros/humble/share/ament_cmake_core/cmake/environment_hooks/environment/ament_prefix_path.sh" "DESTINATION" "share/robot_interfaces/environment")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_interfaces" FILES "/opt/ros/humble/share/ament_cmake_core/cmake/environment_hooks/environment/ament_prefix_path.sh" "DESTINATION" "share/robot_interfaces/environment")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_interfaces" FILES "/opt/ros/humble/share/ament_cmake_core/cmake/environment_hooks/environment/ament_prefix_path.sh" "DESTINATION" "share/robot_interfaces/environment")
 
-# install(FILES "/root/Dojo/build/robot_interfaces/ament_cmake_environment_hooks/ament_prefix_path.dsv" "DESTINATION" "share/robot_interfaces/environment")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_interfaces" FILES "/root/Dojo/build/robot_interfaces/ament_cmake_environment_hooks/ament_prefix_path.dsv" "DESTINATION" "share/robot_interfaces/environment")
+# install(FILES "/root/Dojo/Dojo/build/robot_interfaces/ament_cmake_environment_hooks/ament_prefix_path.dsv" "DESTINATION" "share/robot_interfaces/environment")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_interfaces" FILES "/root/Dojo/Dojo/build/robot_interfaces/ament_cmake_environment_hooks/ament_prefix_path.dsv" "DESTINATION" "share/robot_interfaces/environment")
 
 # install(FILES "/opt/ros/humble/share/ament_cmake_core/cmake/environment_hooks/environment/path.sh" "DESTINATION" "share/robot_interfaces/environment")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_interfaces" FILES "/opt/ros/humble/share/ament_cmake_core/cmake/environment_hooks/environment/path.sh" "DESTINATION" "share/robot_interfaces/environment")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_interfaces" FILES "/opt/ros/humble/share/ament_cmake_core/cmake/environment_hooks/environment/path.sh" "DESTINATION" "share/robot_interfaces/environment")
 
-# install(FILES "/root/Dojo/build/robot_interfaces/ament_cmake_environment_hooks/path.dsv" "DESTINATION" "share/robot_interfaces/environment")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_interfaces" FILES "/root/Dojo/build/robot_interfaces/ament_cmake_environment_hooks/path.dsv" "DESTINATION" "share/robot_interfaces/environment")
+# install(FILES "/root/Dojo/Dojo/build/robot_interfaces/ament_cmake_environment_hooks/path.dsv" "DESTINATION" "share/robot_interfaces/environment")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_interfaces" FILES "/root/Dojo/Dojo/build/robot_interfaces/ament_cmake_environment_hooks/path.dsv" "DESTINATION" "share/robot_interfaces/environment")
 
-# install(FILES "/root/Dojo/build/robot_interfaces/ament_cmake_environment_hooks/local_setup.bash" "DESTINATION" "share/robot_interfaces")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_interfaces" FILES "/root/Dojo/build/robot_interfaces/ament_cmake_environment_hooks/local_setup.bash" "DESTINATION" "share/robot_interfaces")
+# install(FILES "/root/Dojo/Dojo/build/robot_interfaces/ament_cmake_environment_hooks/local_setup.bash" "DESTINATION" "share/robot_interfaces")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_interfaces" FILES "/root/Dojo/Dojo/build/robot_interfaces/ament_cmake_environment_hooks/local_setup.bash" "DESTINATION" "share/robot_interfaces")
 
-# install(FILES "/root/Dojo/build/robot_interfaces/ament_cmake_environment_hooks/local_setup.sh" "DESTINATION" "share/robot_interfaces")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_interfaces" FILES "/root/Dojo/build/robot_interfaces/ament_cmake_environment_hooks/local_setup.sh" "DESTINATION" "share/robot_interfaces")
+# install(FILES "/root/Dojo/Dojo/build/robot_interfaces/ament_cmake_environment_hooks/local_setup.sh" "DESTINATION" "share/robot_interfaces")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_interfaces" FILES "/root/Dojo/Dojo/build/robot_interfaces/ament_cmake_environment_hooks/local_setup.sh" "DESTINATION" "share/robot_interfaces")
 
-# install(FILES "/root/Dojo/build/robot_interfaces/ament_cmake_environment_hooks/local_setup.zsh" "DESTINATION" "share/robot_interfaces")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_interfaces" FILES "/root/Dojo/build/robot_interfaces/ament_cmake_environment_hooks/local_setup.zsh" "DESTINATION" "share/robot_interfaces")
+# install(FILES "/root/Dojo/Dojo/build/robot_interfaces/ament_cmake_environment_hooks/local_setup.zsh" "DESTINATION" "share/robot_interfaces")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_interfaces" FILES "/root/Dojo/Dojo/build/robot_interfaces/ament_cmake_environment_hooks/local_setup.zsh" "DESTINATION" "share/robot_interfaces")
 
-# install(FILES "/root/Dojo/build/robot_interfaces/ament_cmake_environment_hooks/local_setup.dsv" "DESTINATION" "share/robot_interfaces")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_interfaces" FILES "/root/Dojo/build/robot_interfaces/ament_cmake_environment_hooks/local_setup.dsv" "DESTINATION" "share/robot_interfaces")
+# install(FILES "/root/Dojo/Dojo/build/robot_interfaces/ament_cmake_environment_hooks/local_setup.dsv" "DESTINATION" "share/robot_interfaces")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_interfaces" FILES "/root/Dojo/Dojo/build/robot_interfaces/ament_cmake_environment_hooks/local_setup.dsv" "DESTINATION" "share/robot_interfaces")
 
-# install(FILES "/root/Dojo/build/robot_interfaces/ament_cmake_environment_hooks/package.dsv" "DESTINATION" "share/robot_interfaces")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_interfaces" FILES "/root/Dojo/build/robot_interfaces/ament_cmake_environment_hooks/package.dsv" "DESTINATION" "share/robot_interfaces")
+# install(FILES "/root/Dojo/Dojo/build/robot_interfaces/ament_cmake_environment_hooks/package.dsv" "DESTINATION" "share/robot_interfaces")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_interfaces" FILES "/root/Dojo/Dojo/build/robot_interfaces/ament_cmake_environment_hooks/package.dsv" "DESTINATION" "share/robot_interfaces")
 
-# install(FILES "/root/Dojo/build/robot_interfaces/ament_cmake_index/share/ament_index/resource_index/packages/robot_interfaces" "DESTINATION" "share/ament_index/resource_index/packages")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_interfaces" FILES "/root/Dojo/build/robot_interfaces/ament_cmake_index/share/ament_index/resource_index/packages/robot_interfaces" "DESTINATION" "share/ament_index/resource_index/packages")
+# install(FILES "/root/Dojo/Dojo/build/robot_interfaces/ament_cmake_index/share/ament_index/resource_index/packages/robot_interfaces" "DESTINATION" "share/ament_index/resource_index/packages")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_interfaces" FILES "/root/Dojo/Dojo/build/robot_interfaces/ament_cmake_index/share/ament_index/resource_index/packages/robot_interfaces" "DESTINATION" "share/ament_index/resource_index/packages")
 
-# install(FILES "/root/Dojo/build/robot_interfaces/rosidl_cmake/rosidl_cmake-extras.cmake" "DESTINATION" "share/robot_interfaces/cmake")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_interfaces" FILES "/root/Dojo/build/robot_interfaces/rosidl_cmake/rosidl_cmake-extras.cmake" "DESTINATION" "share/robot_interfaces/cmake")
+# install(FILES "/root/Dojo/Dojo/build/robot_interfaces/rosidl_cmake/rosidl_cmake-extras.cmake" "DESTINATION" "share/robot_interfaces/cmake")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_interfaces" FILES "/root/Dojo/Dojo/build/robot_interfaces/rosidl_cmake/rosidl_cmake-extras.cmake" "DESTINATION" "share/robot_interfaces/cmake")
 
-# install(FILES "/root/Dojo/build/robot_interfaces/ament_cmake_export_dependencies/ament_cmake_export_dependencies-extras.cmake" "DESTINATION" "share/robot_interfaces/cmake")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_interfaces" FILES "/root/Dojo/build/robot_interfaces/ament_cmake_export_dependencies/ament_cmake_export_dependencies-extras.cmake" "DESTINATION" "share/robot_interfaces/cmake")
+# install(FILES "/root/Dojo/Dojo/build/robot_interfaces/ament_cmake_export_dependencies/ament_cmake_export_dependencies-extras.cmake" "DESTINATION" "share/robot_interfaces/cmake")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_interfaces" FILES "/root/Dojo/Dojo/build/robot_interfaces/ament_cmake_export_dependencies/ament_cmake_export_dependencies-extras.cmake" "DESTINATION" "share/robot_interfaces/cmake")
 
-# install(FILES "/root/Dojo/build/robot_interfaces/ament_cmake_export_include_directories/ament_cmake_export_include_directories-extras.cmake" "DESTINATION" "share/robot_interfaces/cmake")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_interfaces" FILES "/root/Dojo/build/robot_interfaces/ament_cmake_export_include_directories/ament_cmake_export_include_directories-extras.cmake" "DESTINATION" "share/robot_interfaces/cmake")
+# install(FILES "/root/Dojo/Dojo/build/robot_interfaces/ament_cmake_export_include_directories/ament_cmake_export_include_directories-extras.cmake" "DESTINATION" "share/robot_interfaces/cmake")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_interfaces" FILES "/root/Dojo/Dojo/build/robot_interfaces/ament_cmake_export_include_directories/ament_cmake_export_include_directories-extras.cmake" "DESTINATION" "share/robot_interfaces/cmake")
 
-# install(FILES "/root/Dojo/build/robot_interfaces/ament_cmake_export_libraries/ament_cmake_export_libraries-extras.cmake" "DESTINATION" "share/robot_interfaces/cmake")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_interfaces" FILES "/root/Dojo/build/robot_interfaces/ament_cmake_export_libraries/ament_cmake_export_libraries-extras.cmake" "DESTINATION" "share/robot_interfaces/cmake")
+# install(FILES "/root/Dojo/Dojo/build/robot_interfaces/ament_cmake_export_libraries/ament_cmake_export_libraries-extras.cmake" "DESTINATION" "share/robot_interfaces/cmake")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_interfaces" FILES "/root/Dojo/Dojo/build/robot_interfaces/ament_cmake_export_libraries/ament_cmake_export_libraries-extras.cmake" "DESTINATION" "share/robot_interfaces/cmake")
 
-# install(FILES "/root/Dojo/build/robot_interfaces/ament_cmake_export_targets/ament_cmake_export_targets-extras.cmake" "DESTINATION" "share/robot_interfaces/cmake")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_interfaces" FILES "/root/Dojo/build/robot_interfaces/ament_cmake_export_targets/ament_cmake_export_targets-extras.cmake" "DESTINATION" "share/robot_interfaces/cmake")
+# install(FILES "/root/Dojo/Dojo/build/robot_interfaces/ament_cmake_export_targets/ament_cmake_export_targets-extras.cmake" "DESTINATION" "share/robot_interfaces/cmake")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_interfaces" FILES "/root/Dojo/Dojo/build/robot_interfaces/ament_cmake_export_targets/ament_cmake_export_targets-extras.cmake" "DESTINATION" "share/robot_interfaces/cmake")
 
-# install(FILES "/root/Dojo/build/robot_interfaces/rosidl_cmake/rosidl_cmake_export_typesupport_targets-extras.cmake" "DESTINATION" "share/robot_interfaces/cmake")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_interfaces" FILES "/root/Dojo/build/robot_interfaces/rosidl_cmake/rosidl_cmake_export_typesupport_targets-extras.cmake" "DESTINATION" "share/robot_interfaces/cmake")
+# install(FILES "/root/Dojo/Dojo/build/robot_interfaces/rosidl_cmake/rosidl_cmake_export_typesupport_targets-extras.cmake" "DESTINATION" "share/robot_interfaces/cmake")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_interfaces" FILES "/root/Dojo/Dojo/build/robot_interfaces/rosidl_cmake/rosidl_cmake_export_typesupport_targets-extras.cmake" "DESTINATION" "share/robot_interfaces/cmake")
 
-# install(FILES "/root/Dojo/build/robot_interfaces/rosidl_cmake/rosidl_cmake_export_typesupport_libraries-extras.cmake" "DESTINATION" "share/robot_interfaces/cmake")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_interfaces" FILES "/root/Dojo/build/robot_interfaces/rosidl_cmake/rosidl_cmake_export_typesupport_libraries-extras.cmake" "DESTINATION" "share/robot_interfaces/cmake")
+# install(FILES "/root/Dojo/Dojo/build/robot_interfaces/rosidl_cmake/rosidl_cmake_export_typesupport_libraries-extras.cmake" "DESTINATION" "share/robot_interfaces/cmake")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_interfaces" FILES "/root/Dojo/Dojo/build/robot_interfaces/rosidl_cmake/rosidl_cmake_export_typesupport_libraries-extras.cmake" "DESTINATION" "share/robot_interfaces/cmake")
 
-# install(FILES "/root/Dojo/build/robot_interfaces/ament_cmake_core/robot_interfacesConfig.cmake" "/root/Dojo/build/robot_interfaces/ament_cmake_core/robot_interfacesConfig-version.cmake" "DESTINATION" "share/robot_interfaces/cmake")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_interfaces" FILES "/root/Dojo/build/robot_interfaces/ament_cmake_core/robot_interfacesConfig.cmake" "/root/Dojo/build/robot_interfaces/ament_cmake_core/robot_interfacesConfig-version.cmake" "DESTINATION" "share/robot_interfaces/cmake")
+# install(FILES "/root/Dojo/Dojo/build/robot_interfaces/ament_cmake_core/robot_interfacesConfig.cmake" "/root/Dojo/Dojo/build/robot_interfaces/ament_cmake_core/robot_interfacesConfig-version.cmake" "DESTINATION" "share/robot_interfaces/cmake")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_interfaces" FILES "/root/Dojo/Dojo/build/robot_interfaces/ament_cmake_core/robot_interfacesConfig.cmake" "/root/Dojo/Dojo/build/robot_interfaces/ament_cmake_core/robot_interfacesConfig-version.cmake" "DESTINATION" "share/robot_interfaces/cmake")
 
-# install(FILES "/root/Dojo/src/robot_interfaces/package.xml" "DESTINATION" "share/robot_interfaces")
-ament_cmake_symlink_install_files("/root/Dojo/src/robot_interfaces" FILES "/root/Dojo/src/robot_interfaces/package.xml" "DESTINATION" "share/robot_interfaces")
+# install(FILES "/root/Dojo/Dojo/src/robot_interfaces/package.xml" "DESTINATION" "share/robot_interfaces")
+ament_cmake_symlink_install_files("/root/Dojo/Dojo/src/robot_interfaces" FILES "/root/Dojo/Dojo/src/robot_interfaces/package.xml" "DESTINATION" "share/robot_interfaces")

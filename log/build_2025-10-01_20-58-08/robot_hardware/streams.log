@@ -1,0 +1,22 @@
+[2.970s] Invoking command in '/root/Dojo/Dojo/build/robot_hardware': PYTHONPATH=/root/Dojo/Dojo/build/robot_hardware/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/root/Dojo/Dojo/install/robot_hardware/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /root/Dojo/Dojo/build/robot_hardware/build --no-deps symlink_data
+[3.475s] running develop
+[3.809s] running egg_info
+[3.832s] writing robot_hardware.egg-info/PKG-INFO
+[3.832s] writing dependency_links to robot_hardware.egg-info/dependency_links.txt
+[3.833s] writing entry points to robot_hardware.egg-info/entry_points.txt
+[3.834s] writing requirements to robot_hardware.egg-info/requires.txt
+[3.834s] writing top-level names to robot_hardware.egg-info/top_level.txt
+[3.867s] reading manifest file 'robot_hardware.egg-info/SOURCES.txt'
+[3.868s] writing manifest file 'robot_hardware.egg-info/SOURCES.txt'
+[3.887s] running build_ext
+[3.888s] Creating /root/Dojo/Dojo/install/robot_hardware/lib/python3.10/site-packages/robot-hardware.egg-link (link to .)
+[3.889s] Installing arduino_driver script to /root/Dojo/Dojo/install/robot_hardware/lib/robot_hardware
+[3.890s] Installing camera_driver script to /root/Dojo/Dojo/install/robot_hardware/lib/robot_hardware
+[3.891s] Installing hardware_manager script to /root/Dojo/Dojo/install/robot_hardware/lib/robot_hardware
+[3.891s] Installing lidar_driver script to /root/Dojo/Dojo/install/robot_hardware/lib/robot_hardware
+[3.891s] 
+[3.892s] Installed /root/Dojo/Dojo/build/robot_hardware
+[3.892s] running symlink_data
+[3.892s] symbolically linking /root/Dojo/Dojo/build/robot_hardware/launch/rosarduino_bridge.launch.py -> /root/Dojo/Dojo/install/robot_hardware/share/robot_hardware/launch
+[3.892s] symbolically linking /root/Dojo/Dojo/build/robot_hardware/config/rosarduino_bridge.yaml -> /root/Dojo/Dojo/install/robot_hardware/share/robot_hardware/config
+[3.986s] Invoked command in '/root/Dojo/Dojo/build/robot_hardware' returned '0': PYTHONPATH=/root/Dojo/Dojo/build/robot_hardware/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/root/Dojo/Dojo/install/robot_hardware/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /root/Dojo/Dojo/build/robot_hardware/build --no-deps symlink_data

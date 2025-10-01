@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /root/Dojo/src/robot_interfaces
+CMAKE_SOURCE_DIR = /root/Dojo/Dojo/src/robot_interfaces
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /root/Dojo/build/robot_interfaces
+CMAKE_BINARY_DIR = /root/Dojo/Dojo/build/robot_interfaces
 
 # Utility rule file for robot_interfaces__py.
 
@@ -204,8 +204,8 @@ rosidl_generator_py/robot_interfaces/_robot_interfaces_s.ep.rosidl_typesupport_f
 rosidl_generator_py/robot_interfaces/_robot_interfaces_s.ep.rosidl_typesupport_fastrtps_c.c: /opt/ros/humble/share/action_msgs/msg/GoalStatusArray.idl
 rosidl_generator_py/robot_interfaces/_robot_interfaces_s.ep.rosidl_typesupport_fastrtps_c.c: /opt/ros/humble/share/action_msgs/srv/CancelGoal.idl
 rosidl_generator_py/robot_interfaces/_robot_interfaces_s.ep.rosidl_typesupport_fastrtps_c.c: /opt/ros/humble/share/unique_identifier_msgs/msg/UUID.idl
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/root/Dojo/build/robot_interfaces/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Generating Python code for ROS interfaces"
-	cd /root/Dojo/build/robot_interfaces/robot_interfaces__py && /usr/bin/python3 /opt/ros/humble/share/rosidl_generator_py/cmake/../../../lib/rosidl_generator_py/rosidl_generator_py --generator-arguments-file /root/Dojo/build/robot_interfaces/rosidl_generator_py__arguments.json --typesupport-impls "rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c;rosidl_typesupport_c"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/root/Dojo/Dojo/build/robot_interfaces/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Generating Python code for ROS interfaces"
+	cd /root/Dojo/Dojo/build/robot_interfaces/robot_interfaces__py && /usr/bin/python3 /opt/ros/humble/share/rosidl_generator_py/cmake/../../../lib/rosidl_generator_py/rosidl_generator_py --generator-arguments-file /root/Dojo/Dojo/build/robot_interfaces/rosidl_generator_py__arguments.json --typesupport-impls "rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c;rosidl_typesupport_c"
 
 rosidl_generator_py/robot_interfaces/_robot_interfaces_s.ep.rosidl_typesupport_introspection_c.c: rosidl_generator_py/robot_interfaces/_robot_interfaces_s.ep.rosidl_typesupport_fastrtps_c.c
 	@$(CMAKE_COMMAND) -E touch_nocreate rosidl_generator_py/robot_interfaces/_robot_interfaces_s.ep.rosidl_typesupport_introspection_c.c
@@ -293,10 +293,10 @@ robot_interfaces__py/CMakeFiles/robot_interfaces__py.dir/build: robot_interfaces
 .PHONY : robot_interfaces__py/CMakeFiles/robot_interfaces__py.dir/build
 
 robot_interfaces__py/CMakeFiles/robot_interfaces__py.dir/clean:
-	cd /root/Dojo/build/robot_interfaces/robot_interfaces__py && $(CMAKE_COMMAND) -P CMakeFiles/robot_interfaces__py.dir/cmake_clean.cmake
+	cd /root/Dojo/Dojo/build/robot_interfaces/robot_interfaces__py && $(CMAKE_COMMAND) -P CMakeFiles/robot_interfaces__py.dir/cmake_clean.cmake
 .PHONY : robot_interfaces__py/CMakeFiles/robot_interfaces__py.dir/clean
 
 robot_interfaces__py/CMakeFiles/robot_interfaces__py.dir/depend:
-	cd /root/Dojo/build/robot_interfaces && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /root/Dojo/src/robot_interfaces /root/Dojo/build/robot_interfaces/robot_interfaces__py /root/Dojo/build/robot_interfaces /root/Dojo/build/robot_interfaces/robot_interfaces__py /root/Dojo/build/robot_interfaces/robot_interfaces__py/CMakeFiles/robot_interfaces__py.dir/DependInfo.cmake --color=$(COLOR)
+	cd /root/Dojo/Dojo/build/robot_interfaces && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /root/Dojo/Dojo/src/robot_interfaces /root/Dojo/Dojo/build/robot_interfaces/robot_interfaces__py /root/Dojo/Dojo/build/robot_interfaces /root/Dojo/Dojo/build/robot_interfaces/robot_interfaces__py /root/Dojo/Dojo/build/robot_interfaces/robot_interfaces__py/CMakeFiles/robot_interfaces__py.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : robot_interfaces__py/CMakeFiles/robot_interfaces__py.dir/depend
 

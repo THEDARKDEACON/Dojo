@@ -1,0 +1,113 @@
+[0.052s] Invoking command in '/root/Dojo/Dojo/build/robot_description': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/root/Dojo/install/robot_hardware:/opt/ros/humble /usr/bin/cmake /root/Dojo/Dojo/src/robot_description -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/root/Dojo/Dojo/install/robot_description
+[1.785s] -- Found ament_cmake: 1.3.12 (/opt/ros/humble/share/ament_cmake/cmake)
+[1.785s] -- Override CMake install command with custom implementation using symlinks instead of copying resources
+[1.786s] -- Found rclcpp: 16.0.15 (/opt/ros/humble/share/rclcpp/cmake)
+[1.786s] -- Found rosidl_generator_c: 3.1.7 (/opt/ros/humble/share/rosidl_generator_c/cmake)
+[1.786s] -- Found rosidl_adapter: 3.1.7 (/opt/ros/humble/share/rosidl_adapter/cmake)
+[1.786s] -- Found rosidl_generator_cpp: 3.1.7 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)
+[1.786s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[1.786s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[1.786s] -- Found rmw_implementation_cmake: 6.1.2 (/opt/ros/humble/share/rmw_implementation_cmake/cmake)
+[1.786s] -- Found rmw_fastrtps_cpp: 6.2.8 (/opt/ros/humble/share/rmw_fastrtps_cpp/cmake)
+[1.786s] -- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[1.786s] -- Found geometry_msgs: 4.9.0 (/opt/ros/humble/share/geometry_msgs/cmake)
+[1.786s] -- Found sensor_msgs: 4.9.0 (/opt/ros/humble/share/sensor_msgs/cmake)
+[1.786s] -- Found tf2_ros: 0.25.16 (/opt/ros/humble/share/tf2_ros/cmake)
+[1.786s] -- Found urdf: 2.6.1 (/opt/ros/humble/share/urdf/cmake)
+[1.786s] -- Found xacro: 2.1.1 (/opt/ros/humble/share/xacro/cmake)
+[1.786s] -- Found gazebo_ros2_control: 0.4.10 (/opt/ros/humble/share/gazebo_ros2_control/cmake)
+[1.787s] -- Found DART: /usr/include (Required is at least version "6.6") found components: dart 
+[1.787s] -- Found Protobuf: /usr/lib/x86_64-linux-gnu/libprotobuf.so (found version "3.12.4") 
+[1.787s] -- Looking for ignition-math6 -- found version 6.15.1
+[1.787s] -- Searching for dependencies of ignition-math6
+[1.787s] -- Looking for OGRE...
+[1.787s] -- Found Ogre Ghadamon (1.9.0)
+[1.787s] -- Found OGRE: optimized;/usr/lib/x86_64-linux-gnu/libOgreMain.so;debug;/usr/lib/x86_64-linux-gnu/libOgreMain.so
+[1.787s] -- Looking for OGRE_Paging...
+[1.787s] -- Found OGRE_Paging: optimized;/usr/lib/x86_64-linux-gnu/libOgrePaging.so;debug;/usr/lib/x86_64-linux-gnu/libOgrePaging.so
+[1.787s] -- Looking for OGRE_Terrain...
+[1.787s] -- Found OGRE_Terrain: optimized;/usr/lib/x86_64-linux-gnu/libOgreTerrain.so;debug;/usr/lib/x86_64-linux-gnu/libOgreTerrain.so
+[1.787s] -- Looking for OGRE_Property...
+[1.788s] -- Found OGRE_Property: optimized;/usr/lib/x86_64-linux-gnu/libOgreProperty.so;debug;/usr/lib/x86_64-linux-gnu/libOgreProperty.so
+[1.788s] -- Looking for OGRE_RTShaderSystem...
+[1.788s] -- Found OGRE_RTShaderSystem: optimized;/usr/lib/x86_64-linux-gnu/libOgreRTShaderSystem.so;debug;/usr/lib/x86_64-linux-gnu/libOgreRTShaderSystem.so
+[1.788s] -- Looking for OGRE_Volume...
+[1.788s] -- Found OGRE_Volume: optimized;/usr/lib/x86_64-linux-gnu/libOgreVolume.so;debug;/usr/lib/x86_64-linux-gnu/libOgreVolume.so
+[1.788s] -- Looking for OGRE_Overlay...
+[1.788s] -- Found OGRE_Overlay: optimized;/usr/lib/x86_64-linux-gnu/libOgreOverlay.so;debug;/usr/lib/x86_64-linux-gnu/libOgreOverlay.so
+[1.788s] -- Looking for ignition-math6 -- found version 6.15.1
+[1.788s] -- Looking for ignition-transport8 -- found version 8.2.1
+[1.788s] -- Searching for dependencies of ignition-transport8
+[1.788s] -- Found Protobuf: /usr/lib/x86_64-linux-gnu/libprotobuf.so (found suitable version "3.12.4", minimum required is "3") 
+[1.788s] -- Config-file not installed for ZeroMQ -- checking for pkg-config
+[1.789s] -- Checking for module 'libzmq >= 4'
+[1.789s] --   Found libzmq , version 4.3.4
+[1.789s] -- Checking for module 'uuid'
+[1.789s] --   Found uuid, version 2.37.2
+[1.789s] -- Looking for ignition-msgs5 -- found version 5.8.1
+[1.789s] -- Searching for dependencies of ignition-msgs5
+[1.789s] -- Looking for ignition-math6 -- found version 6.15.1
+[1.789s] -- Looking for ignition-msgs5 -- found version 5.8.1
+[1.789s] -- Looking for ignition-common3 -- found version 3.14.0
+[1.789s] -- Searching for dependencies of ignition-common3
+[1.789s] -- Looking for dlfcn.h - found
+[1.789s] -- Looking for libdl - found
+[1.790s] -- Searching for <ignition-common3> component [graphics]
+[1.790s] -- Looking for ignition-common3-graphics -- found version 3.14.0
+[1.790s] -- Searching for dependencies of ignition-common3-graphics
+[1.790s] -- Looking for ignition-math6 -- found version 6.15.1
+[1.790s] -- Looking for ignition-fuel_tools4 -- found version 4.4.0
+[1.790s] -- Searching for dependencies of ignition-fuel_tools4
+[1.790s] -- Checking for module 'jsoncpp'
+[1.790s] --   Found jsoncpp, version 1.9.5
+[1.790s] -- Checking for module 'libzip'
+[1.790s] --   Found libzip, version 1.7.3
+[1.790s] -- Looking for ignition-common3 -- found version 3.14.0
+[1.790s] -- Looking for ignition-math6 -- found version 6.15.1
+[1.790s] -- Looking for ignition-msgs5 -- found version 5.8.1
+[1.790s] -- Gazebo version: 11.10
+[1.791s] -- Configuring done
+[1.791s] -- Generating done
+[1.791s] -- Build files have been written to: /root/Dojo/Dojo/build/robot_description
+[2.119s] Invoked command in '/root/Dojo/Dojo/build/robot_description' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/root/Dojo/install/robot_hardware:/opt/ros/humble /usr/bin/cmake /root/Dojo/Dojo/src/robot_description -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/root/Dojo/Dojo/install/robot_description
+[2.120s] Invoking command in '/root/Dojo/Dojo/build/robot_description': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/root/Dojo/install/robot_hardware:/opt/ros/humble /usr/bin/cmake --build /root/Dojo/Dojo/build/robot_description -- -j16 -l16
+[2.179s] Invoked command in '/root/Dojo/Dojo/build/robot_description' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/root/Dojo/install/robot_hardware:/opt/ros/humble /usr/bin/cmake --build /root/Dojo/Dojo/build/robot_description -- -j16 -l16
+[2.181s] Invoking command in '/root/Dojo/Dojo/build/robot_description': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/root/Dojo/install/robot_hardware:/opt/ros/humble /usr/bin/cmake --install /root/Dojo/Dojo/build/robot_description
+[2.193s] -- Install configuration: "Release"
+[2.194s] -- Execute custom install script
+[2.194s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_description/share/robot_description/launch/description.launch.py
+[2.194s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_description/share/robot_description/launch/display.launch.py
+[2.195s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_description/share/robot_description/launch/robot_state_publisher.launch.py
+[2.195s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_description/share/robot_description/config/robot_controllers.yaml
+[2.196s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_description/share/robot_description/common_properties.xacro
+[2.196s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_description/share/robot_description/dojo_robot.gazebo
+[2.197s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_description/share/robot_description/dojo_robot.urdf.xacro
+[2.197s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_description/share/robot_description/robot.urdf
+[2.197s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_description/share/robot_description/robot.urdf.xacro
+[2.198s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_description/share/robot_description/robot.urdf.xacro.clean
+[2.198s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_description/share/robot_description/sensors/rplidar.urdf.xacro
+[2.198s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_description/share/robot_description/display.rviz
+[2.198s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_description/share/robot_description/dojo_robot.rviz
+[2.198s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_description/share/robot_description/robot.rviz
+[2.198s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_description/lib/python3.10/site-packages/__init__.py
+[2.200s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_description/lib/python3.10/site-packages/robot_description/__init__.py
+[2.200s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_description/lib/robot_description/display_robot.py
+[2.200s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_description/share/robot_description/package.xml
+[2.200s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_description/share/robot_description/setup.py
+[2.200s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_description/share/robot_description/setup.cfg
+[2.200s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_description/share/ament_index/resource_index/package_run_dependencies/robot_description
+[2.200s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_description/share/ament_index/resource_index/parent_prefix_path/robot_description
+[2.200s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_description/share/robot_description/environment/ament_prefix_path.sh
+[2.201s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_description/share/robot_description/environment/ament_prefix_path.dsv
+[2.201s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_description/share/robot_description/environment/path.sh
+[2.203s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_description/share/robot_description/environment/path.dsv
+[2.203s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_description/share/robot_description/local_setup.bash
+[2.203s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_description/share/robot_description/local_setup.sh
+[2.203s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_description/share/robot_description/local_setup.zsh
+[2.203s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_description/share/robot_description/local_setup.dsv
+[2.203s] -- Symlinking: /root/Dojo/Dojo/install/robot_description/share/robot_description/package.dsv
+[2.216s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_description/share/ament_index/resource_index/packages/robot_description
+[2.217s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_description/share/robot_description/cmake/robot_descriptionConfig.cmake
+[2.217s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_description/share/robot_description/cmake/robot_descriptionConfig-version.cmake
+[2.217s] -- Up-to-date symlink: /root/Dojo/Dojo/install/robot_description/share/robot_description/package.xml
+[2.237s] Invoked command in '/root/Dojo/Dojo/build/robot_description' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/root/Dojo/install/robot_hardware:/opt/ros/humble /usr/bin/cmake --install /root/Dojo/Dojo/build/robot_description

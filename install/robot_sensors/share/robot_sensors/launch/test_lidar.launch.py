@@ -1,1 +1,1 @@
-/root/Dojo/build/robot_sensors/launch/test_lidar.launch.py
+/root/Dojo/Dojo/build/robot_sensors/launch/test_lidar.launch.py

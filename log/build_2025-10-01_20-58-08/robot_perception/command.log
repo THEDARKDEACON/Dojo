@@ -1,0 +1,6 @@
+Invoking command in '/root/Dojo/Dojo/build/robot_perception': /usr/bin/cmake /root/Dojo/Dojo/src/robot_perception -DCMAKE_INSTALL_PREFIX=/root/Dojo/Dojo/install/robot_perception
+Invoked command in '/root/Dojo/Dojo/build/robot_perception' returned '0': /usr/bin/cmake /root/Dojo/Dojo/src/robot_perception -DCMAKE_INSTALL_PREFIX=/root/Dojo/Dojo/install/robot_perception
+Invoking command in '/root/Dojo/Dojo/build/robot_perception': /usr/bin/cmake --build /root/Dojo/Dojo/build/robot_perception -- -j16 -l16
+Invoked command in '/root/Dojo/Dojo/build/robot_perception' returned '0': /usr/bin/cmake --build /root/Dojo/Dojo/build/robot_perception -- -j16 -l16
+Invoking command in '/root/Dojo/Dojo/build/robot_perception': /usr/bin/cmake --install /root/Dojo/Dojo/build/robot_perception
+Invoked command in '/root/Dojo/Dojo/build/robot_perception' returned '0': /usr/bin/cmake --install /root/Dojo/Dojo/build/robot_perception

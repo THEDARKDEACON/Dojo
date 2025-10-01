@@ -1,1 +1,1 @@
-/root/Dojo/build/robot_interfaces/rosidl_generator_c/robot_interfaces/msg/detail/hardware_status__struct.h
+/root/Dojo/Dojo/build/robot_interfaces/rosidl_generator_c/robot_interfaces/msg/detail/hardware_status__struct.h

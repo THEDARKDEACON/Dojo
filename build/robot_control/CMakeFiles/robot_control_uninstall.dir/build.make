@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /root/Dojo/src/robot_control
+CMAKE_SOURCE_DIR = /root/Dojo/Dojo/src/robot_control
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /root/Dojo/build/robot_control
+CMAKE_BINARY_DIR = /root/Dojo/Dojo/build/robot_control
 
 # Utility rule file for robot_control_uninstall.
 
@@ -67,7 +67,7 @@ include CMakeFiles/robot_control_uninstall.dir/compiler_depend.make
 include CMakeFiles/robot_control_uninstall.dir/progress.make
 
 CMakeFiles/robot_control_uninstall:
-	/usr/bin/cmake -P /root/Dojo/build/robot_control/ament_cmake_uninstall_target/ament_cmake_uninstall_target.cmake
+	/usr/bin/cmake -P /root/Dojo/Dojo/build/robot_control/ament_cmake_uninstall_target/ament_cmake_uninstall_target.cmake
 
 robot_control_uninstall: CMakeFiles/robot_control_uninstall
 robot_control_uninstall: CMakeFiles/robot_control_uninstall.dir/build.make
@@ -82,6 +82,6 @@ CMakeFiles/robot_control_uninstall.dir/clean:
 .PHONY : CMakeFiles/robot_control_uninstall.dir/clean
 
 CMakeFiles/robot_control_uninstall.dir/depend:
-	cd /root/Dojo/build/robot_control && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /root/Dojo/src/robot_control /root/Dojo/src/robot_control /root/Dojo/build/robot_control /root/Dojo/build/robot_control /root/Dojo/build/robot_control/CMakeFiles/robot_control_uninstall.dir/DependInfo.cmake --color=$(COLOR)
+	cd /root/Dojo/Dojo/build/robot_control && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /root/Dojo/Dojo/src/robot_control /root/Dojo/Dojo/src/robot_control /root/Dojo/Dojo/build/robot_control /root/Dojo/Dojo/build/robot_control /root/Dojo/Dojo/build/robot_control/CMakeFiles/robot_control_uninstall.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/robot_control_uninstall.dir/depend
 

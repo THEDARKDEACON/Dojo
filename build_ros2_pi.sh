@@ -146,10 +146,12 @@ build_package() {
             if colcon build \
                 --packages-select "$pkg" \
                 --symlink-install \
+                --allow-overriding "$pkg" \
                 --cmake-args \
                     -DCMAKE_BUILD_TYPE=Release \
                     -DBUILD_TESTING=OFF \
-                    -DCMAKE_SYSTEM_PROCESSOR=aarch64; then
+                    -DCMAKE_SYSTEM_PROCESSOR=aarch64 \
+                    -DCMAKE_INSTALL_PREFIX="$WORKSPACE/install"; then
                 echo "✅ Successfully built $pkg (with gazebo dependencies optional)"
             else
                 echo "❌ Failed to build $pkg"
@@ -161,10 +163,12 @@ build_package() {
             if colcon build \
                 --packages-select "$pkg" \
                 --symlink-install \
+                --allow-overriding "$pkg" \
                 --cmake-args \
                     -DCMAKE_BUILD_TYPE=Release \
                     -DBUILD_TESTING=OFF \
-                    -DCMAKE_SYSTEM_PROCESSOR=aarch64; then
+                    -DCMAKE_SYSTEM_PROCESSOR=aarch64 \
+                    -DCMAKE_INSTALL_PREFIX="$WORKSPACE/install"; then
                 echo "✅ Successfully built $pkg (with fixes)"
             else
                 echo "❌ Failed to build $pkg"
@@ -192,7 +196,9 @@ build_package() {
                     --cmake-args \
                         -DCMAKE_BUILD_TYPE=Release \
                         -DBUILD_TESTING=OFF \
-                        -DCMAKE_SYSTEM_PROCESSOR=aarch64; then
+                        -DCMAKE_SYSTEM_PROCESSOR=aarch64 \
+                        -DCMAKE_INSTALL_PREFIX="$WORKSPACE/install" \
+                        --allow-overriding "$pkg"; then
                     echo "✅ Successfully built $pkg"
                 else
                     echo "❌ Failed to build $pkg"

@@ -11,7 +11,11 @@ from rclpy.qos import qos_profile_sensor_data
 try:
     from rclpy.impl.rcutils_logger import RcutilsLoggingError as RCLError
 except ImportError:
-    from rclpy.impl.rcutils_logger import RCLError
+    try:
+        from rclpy.impl.rcutils_logger import RCLError
+    except ImportError:
+        # Fallback for different ROS 2 versions
+        RCLError = Exception
 import serial
 import serial.tools.list_ports
 import time

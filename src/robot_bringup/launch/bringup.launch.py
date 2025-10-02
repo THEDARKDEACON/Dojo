@@ -51,21 +51,21 @@ def generate_launch_description():
         condition=IfCondition(use_robot_description)
     )
     
-    # Unified simulation launch (when use_gazebo=true)
-    unified_simulation = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(get_package_share_directory('robot_gazebo'), 'launch', 'unified_simulation.launch.py')
-        ),
-        launch_arguments={
-            'use_sim_time': use_sim_time,
-            'use_slam': 'true',
-            'use_nav2': use_navigation,
-            'use_perception': use_perception,
-            'use_rviz': 'true',
-            'use_teleop': 'true'
-        }.items(),
-        condition=IfCondition(use_gazebo)
-    )
+    # Unified simulation launch (when use_gazebo=true) - DISABLED for hardware-only build
+    # unified_simulation = IncludeLaunchDescription(
+    #     PythonLaunchDescriptionSource(
+    #         os.path.join(get_package_share_directory('robot_gazebo'), 'launch', 'unified_simulation.launch.py')
+    #     ),
+    #     launch_arguments={
+    #         'use_sim_time': use_sim_time,
+    #         'use_slam': 'true',
+    #         'use_nav2': use_navigation,
+    #         'use_perception': use_perception,
+    #         'use_rviz': 'true',
+    #         'use_teleop': 'true'
+    #     }.items(),
+    #     condition=IfCondition(use_gazebo)
+    # )
     
     # Hardware layer - new unified hardware interface (when use_gazebo=false)
     hardware_launch = IncludeLaunchDescription(
@@ -121,7 +121,7 @@ def generate_launch_description():
     # Group all launches for better organization
     robot_group = GroupAction([
         robot_state_publisher_node,
-        unified_simulation,  # This will be ignored if use_gazebo=false
+        # unified_simulation,  # DISABLED - This will be ignored if use_gazebo=false
         hardware_launch,     # This will be ignored if use_gazebo=true
         control_launch,      # This will be ignored if use_gazebo=true
         perception_launch,   # This will be ignored if use_gazebo=true
@@ -151,21 +151,21 @@ def generate_launch_description():
         DeclareLaunchArgument('use_lidar', default_value='true',
                            description='Enable LiDAR driver'),
         
-        # Include Gazebo launch file if use_gazebo is true
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource([
-                PathJoinSubstitution([
-                    FindPackageShare('robot_gazebo'),
-                    'launch',
-                    'gazebo.launch.py'
-                ])
-            ]),
-            condition=IfCondition(use_gazebo),
-            launch_arguments={
-                'use_sim_time': use_sim_time,
-                'world': 'empty.world'
-            }.items()
-        ),
+        # Include Gazebo launch file if use_gazebo is true - DISABLED for hardware-only build
+        # IncludeLaunchDescription(
+        #     PythonLaunchDescriptionSource([
+        #         PathJoinSubstitution([
+        #             FindPackageShare('robot_gazebo'),
+        #             'launch',
+        #             'gazebo.launch.py'
+        #         ])
+        #     ]),
+        #     condition=IfCondition(use_gazebo),
+        #     launch_arguments={
+        #         'use_sim_time': use_sim_time,
+        #         'world': 'empty.world'
+        #     }.items()
+        # ),
         
         # Add all robot components
         robot_group

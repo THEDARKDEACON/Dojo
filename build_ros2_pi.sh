@@ -4,7 +4,7 @@
 set -e
 
 # Set workspace directory
-WORKSPACE="/home/robosync/Dojo"
+WORKSPACE="/home/Dojo/Dojo"
 cd "$WORKSPACE"
 
 # Source ROS 2 environment

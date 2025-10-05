@@ -21,7 +21,7 @@ def generate_launch_description():
         PathJoinSubstitution([
             FindPackageShare('robot_description'),
             'urdf',
-            'dojo_robot.urdf.xacro'
+            'robot.urdf.xacro'
         ])
     ])
     
@@ -31,7 +31,7 @@ def generate_launch_description():
     rviz_config_file = PathJoinSubstitution([
         FindPackageShare('robot_description'),
         'rviz',
-        'display.rviz'
+        'robot_display.rviz'
     ])
     
     # Nodes

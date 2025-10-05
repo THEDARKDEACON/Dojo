@@ -43,13 +43,18 @@ install(
   PATTERN "*.rviz"
 )
 
-# Install model and resource files
+# Install URDF files
 install(
-  DIRECTORY 
-    urdf/
-    rviz/
-  DESTINATION share/${PROJECT_NAME}
-  PATTERN "*"
+  DIRECTORY urdf/
+  DESTINATION share/${PROJECT_NAME}/urdf
+  FILES_MATCHING PATTERN "*.urdf" PATTERN "*.xacro" PATTERN "*.gazebo"
+)
+
+# Install RViz files  
+install(
+  DIRECTORY rviz/
+  DESTINATION share/${PROJECT_NAME}/rviz
+  FILES_MATCHING PATTERN "*.rviz"
 )
 
 # Install Python package
@@ -66,11 +71,9 @@ if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/scripts")
   )
 endif()
 
-# Install package.xml and setup files
+# Install package.xml
 install(FILES
   package.xml
-  setup.py
-  setup.cfg
   DESTINATION share/${PROJECT_NAME}
 )
 

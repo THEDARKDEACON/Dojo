@@ -36,16 +36,17 @@
   <gazebo reference="lidar">
     <material>Gazebo/White</material>
   </gazebo>
-  <gazebo reference="left_wheel">
+
+  <gazebo reference="front_right_wheel">
     <material>Gazebo/Grey</material>
   </gazebo>
-  <gazebo reference="right_wheel">
+  <gazebo reference="rear_left_wheel">
     <material>Gazebo/Grey</material>
   </gazebo>
-  <gazebo reference="frontright_wheel">
+  <gazebo reference="rear_right_wheel">
     <material>Gazebo/Grey</material>
   </gazebo>
-  <gazebo reference="frontleft_wheel">
+  <gazebo reference="front_left_wheel">
     <material>Gazebo/Grey</material>
   </gazebo>
   
@@ -109,12 +110,14 @@
         <geometry>
           <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
         </geometry>
+        <origin xyz="0 0 0" rpy="${M_PI_2} 0 0"/>
         <material name="grey"/>
       </visual>
       <collision>
         <geometry>
           <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
         </geometry>
+        <origin xyz="0 0 0" rpy="${M_PI_2} 0 0"/>
       </collision>
       <inertial>
         <mass value="0.1"/>
@@ -130,17 +133,19 @@
     </joint>
   </xacro:macro>
 
-  <!-- Create wheels -->
-  <xacro:wheel prefix="left" x="-0.1075" y="0.13" z="0"/>
-  <xacro:wheel prefix="right" x="-0.1075" y="-0.13" z="0"/>
-  <xacro:wheel prefix="frontleft" x="0.1075" y="0.13" z="0"/>
-  <xacro:wheel prefix="frontright" x="0.1075" y="-0.13" z="0"/>
+  <!-- Create front drive wheels (motorized) -->
+  <xacro:wheel prefix="front_left" x="0.1075" y="0.13" z="0"/>
+  <xacro:wheel prefix="front_right" x="0.1075" y="-0.13" z="0"/>
+  
+  <!-- Create rear wheels (unpowered, just dragged along like a car) -->
+  <xacro:wheel prefix="rear_left" x="-0.1075" y="0.13" z="0"/>
+  <xacro:wheel prefix="rear_right" x="-0.1075" y="-0.13" z="0"/>
 
   <!-- Lidar -->
   <link name="lidar">
     <visual>
       <geometry>
-        <cylinder radius="0.03" length="0.05"/>
+        <cylinder radius="0.03" length="0.02"/>
       </geometry>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <material name="white"/>
@@ -209,6 +214,8 @@
       <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
         <ros>
           <namespace>/</namespace>
+          <remapping>image_raw:=camera/image_raw</remapping>
+          <remapping>camera_info:=camera/camera_info</remapping>
         </ros>
         <camera_name>camera</camera_name>
         <frame_name>camera_link</frame_name>
@@ -256,16 +263,14 @@
     </sensor>
   </gazebo>
 
-  <!-- Gazebo Differential Drive Plugin -->
+  <!-- Gazebo Differential Drive Plugin for Front-Wheel Drive -->
   <gazebo>
     <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
       <ros>
         <namespace>/</namespace>
       </ros>
-      <left_joint>base_left_wheel_joint</left_joint>
-      <left_joint>base_frontleft_wheel_joint</left_joint>
-      <right_joint>base_right_wheel_joint</right_joint>
-      <right_joint>base_frontright_wheel_joint</right_joint>
+      <left_joint>base_front_left_wheel_joint</left_joint>
+      <right_joint>base_front_right_wheel_joint</right_joint>
       <wheel_separation>${wheel_separation}</wheel_separation>
       <wheel_diameter>${2 * wheel_radius}</wheel_diameter>
       <command_topic>cmd_vel</command_topic>
@@ -275,8 +280,20 @@
       <publish_odom>true</publish_odom>
       <publish_odom_tf>true</publish_odom_tf>
       <publish_wheel_tf>true</publish_wheel_tf>
+      
+      <!-- Smoother turning parameters -->
       <max_wheel_torque>0.5</max_wheel_torque>
       <max_wheel_acceleration>1.0</max_wheel_acceleration>
+      <update_rate>50.0</update_rate>
+      
+      <!-- Front-wheel drive specific parameters -->
+      <wheel_separation_multiplier>1.0</wheel_separation_multiplier>
+      <wheel_radius_multiplier>1.0</wheel_radius_multiplier>
+      
+      <!-- Additional smoothing parameters -->
+      <covariance_x>0.0001</covariance_x>
+      <covariance_y>0.0001</covariance_y>
+      <covariance_yaw>0.01</covariance_yaw>
     </plugin>
   </gazebo>
 </robot>

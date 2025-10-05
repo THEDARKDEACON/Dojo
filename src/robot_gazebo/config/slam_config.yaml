@@ -5,7 +5,7 @@ slam_toolbox:
     # ROS Parameters
     odom_frame: odom
     map_frame: map
-    base_frame: base_footprint  # Changed from base_link to base_footprint for better navigation
+    base_frame: base_link  # Using base_link as defined in URDF
     scan_topic: /scan
     use_map_saver: true
     mode: mapping  # localization, mapping, lifelong

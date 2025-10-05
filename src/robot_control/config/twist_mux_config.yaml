@@ -5,18 +5,24 @@
     # The output topic where twist commands are published
     topic_out: /diff_drive_controller/cmd_vel_unstamped
 
-    # Velocity Limits
+    # Velocity Limits - Reduced for smoother control
     # These limits apply to all input topics unless overridden
     linear:
       x:
         has_velocity_limits: true
-        max_velocity: 0.5
-        min_velocity: -0.5
+        max_velocity: 0.3
+        min_velocity: -0.3
+        has_acceleration_limits: true
+        max_acceleration: 0.5
+        min_acceleration: -0.5
     angular:
       z:
         has_velocity_limits: true
-        max_velocity: 1.0
-        min_velocity: -1.0
+        max_velocity: 0.6
+        min_velocity: -0.6
+        has_acceleration_limits: true
+        max_acceleration: 0.8
+        min_acceleration: -0.8
 
     # Input Topic Configuration
     topics:

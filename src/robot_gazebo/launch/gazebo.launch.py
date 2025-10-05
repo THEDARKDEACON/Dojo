@@ -81,22 +81,16 @@ def generate_launch_description():
         world_name
     ])
     
-    # Gazebo launch
-    gazebo_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([
-            PathJoinSubstitution([
-                FindPackageShare('gazebo_ros'),
-                'launch',
-                'gazebo.launch.py'
-            ])
-        ]),
-        launch_arguments={
-            'world': world_file,
-            'gui': gui,
-            'server': 'true',
-            'debug': debug,
-            'verbose': verbose
-        }.items()
+    # Start Gazebo server and client separately for better control
+    gazebo_server = ExecuteProcess(
+        cmd=['gzserver', '--verbose', '-s', 'libgazebo_ros_init.so', '-s', 'libgazebo_ros_factory.so', world_file],
+        output='screen'
+    )
+    
+    gazebo_client = ExecuteProcess(
+        cmd=['gzclient'],
+        output='screen',
+        condition=IfCondition(gui)
     )
     
     # Robot state publisher
@@ -122,61 +116,12 @@ def generate_launch_description():
         output='screen'
     )
     
-    # Controller manager with Gazebo-specific configuration
-    controller_manager_node = Node(
-        package='controller_manager',
-        executable='ros2_control_node',
-        parameters=[
-            robot_description,
-            PathJoinSubstitution([
-                FindPackageShare('robot_gazebo'),
-                'config',
-                'ros2_controllers.yaml'
-            ]),
-            {'use_sim_time': use_sim_time}
-        ],
-        output='screen'
-    )
-    
-    # Joint state broadcaster
-    joint_state_broadcaster_spawner = Node(
-        package='controller_manager',
-        executable='spawner',
-        arguments=['joint_state_broadcaster', '--controller-manager', '/controller_manager'],
+    # Joint state publisher for wheel joints (since we're using Gazebo plugin)
+    joint_state_publisher_node = Node(
+        package='joint_state_publisher',
+        executable='joint_state_publisher',
         parameters=[{'use_sim_time': use_sim_time}],
         output='screen'
-    )
-    
-    # Differential drive controller
-    diff_drive_spawner = Node(
-        package='controller_manager',
-        executable='spawner',
-        arguments=['diff_drive_controller', '--controller-manager', '/controller_manager'],
-        parameters=[{'use_sim_time': use_sim_time}],
-        output='screen'
-    )
-    
-    # Delay controller manager after robot spawn
-    delay_controller_manager_after_spawn = RegisterEventHandler(
-        event_handler=OnProcessExit(
-            target_action=spawn_robot_node,
-            on_exit=[controller_manager_node],
-        )
-    )
-    
-    # Delay controller spawning after controller manager
-    delay_joint_state_broadcaster_after_controller_manager = RegisterEventHandler(
-        event_handler=OnProcessExit(
-            target_action=controller_manager_node,
-            on_exit=[joint_state_broadcaster_spawner],
-        )
-    )
-    
-    delay_diff_drive_after_joint_state = RegisterEventHandler(
-        event_handler=OnProcessExit(
-            target_action=joint_state_broadcaster_spawner,
-            on_exit=[diff_drive_spawner],
-        )
     )
     
     # RViz (optional)
@@ -184,8 +129,7 @@ def generate_launch_description():
         """Get RViz config file, with fallback options."""
         possible_configs = [
             'simulation.rviz',
-            'robot_simulation.rviz', 
-            'dojo_robot.rviz'
+            'robot_simulation.rviz'
         ]
         
         gazebo_share = get_package_share_directory('robot_gazebo')
@@ -197,9 +141,14 @@ def generate_launch_description():
         # Fallback to robot_description if available
         try:
             desc_share = get_package_share_directory('robot_description')
-            return os.path.join(desc_share, 'rviz', 'robot.rviz')
+            fallback_configs = ['robot_display.rviz', 'robot_simulation.rviz']
+            for config_name in fallback_configs:
+                config_path = os.path.join(desc_share, 'rviz', config_name)
+                if os.path.exists(config_path):
+                    return config_path
         except PackageNotFoundError:
-            return None
+            pass
+        return None
     
     rviz_config_file = get_rviz_config()
     
@@ -242,10 +191,9 @@ def generate_launch_description():
         
         # Launch nodes
         config_manager_node,
-        gazebo_launch,
+        gazebo_server,
+        gazebo_client,
         robot_state_publisher_node,
         spawn_robot_node,
-        delay_controller_manager_after_spawn,
-        delay_joint_state_broadcaster_after_controller_manager,
-        delay_diff_drive_after_joint_state,
+        joint_state_publisher_node,
     ] + ([rviz_node] if rviz_node else []))

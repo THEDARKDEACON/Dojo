@@ -116,7 +116,7 @@ def generate_launch_description():
         name='rviz2',
         output='screen',
         arguments=['-d', PathJoinSubstitution([
-            pkg_robot_description, 'rviz', 'robot.rviz'
+            pkg_robot_gazebo, 'rviz', 'simulation.rviz'
         ])],
         condition=IfCondition(use_rviz)
     )

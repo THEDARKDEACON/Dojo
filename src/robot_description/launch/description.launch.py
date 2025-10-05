@@ -2,6 +2,7 @@ import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
+from launch.conditions import UnlessCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
@@ -48,11 +49,11 @@ def generate_launch_description():
         executable='joint_state_publisher_gui',
         name='joint_state_publisher_gui',
         output='screen',
-        condition=launch.conditions.UnlessCondition(use_ros2_control)
+        condition=UnlessCondition(use_ros2_control)
     )
     
     # RViz
-    rviz_config = os.path.join(pkg_robot_description, 'rviz', 'robot.rviz')
+    rviz_config = os.path.join(pkg_robot_description, 'rviz', 'robot_display.rviz')
     rviz = Node(
         package='rviz2',
         executable='rviz2',

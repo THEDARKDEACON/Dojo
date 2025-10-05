@@ -6,7 +6,7 @@ import os
 def generate_launch_description():
     # Get the package directory
     pkg_robot_description = get_package_share_directory('robot_description')
-    rviz_config = os.path.join(pkg_robot_description, 'rviz', 'dojo_robot.rviz')
+    rviz_config = os.path.join(pkg_robot_description, 'rviz', 'robot_display.rviz')
     
     return LaunchDescription([
         Node(

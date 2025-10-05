@@ -27,16 +27,16 @@
   <gazebo reference="lidar">
     <material>Gazebo/White</material>
   </gazebo>
-  <gazebo reference="left_wheel">
+  <gazebo reference="front_right_wheel">
     <material>Gazebo/Grey</material>
   </gazebo>
-  <gazebo reference="right_wheel">
+  <gazebo reference="rear_left_wheel">
     <material>Gazebo/Grey</material>
   </gazebo>
-  <gazebo reference="frontright_wheel">
+  <gazebo reference="rear_right_wheel">
     <material>Gazebo/Grey</material>
   </gazebo>
-  <gazebo reference="frontleft_wheel">
+  <gazebo reference="front_left_wheel">
     <material>Gazebo/Grey</material>
   </gazebo>
   <!-- Base link -->
@@ -85,103 +85,111 @@
     <child link="top_floor"/>
     <origin rpy="0 0 0" xyz="0 0 0.085"/>
   </joint>
-  <link name="left_wheel">
+  <link name="front_left_wheel">
     <visual>
       <geometry>
         <cylinder length="0.03" radius="0.0325"/>
       </geometry>
+      <origin rpy="1.5707963267948966 0 0" xyz="0 0 0"/>
       <material name="grey"/>
     </visual>
     <collision>
       <geometry>
         <cylinder length="0.03" radius="0.0325"/>
       </geometry>
+      <origin rpy="1.5707963267948966 0 0" xyz="0 0 0"/>
     </collision>
     <inertial>
       <mass value="0.1"/>
       <inertia ixx="0.0001" ixy="0.0" ixz="0.0" iyy="0.0001" iyz="0.0" izz="0.0001"/>
     </inertial>
   </link>
-  <joint name="base_left_wheel_joint" type="continuous">
+  <joint name="base_front_left_wheel_joint" type="continuous">
     <parent link="base_link"/>
-    <child link="left_wheel"/>
-    <origin rpy="0 0 0" xyz="-0.1075 0.13 0"/>
-    <axis xyz="0 1 0"/>
-  </joint>
-  <link name="right_wheel">
-    <visual>
-      <geometry>
-        <cylinder length="0.03" radius="0.0325"/>
-      </geometry>
-      <material name="grey"/>
-    </visual>
-    <collision>
-      <geometry>
-        <cylinder length="0.03" radius="0.0325"/>
-      </geometry>
-    </collision>
-    <inertial>
-      <mass value="0.1"/>
-      <inertia ixx="0.0001" ixy="0.0" ixz="0.0" iyy="0.0001" iyz="0.0" izz="0.0001"/>
-    </inertial>
-  </link>
-  <joint name="base_right_wheel_joint" type="continuous">
-    <parent link="base_link"/>
-    <child link="right_wheel"/>
-    <origin rpy="0 0 0" xyz="-0.1075 -0.13 0"/>
-    <axis xyz="0 1 0"/>
-  </joint>
-  <link name="frontleft_wheel">
-    <visual>
-      <geometry>
-        <cylinder length="0.03" radius="0.0325"/>
-      </geometry>
-      <material name="grey"/>
-    </visual>
-    <collision>
-      <geometry>
-        <cylinder length="0.03" radius="0.0325"/>
-      </geometry>
-    </collision>
-    <inertial>
-      <mass value="0.1"/>
-      <inertia ixx="0.0001" ixy="0.0" ixz="0.0" iyy="0.0001" iyz="0.0" izz="0.0001"/>
-    </inertial>
-  </link>
-  <joint name="base_frontleft_wheel_joint" type="continuous">
-    <parent link="base_link"/>
-    <child link="frontleft_wheel"/>
+    <child link="front_left_wheel"/>
     <origin rpy="0 0 0" xyz="0.1075 0.13 0"/>
     <axis xyz="0 1 0"/>
   </joint>
-  <link name="frontright_wheel">
+  <link name="front_right_wheel">
     <visual>
       <geometry>
         <cylinder length="0.03" radius="0.0325"/>
       </geometry>
+      <origin rpy="1.5707963267948966 0 0" xyz="0 0 0"/>
       <material name="grey"/>
     </visual>
     <collision>
       <geometry>
         <cylinder length="0.03" radius="0.0325"/>
       </geometry>
+      <origin rpy="1.5707963267948966 0 0" xyz="0 0 0"/>
     </collision>
     <inertial>
       <mass value="0.1"/>
       <inertia ixx="0.0001" ixy="0.0" ixz="0.0" iyy="0.0001" iyz="0.0" izz="0.0001"/>
     </inertial>
   </link>
-  <joint name="base_frontright_wheel_joint" type="continuous">
+  <joint name="base_front_right_wheel_joint" type="continuous">
     <parent link="base_link"/>
-    <child link="frontright_wheel"/>
+    <child link="front_right_wheel"/>
     <origin rpy="0 0 0" xyz="0.1075 -0.13 0"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+  <link name="rear_left_wheel">
+    <visual>
+      <geometry>
+        <cylinder length="0.03" radius="0.0325"/>
+      </geometry>
+      <origin rpy="1.5707963267948966 0 0" xyz="0 0 0"/>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.03" radius="0.0325"/>
+      </geometry>
+      <origin rpy="1.5707963267948966 0 0" xyz="0 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="0.1"/>
+      <inertia ixx="0.0001" ixy="0.0" ixz="0.0" iyy="0.0001" iyz="0.0" izz="0.0001"/>
+    </inertial>
+  </link>
+  <joint name="base_rear_left_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="rear_left_wheel"/>
+    <origin rpy="0 0 0" xyz="-0.1075 0.13 0"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+  <link name="rear_right_wheel">
+    <visual>
+      <geometry>
+        <cylinder length="0.03" radius="0.0325"/>
+      </geometry>
+      <origin rpy="1.5707963267948966 0 0" xyz="0 0 0"/>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.03" radius="0.0325"/>
+      </geometry>
+      <origin rpy="1.5707963267948966 0 0" xyz="0 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="0.1"/>
+      <inertia ixx="0.0001" ixy="0.0" ixz="0.0" iyy="0.0001" iyz="0.0" izz="0.0001"/>
+    </inertial>
+  </link>
+  <joint name="base_rear_right_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="rear_right_wheel"/>
+    <origin rpy="0 0 0" xyz="-0.1075 -0.13 0"/>
     <axis xyz="0 1 0"/>
   </joint>
   <!-- Lidar -->
   <link name="lidar">
     <visual>
       <geometry>
-        <cylinder length="0.05" radius="0.03"/>
+        <cylinder length="0.02" radius="0.03"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <material name="white"/>
@@ -246,6 +254,8 @@
       <plugin filename="libgazebo_ros_camera.so" name="camera_controller">
         <ros>
           <namespace>/</namespace>
+          <remapping>image_raw:=camera/image_raw</remapping>
+          <remapping>camera_info:=camera/camera_info</remapping>
         </ros>
         <camera_name>camera</camera_name>
         <frame_name>camera_link</frame_name>
@@ -291,16 +301,14 @@
       </plugin>
     </sensor>
   </gazebo>
-  <!-- Gazebo Differential Drive Plugin -->
+  <!-- Gazebo Differential Drive Plugin for Front-Wheel Drive -->
   <gazebo>
     <plugin filename="libgazebo_ros_diff_drive.so" name="differential_drive_controller">
       <ros>
         <namespace>/</namespace>
       </ros>
-      <left_joint>base_left_wheel_joint</left_joint>
-      <left_joint>base_frontleft_wheel_joint</left_joint>
-      <right_joint>base_right_wheel_joint</right_joint>
-      <right_joint>base_frontright_wheel_joint</right_joint>
+      <left_joint>base_front_left_wheel_joint</left_joint>
+      <right_joint>base_front_right_wheel_joint</right_joint>
       <wheel_separation>0.26</wheel_separation>
       <wheel_diameter>0.065</wheel_diameter>
       <command_topic>cmd_vel</command_topic>
@@ -310,8 +318,11 @@
       <publish_odom>true</publish_odom>
       <publish_odom_tf>true</publish_odom_tf>
       <publish_wheel_tf>true</publish_wheel_tf>
-      <max_wheel_torque>0.5</max_wheel_torque>
-      <max_wheel_acceleration>1.0</max_wheel_acceleration>
+      <max_wheel_torque>1.0</max_wheel_torque>
+      <max_wheel_acceleration>2.0</max_wheel_acceleration>
+      <!-- Front-wheel drive specific parameters -->
+      <wheel_separation_multiplier>1.0</wheel_separation_multiplier>
+      <wheel_radius_multiplier>1.0</wheel_radius_multiplier>
     </plugin>
   </gazebo>
 </robot>

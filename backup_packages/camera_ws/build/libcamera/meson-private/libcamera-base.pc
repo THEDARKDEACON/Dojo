@@ -1,9 +1,0 @@
-prefix=/home/robosync/Robot/camera_ws/install/libcamera
-includedir=${prefix}/include
-libdir=${prefix}/lib
-
-Name: libcamera-base
-Description: Camera support base utility library
-Version: 0.5.2
-Libs: -L${libdir} -lcamera-base
-Cflags: -I${includedir}/libcamera

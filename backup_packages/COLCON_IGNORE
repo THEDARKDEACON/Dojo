@@ -1,2 +1,0 @@
-# This file tells colcon to ignore this directory and all subdirectories
-# The backup_packages directory contains legacy packages that should not be built

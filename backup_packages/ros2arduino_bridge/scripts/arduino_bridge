@@ -1,5 +1,0 @@
-
-from ros2arduino_bridge.arduino_bridge import main
-
-if __name__ == '__main__':
-    main()

@@ -1,7 +1,0 @@
-[options]
-prefix = /home/robosync/Robot/camera_ws/install/libcamera
-libdir = lib
-buildtype = release
-
-[properties]
-

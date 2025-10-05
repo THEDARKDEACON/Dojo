@@ -1,7 +1,0 @@
-Metadata-Version: 2.1
-Name: arduino-bridge
-Version: 0.1.0
-Summary: ROS 2 package for communicating with Arduino over serial
-Maintainer: thedarkdeacon
-Maintainer-email: garethjoel77@gmail.com
-License: Apache-2.0

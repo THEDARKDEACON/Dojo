@@ -1,1 +1,0 @@
-/root/Dojo/Dojo/build/robot_interfaces/rosidl_cmake/srv/SetMode_Response.msg

@@ -1,3 +1,0 @@
-[console_scripts]
-arduino_bridge_node = arduino_bridge.arduino_bridge_node:main
-test_arduino_bridge = arduino_bridge.test_arduino_bridge:main

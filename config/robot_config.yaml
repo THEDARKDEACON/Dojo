@@ -1,0 +1,233 @@
+# Master Robot Configuration File
+# Single source of truth for all robot parameters
+# This file defines physical parameters, hardware settings, and safety limits
+
+robot:
+  # Physical robot parameters - consistent across all components
+  physical_parameters:
+    wheel_base: 0.26          # meters - distance between wheels
+    wheel_radius: 0.033       # meters - wheel radius
+    wheel_circumference: 0.207 # meters - 2 * pi * wheel_radius
+    encoder_ticks_per_rev: 20 # encoder ticks per wheel revolution
+    
+    # Velocity and acceleration limits
+    max_linear_velocity: 0.5   # m/s
+    max_angular_velocity: 1.0  # rad/s
+    max_linear_acceleration: 3.0   # m/s^2
+    max_angular_acceleration: 3.0  # rad/s^2
+    
+    # Robot dimensions for safety calculations
+    robot_length: 0.4         # meters
+    robot_width: 0.3          # meters
+    robot_height: 0.2         # meters
+
+  # Hardware configuration and discovery settings
+  hardware:
+    # Arduino/Motor controller settings
+    arduino:
+      auto_discover: true
+      fallback_port: "/dev/ttyACM0"
+      baud_rate: 115200
+      timeout: 1.0
+      write_timeout: 1.0
+      reconnect_interval: 5.0
+      
+      # Protocol settings
+      start_delimiter: "<"
+      end_delimiter: ">"
+      field_separator: ","
+      use_rosarduino_bridge: true
+      
+      # Motor limits
+      motor_max: 255
+      motor_min: 0
+      
+      # PID controller parameters
+      pid:
+        kp: 20.0
+        ki: 0.0
+        kd: 12.0
+        ko: 50
+        sample_time: 0.1
+    
+    # Camera configuration
+    camera:
+      auto_discover: true
+      preferred_resolution: [640, 480]
+      fps: 30.0
+      format: "YUYV"
+      device_path: "/dev/video0"  # fallback if auto-discovery fails
+      
+    # LiDAR configuration
+    lidar:
+      auto_discover: true
+      fallback_port: "/dev/ttyUSB0"
+      baud_rate: 115200
+      scan_frequency: 10.0
+      angle_min: -3.14159  # radians
+      angle_max: 3.14159   # radians
+      range_min: 0.12      # meters
+      range_max: 3.5       # meters
+
+  # Safety system configuration
+  safety:
+    # Emergency stop settings
+    emergency_stop_timeout: 0.5    # seconds - max time to stop all motors
+    emergency_stop_deceleration: 5.0  # m/s^2 - emergency braking rate
+    
+    # Obstacle avoidance
+    obstacle_stop_distance: 0.3    # meters - distance to trigger emergency stop
+    obstacle_slow_distance: 0.8    # meters - distance to reduce speed
+    obstacle_speed_reduction: 0.5  # factor to reduce speed when obstacle detected
+    
+    # Command timeouts and watchdogs
+    command_timeout: 1.0           # seconds - max time between cmd_vel commands
+    watchdog_interval: 2.0         # seconds - watchdog check interval
+    heartbeat_timeout: 5.0         # seconds - max time between heartbeat messages
+    
+    # Velocity limits for safety
+    safe_linear_velocity: 0.3      # m/s - reduced speed in safety mode
+    safe_angular_velocity: 0.5     # rad/s - reduced angular speed in safety mode
+
+  # Control system parameters
+  control:
+    # Controller update rates
+    controller_update_rate: 100    # Hz
+    joint_state_rate: 50          # Hz
+    odometry_rate: 50             # Hz
+    
+    # Differential drive controller settings
+    diff_drive:
+      wheel_separation_multiplier: 1.0
+      left_wheel_radius_multiplier: 1.0
+      right_wheel_radius_multiplier: 1.0
+      open_loop: true              # set to false for closed loop control
+      enable_odom_tf: true         # publish odom->base_link transform
+      
+      # Frame IDs
+      odom_frame_id: "odom"
+      base_frame_id: "base_link"
+      
+      # Covariance matrices
+      pose_covariance_diagonal: [0.001, 0.001, 0.001, 0.001, 0.001, 0.03]
+      twist_covariance_diagonal: [0.001, 0.001, 0.001, 0.001, 0.001, 0.03]
+
+  # System configuration
+  system:
+    # Operation modes
+    use_simulation: false          # true for Gazebo simulation, false for hardware
+    simulation_world: "empty.world"  # default Gazebo world
+    
+    # Logging and diagnostics
+    log_level: "INFO"             # DEBUG, INFO, WARN, ERROR
+    diagnostics_rate: 2.0         # Hz - rate for publishing diagnostics
+    enable_debug_output: false    # enable detailed debug logging
+    
+    # Node configuration
+    node_namespace: ""            # ROS2 namespace for all nodes
+    use_sim_time: false           # use simulation time when in simulation mode
+    
+    # Build and dependency settings
+    required_packages:
+      - "robot_control"
+      - "robot_hardware" 
+      - "robot_sensors"
+    
+    optional_packages:
+      - "robot_gazebo"
+      - "robot_navigation"
+      - "robot_perception"
+
+# Configuration validation schema
+validation:
+  # Physical parameter ranges
+  physical_limits:
+    wheel_base: [0.1, 1.0]        # min/max wheel base in meters
+    wheel_radius: [0.01, 0.2]     # min/max wheel radius in meters
+    max_linear_velocity: [0.1, 2.0]  # min/max linear velocity in m/s
+    max_angular_velocity: [0.1, 5.0] # min/max angular velocity in rad/s
+  
+  # Hardware validation
+  hardware_checks:
+    arduino_baud_rates: [9600, 19200, 38400, 57600, 115200]
+    camera_resolutions: [[320, 240], [640, 480], [1280, 720], [1920, 1080]]
+    lidar_frequencies: [5.0, 10.0, 15.0, 20.0]
+  
+  # Safety validation
+  safety_checks:
+    min_obstacle_distance: 0.1    # minimum safe obstacle distance
+    max_command_timeout: 5.0      # maximum allowed command timeout
+    min_emergency_stop_time: 0.1  # minimum emergency stop response time
+
+# Environment-specific overrides
+environments:
+  development:
+    system:
+      log_level: "DEBUG"
+      enable_debug_output: true
+    safety:
+      obstacle_stop_distance: 0.5  # more conservative in development
+  
+  production:
+    system:
+      log_level: "WARN"
+      enable_debug_output: false
+    safety:
+      emergency_stop_timeout: 0.3  # faster response in production
+  
+  # Simulation mode configuration
+  simulation:
+    system:
+      use_simulation: true
+      use_sim_time: true
+      simulation_world: "empty.world"
+      node_namespace: ""
+    
+    hardware:
+      arduino:
+        auto_discover: false       # don't scan for hardware in simulation
+        use_rosarduino_bridge: false  # use Gazebo controllers instead
+      camera:
+        auto_discover: false
+        device_path: "/gazebo_camera"  # simulated camera topic
+      lidar:
+        auto_discover: false
+        fallback_port: "/scan"     # simulated lidar topic
+    
+    control:
+      # Use Gazebo controllers in simulation
+      controller_update_rate: 100
+      use_gazebo_controllers: true
+      
+    safety:
+      # More relaxed safety in simulation
+      obstacle_stop_distance: 0.2
+      command_timeout: 2.0
+  
+  # Hardware mode configuration  
+  hardware:
+    system:
+      use_simulation: false
+      use_sim_time: false
+      node_namespace: ""
+    
+    hardware:
+      arduino:
+        auto_discover: true        # scan for real hardware
+        use_rosarduino_bridge: true
+      camera:
+        auto_discover: true
+        device_path: "/dev/video0"
+      lidar:
+        auto_discover: true
+        fallback_port: "/dev/ttyUSB0"
+    
+    control:
+      # Use real hardware controllers
+      controller_update_rate: 50   # lower rate for real hardware
+      use_gazebo_controllers: false
+      
+    safety:
+      # Strict safety for real hardware
+      obstacle_stop_distance: 0.3
+      command_timeout: 1.0

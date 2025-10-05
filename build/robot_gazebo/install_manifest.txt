@@ -1,2 +1,0 @@
-/robot_gazebo/__init__.py
-/robot_gazebo/cmd_vel_relay.py

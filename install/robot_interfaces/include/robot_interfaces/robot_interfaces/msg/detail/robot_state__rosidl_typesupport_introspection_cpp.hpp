@@ -1,1 +1,0 @@
-/root/Dojo/Dojo/build/robot_interfaces/rosidl_typesupport_introspection_cpp/robot_interfaces/msg/detail/robot_state__rosidl_typesupport_introspection_cpp.hpp

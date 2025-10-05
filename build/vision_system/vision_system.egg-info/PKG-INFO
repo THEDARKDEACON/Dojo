@@ -1,8 +1,0 @@
-Metadata-Version: 2.1
-Name: vision-system
-Version: 0.1.0
-Summary: Vision system for object detection and robot control
-Maintainer: Gareth Joel
-Maintainer-email: garethjoel77@gmail.com
-License: Apache-2.0
-Provides-Extra: test

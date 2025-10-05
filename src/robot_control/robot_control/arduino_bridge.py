@@ -9,28 +9,36 @@ import time
 import yaml
 import os
 
-from std_msgs.msg import Int32, Float32
+from std_msgs.msg import Int32, Float32, Bool, String
 from sensor_msgs.msg import Imu, Range
 from geometry_msgs.msg import Twist, TransformStamped
 from nav_msgs.msg import Odometry
 from tf2_ros import TransformBroadcaster
+from robot_interfaces.msg import EmergencyStop
+
+from .hardware_discovery import HardwareDiscovery
+from .device_abstraction import DeviceManager, DeviceStatus
+from .device_implementations import ArduinoDevice
 
 class ArduinoBridge(Node):
     def __init__(self):
         super().__init__('arduino_bridge')
         
         # Declare parameters
-        self.declare_parameter('port', '/dev/ttyACM0')
-        self.declare_parameter('baud_rate', 57600)
+        self.declare_parameter('auto_discover', True)
+        self.declare_parameter('fallback_port', '/dev/ttyACM0')
+        self.declare_parameter('baud_rate', 115200)
         self.declare_parameter('timeout', 1.0)
         self.declare_parameter('write_timeout', 1.0)
         self.declare_parameter('start_delimiter', '<')
         self.declare_parameter('end_delimiter', '>')
         self.declare_parameter('field_separator', ',')
         self.declare_parameter('debug', True)
+        self.declare_parameter('reconnect_interval', 5.0)
         
         # Get parameters
-        self.port = self.get_parameter('port').value
+        self.auto_discover = self.get_parameter('auto_discover').value
+        self.fallback_port = self.get_parameter('fallback_port').value
         self.baud_rate = self.get_parameter('baud_rate').value
         self.timeout = self.get_parameter('timeout').value
         self.write_timeout = self.get_parameter('write_timeout').value
@@ -38,14 +46,21 @@ class ArduinoBridge(Node):
         self.end_delimiter = self.get_parameter('end_delimiter').value
         self.field_separator = self.get_parameter('field_separator').value
         self.debug = self.get_parameter('debug').value
+        self.reconnect_interval = self.get_parameter('reconnect_interval').value
         
-        # Serial connection
-        self.serial_conn = None
+        # Hardware discovery and device management
+        self.hardware_discovery = None
+        self.device_manager = DeviceManager()
+        self.arduino_device = None
         self.connected = False
         
         # Motor commands
         self.left_motor_cmd = 0
         self.right_motor_cmd = 0
+        
+        # Safety system integration
+        self.emergency_stop_active = False
+        self.last_heartbeat_time = self.get_clock().now()
         
         # Encoder data
         self.left_encoder = 0
@@ -68,10 +83,26 @@ class ArduinoBridge(Node):
         # Setup subscribers
         self.cmd_vel_sub = self.create_subscription(
             Twist,
-            'cmd_vel',
+            '/cmd_vel_limited',  # Subscribe to filtered commands from safety system
             self.cmd_vel_callback,
             10
         )
+        
+        # Safety system integration
+        self.emergency_stop_sub = self.create_subscription(
+            EmergencyStop,
+            '/emergency_stop',
+            self.emergency_stop_callback,
+            10
+        )
+        
+        # Publishers for safety system
+        self.component_heartbeat_pub = self.create_publisher(
+            String, '/component_heartbeat', 10)
+        self.emergency_stop_ack_pub = self.create_publisher(
+            String, '/emergency_stop_ack', 10)
+        self.recovery_ready_pub = self.create_publisher(
+            String, '/recovery_ready', 10)
         
         # TF broadcaster
         self.tf_broadcaster = TransformBroadcaster(self)
@@ -79,69 +110,112 @@ class ArduinoBridge(Node):
         # Timer for reading from serial
         self.serial_timer = self.create_timer(0.01, self.serial_read_callback)  # 100Hz
         
-        # Connect to Arduino
+        # Safety system heartbeat timer
+        self.heartbeat_timer = self.create_timer(1.0, self.send_heartbeat)  # 1Hz
+        
+        # Initialize hardware discovery if enabled
+        if self.auto_discover:
+            self.hardware_discovery = HardwareDiscovery()
+            
+        # Connect to Arduino using auto-discovery or fallback
         self.connect_arduino()
         
-        self.get_logger().info('Arduino bridge node started')
+        self.get_logger().info('Arduino bridge node started with auto-discovery enabled' if self.auto_discover else 'Arduino bridge node started with manual configuration')
     
     def connect_arduino(self):
-        """Attempt to connect to the Arduino."""
-        self.get_logger().info(f'Connecting to Arduino on {self.port}...')
+        """Attempt to connect to Arduino using auto-discovery or fallback."""
+        if self.auto_discover and self.hardware_discovery:
+            self.get_logger().info('Using hardware discovery to find Arduino...')
+            
+            # Discover Arduino devices
+            devices = self.hardware_discovery.discover_all_devices()
+            arduino_devices = [dev for dev in devices.values() if dev.device_type == 'arduino' and dev.status == 'available']
+            
+            if arduino_devices:
+                # Use the first available Arduino
+                arduino_info = arduino_devices[0]
+                self.get_logger().info(f'Found Arduino: {arduino_info.name} on {arduino_info.port}')
+                
+                # Create Arduino device instance
+                self.arduino_device = ArduinoDevice(
+                    name=arduino_info.name,
+                    port=arduino_info.port,
+                    baud_rate=self.baud_rate,
+                    timeout=self.timeout
+                )
+                
+                # Register device with manager
+                self.device_manager.register_device(self.arduino_device)
+                
+                # Add status callback
+                self.arduino_device.add_status_callback(self._on_arduino_status_change)
+                
+                # Connect to device
+                if self.arduino_device.connect():
+                    self.connected = True
+                    self.get_logger().info(f'Successfully connected to Arduino via auto-discovery')
+                    self.send_config()
+                else:
+                    self.get_logger().error('Failed to connect to discovered Arduino')
+                    self.connected = False
+            else:
+                self.get_logger().warning('No Arduino devices found via auto-discovery, using fallback')
+                self._connect_fallback()
+        else:
+            self.get_logger().info('Auto-discovery disabled, using fallback port')
+            self._connect_fallback()
+    
+    def _connect_fallback(self):
+        """Connect using fallback port configuration."""
+        self.get_logger().info(f'Connecting to Arduino on fallback port {self.fallback_port}...')
         
-        if not os.path.exists(self.port):
-            self.get_logger().warn(f'Port {self.port} does not exist. Searching for Arduino...')
-            self.find_arduino()
+        # Create Arduino device with fallback port
+        self.arduino_device = ArduinoDevice(
+            name="Arduino_Fallback",
+            port=self.fallback_port,
+            baud_rate=self.baud_rate,
+            timeout=self.timeout
+        )
         
-        try:
-            self.serial_conn = serial.Serial(
-                port=self.port,
-                baudrate=self.baud_rate,
-                timeout=self.timeout,
-                write_timeout=self.write_timeout
-            )
-            # Wait for Arduino to reset
-            time.sleep(2)
+        # Register device with manager
+        self.device_manager.register_device(self.arduino_device)
+        
+        # Add status callback
+        self.arduino_device.add_status_callback(self._on_arduino_status_change)
+        
+        # Connect to device
+        if self.arduino_device.connect():
             self.connected = True
-            self.get_logger().info(f'Connected to Arduino on {self.port}')
-            
-            # Send initial configuration
+            self.get_logger().info(f'Connected to Arduino on fallback port {self.fallback_port}')
             self.send_config()
-            
-        except serial.SerialException as e:
-            self.get_logger().error(f'Failed to connect to Arduino: {str(e)}')
+        else:
+            self.get_logger().error(f'Failed to connect to Arduino on fallback port {self.fallback_port}')
             self.connected = False
     
-    def find_arduino(self):
-        """Try to find Arduino by checking common ports and vendor IDs."""
-        # Common Arduino vendor IDs
-        arduino_vids = {
-            0x2341,  # Arduino
-            0x2a03,  # Arduino.org
-            0x1a86,  # CH340 (common clone)
-            0x10C4,  # CP210x
-            0x0403,  # FTDI
-        }
-        
-        for port in serial.tools.list_ports.comports():
-            if port.vid in arduino_vids:
-                self.port = port.device
-                self.get_logger().info(f'Found Arduino on {self.port}')
-                return
-        
-        self.get_logger().error('Could not find Arduino. Please check connections.')
+    def _on_arduino_status_change(self, status: DeviceStatus):
+        """Handle Arduino device status changes."""
+        if status == DeviceStatus.CONNECTED:
+            self.connected = True
+            self.get_logger().info('Arduino reconnected successfully')
+            self.send_config()
+        elif status == DeviceStatus.DISCONNECTED or status == DeviceStatus.ERROR:
+            self.connected = False
+            self.get_logger().warning(f'Arduino connection lost: {status.value}')
+        elif status == DeviceStatus.RECONNECTING:
+            self.get_logger().info('Arduino attempting reconnection...')
     
-    def send_config(self):
-        """Send configuration to Arduino."""
-        if not self.connected:
-            return
-            
-        # Example: Send PID parameters
-        # Format: <CONFIG,PID,Kp,Ki,Kd>
-        config_msg = f"{self.start_delimiter}CONFIG,PID,1.0,0.1,0.05{self.end_delimiter}\n"
-        self.serial_write(config_msg)
+
     
     def cmd_vel_callback(self, msg):
         """Handle incoming cmd_vel messages."""
+        # Check emergency stop status
+        if self.emergency_stop_active:
+            # Force zero commands during emergency stop
+            self.left_motor_cmd = 0
+            self.right_motor_cmd = 0
+            self.send_motor_commands()
+            return
+        
         # Convert twist to motor commands (differential drive)
         # This is a simple implementation - you might want to use the cmd_vel_to_motors node instead
         linear = msg.linear.x
@@ -171,59 +245,62 @@ class ArduinoBridge(Node):
     
     def send_motor_commands(self):
         """Send motor commands to Arduino."""
-        if not self.connected:
+        if not self.connected or not self.arduino_device:
             return
             
-        # Format: <LEFT_MOTOR,RIGHT_MOTOR> (e.g., <100,-100>)
-        motor_cmd = f"{self.start_delimiter}{self.left_motor_cmd}{self.field_separator}{self.right_motor_cmd}{self.end_delimiter}\n"
-        self.serial_write(motor_cmd)
+        # Use device abstraction layer to send motor commands
+        motor_data = {
+            'motor_speeds': {
+                'left': self.left_motor_cmd,
+                'right': self.right_motor_cmd
+            }
+        }
+        
+        success = self.arduino_device.write(motor_data)
+        if not success:
+            self.get_logger().warning('Failed to send motor commands to Arduino')
     
-    def serial_write(self, data):
-        """Safely write data to the serial port."""
-        try:
-            if self.connected and self.serial_conn and self.serial_conn.is_open:
-                self.serial_conn.write(data.encode('utf-8'))
-                return True
-        except serial.SerialException as e:
-            self.get_logger().error(f'Serial write error: {str(e)}')
-            self.connected = False
-        return False
+    def send_config(self):
+        """Send configuration to Arduino."""
+        if not self.connected or not self.arduino_device:
+            return
+            
+        # Send configuration through device abstraction layer
+        config_data = {
+            'config': {
+                'pid_kp': 1.0,
+                'pid_ki': 0.1,
+                'pid_kd': 0.05
+            }
+        }
+        
+        success = self.arduino_device.write(config_data)
+        if success:
+            self.get_logger().info('Configuration sent to Arduino')
+        else:
+            self.get_logger().warning('Failed to send configuration to Arduino')
     
     def serial_read_callback(self):
-        """Read and process data from the serial port."""
-        if not self.connected:
-            # Try to reconnect
-            self.connect_arduino()
+        """Read and process data from Arduino using device abstraction layer."""
+        if not self.connected or not self.arduino_device:
             return
             
         try:
-            if self.serial_conn.in_waiting > 0:
-                # Read a line from the serial port
-                line = self.serial_conn.readline().decode('utf-8').strip()
+            # Read data through device abstraction layer
+            data = self.arduino_device.read()
+            
+            if data:
+                # Process encoder data
+                if 'encoders' in data:
+                    encoder_data = data['encoders']
+                    self.process_encoder_data([str(encoder_data['left']), str(encoder_data['right'])])
                 
-                # Process the line if it contains our delimiters
-                if line.startswith(self.start_delimiter) and line.endswith(self.end_delimiter):
-                    # Remove delimiters and split by separator
-                    content = line[1:-1]  # Remove < and >
-                    parts = content.split(self.field_separator)
-                    
-                    # Process different message types
-                    if len(parts) >= 2 and parts[0] == 'ENCODER':
-                        self.process_encoder_data(parts[1:])
-                    elif len(parts) >= 3 and parts[0] == 'IMU':
-                        self.process_imu_data(parts[1:])
-                    elif len(parts) >= 1 and parts[0] == 'PING':
-                        self.get_logger().debug('Received PING from Arduino')
-                    
-                    # Debug output
-                    if self.debug:
-                        self.get_logger().debug(f'Received: {line}')
+                # Debug output
+                if self.debug:
+                    self.get_logger().debug(f'Received data from Arduino: {data}')
                         
-        except UnicodeDecodeError:
-            self.get_logger().warn('Received invalid data from Arduino')
-        except serial.SerialException as e:
-            self.get_logger().error(f'Serial read error: {str(e)}')
-            self.connected = False
+        except Exception as e:
+            self.get_logger().error(f'Error reading Arduino data: {e}')
     
     def process_encoder_data(self, data):
         """Process encoder data from Arduino."""
@@ -328,17 +405,64 @@ class ArduinoBridge(Node):
         # Implement IMU data processing if your Arduino has an IMU
         pass
     
-    def __del__(self):
-        """Cleanup on node destruction."""
-        if hasattr(self, 'serial_conn') and self.serial_conn and self.serial_conn.is_open:
-            try:
-                # Stop motors before exiting
-                self.left_motor_cmd = 0
-                self.right_motor_cmd = 0
-                self.send_motor_commands()
-                self.serial_conn.close()
-            except:
-                pass
+    def destroy_node(self):
+        """Clean shutdown of the Arduino bridge."""
+        try:
+            # Stop motors before exiting
+            self.left_motor_cmd = 0
+            self.right_motor_cmd = 0
+            self.send_motor_commands()
+            
+            # Disconnect Arduino device
+            if self.arduino_device:
+                self.arduino_device.disconnect()
+            
+            # Cleanup device manager
+            if self.device_manager:
+                self.device_manager.destroy_node()
+                
+            # Cleanup hardware discovery
+            if self.hardware_discovery:
+                self.hardware_discovery.destroy_node()
+                
+        except Exception as e:
+            self.get_logger().error(f'Error during cleanup: {e}')
+        
+        super().destroy_node()
+    
+    def emergency_stop_callback(self, msg: EmergencyStop) -> None:
+        """Handle emergency stop messages from safety system"""
+        self.emergency_stop_active = msg.active
+        
+        if msg.active:
+            # Immediately stop motors
+            self.left_motor_cmd = 0
+            self.right_motor_cmd = 0
+            self.send_motor_commands()
+            
+            # Acknowledge emergency stop
+            ack_msg = String()
+            ack_msg.data = "arduino_bridge"
+            self.emergency_stop_ack_pub.publish(ack_msg)
+            
+            self.get_logger().warn(f"Emergency stop activated: {msg.reason}")
+        else:
+            # Signal ready for recovery
+            recovery_msg = String()
+            recovery_msg.data = "arduino_bridge"
+            self.recovery_ready_pub.publish(recovery_msg)
+            
+            self.get_logger().info("Emergency stop cleared - Arduino bridge ready")
+    
+    def send_heartbeat(self) -> None:
+        """Send heartbeat to watchdog system"""
+        try:
+            heartbeat_msg = String()
+            heartbeat_msg.data = "arduino_bridge"
+            self.component_heartbeat_pub.publish(heartbeat_msg)
+            self.last_heartbeat_time = self.get_clock().now()
+        except Exception as e:
+            self.get_logger().error(f"Failed to send heartbeat: {e}")
 
 def main(args=None):
     rclpy.init(args=args)

@@ -1,4 +1,0 @@
-Invoking command in '/root/Dojo/Dojo/build/robot_perception': /usr/bin/cmake --build /root/Dojo/Dojo/build/robot_perception -- -j16 -l16
-Invoked command in '/root/Dojo/Dojo/build/robot_perception' returned '0': /usr/bin/cmake --build /root/Dojo/Dojo/build/robot_perception -- -j16 -l16
-Invoking command in '/root/Dojo/Dojo/build/robot_perception': /usr/bin/cmake --install /root/Dojo/Dojo/build/robot_perception
-Invoked command in '/root/Dojo/Dojo/build/robot_perception' returned '0': /usr/bin/cmake --install /root/Dojo/Dojo/build/robot_perception

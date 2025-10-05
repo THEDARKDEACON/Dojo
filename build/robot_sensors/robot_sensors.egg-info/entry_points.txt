@@ -1,2 +1,0 @@
-[console_scripts]
-camera_node = robot_sensors.camera_node:main

@@ -1,5 +1,0 @@
-[console_scripts]
-arduino_driver = robot_hardware.drivers.arduino_driver:main
-camera_driver = robot_hardware.drivers.camera_driver:main
-hardware_manager = robot_hardware.hardware_manager:main
-lidar_driver = robot_hardware.drivers.lidar_driver:main

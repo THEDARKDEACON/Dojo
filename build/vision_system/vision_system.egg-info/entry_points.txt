@@ -1,2 +1,0 @@
-[console_scripts]
-object_detector = vision_system.object_detector:main

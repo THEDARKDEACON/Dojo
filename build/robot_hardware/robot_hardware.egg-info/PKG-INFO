@@ -1,7 +1,0 @@
-Metadata-Version: 2.1
-Name: robot-hardware
-Version: 1.0.0
-Summary: Unified hardware interface for Dojo robot
-Maintainer: Gareth Joel
-Maintainer-email: garethjoel77@gmail.com
-License: Apache-2.0

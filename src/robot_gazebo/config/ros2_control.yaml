@@ -21,18 +21,20 @@ controller_manager:
     robot_description_kinematics_cache: ''
 
 # Differential Drive Controller Configuration
+# NOTE: This file will be automatically updated by the configuration manager
+# to use values from the master robot_config.yaml
 diff_drive_controller:
   ros__parameters:
-    # Wheel joints
-    left_wheel_names: ['front_left_wheel_joint', 'rear_left_wheel_joint']
-    right_wheel_names: ['front_right_wheel_joint', 'rear_right_wheel_joint']
+    # Wheel joints - these should match the URDF joint names
+    left_wheel_names: ['left_wheel_joint']
+    right_wheel_names: ['right_wheel_joint']
     
-    # Kinematics
-    wheel_separation: 0.26  # Distance between wheels
-    wheel_radius: 0.0325   # Wheel radius
+    # Kinematics - will be updated from master config
+    wheel_separation: 0.26  # Distance between wheels (from robot_config.yaml)
+    wheel_radius: 0.033     # Wheel radius (from robot_config.yaml)
     
     # Command timeout (seconds)
-    cmd_vel_timeout: 0.25
+    cmd_vel_timeout: 1.0    # From safety config
     
     # Enable/disable odometry and TF publishing
     enable_odom_tf: true
@@ -50,41 +52,34 @@ diff_drive_controller:
     # Odometry
     odom_frame_id: odom
     base_frame_id: base_link
-    pose_covariance_diagonal: [0.001, 0.001, 0.001, 0.001, 0.001, 0.01]
-    twist_covariance_diagonal: [0.001, 0.001, 0.001, 0.001, 0.001, 0.01]
+    pose_covariance_diagonal: [0.001, 0.001, 0.001, 0.001, 0.001, 0.03]
+    twist_covariance_diagonal: [0.001, 0.001, 0.001, 0.001, 0.001, 0.03]
     
     # Publishing
     publish_rate: 50.0
     publish_odom: true
     publish_odom_tf: true
     
-    # Velocity and acceleration limits
+    # Velocity and acceleration limits - will be updated from master config
     linear:
       x:
         has_velocity_limits: true
         has_acceleration_limits: true
         has_jerk_limits: false
-        max_velocity: 0.5
+        max_velocity: 0.5      # From robot_config.yaml max_linear_velocity
         min_velocity: -0.5
-        max_acceleration: 0.5
-        min_acceleration: -0.5
+        max_acceleration: 3.0  # From robot_config.yaml max_linear_acceleration
+        min_acceleration: -3.0
         
     angular:
       z:
         has_velocity_limits: true
         has_acceleration_limits: true
         has_jerk_limits: false
-        max_velocity: 1.0
+        max_velocity: 1.0      # From robot_config.yaml max_angular_velocity
         min_velocity: -1.0
-        max_acceleration: 1.0
-        min_acceleration: -1.0
-    
-    # PID parameters for wheel velocity control
-    wheel_joints:
-      front_left_wheel_joint: {p: 0.1, i: 0.0, d: 0.0}
-      front_right_wheel_joint: {p: 0.1, i: 0.0, d: 0.0}
-      rear_left_wheel_joint: {p: 0.1, i: 0.0, d: 0.0}
-      rear_right_wheel_joint: {p: 0.1, i: 0.0, d: 0.0}
+        max_acceleration: 3.0  # From robot_config.yaml max_angular_acceleration
+        min_acceleration: -3.0
 
 # Hardware Interface Configuration
 hardware_interface:

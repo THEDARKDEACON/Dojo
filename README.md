@@ -1,35 +1,29 @@
 # Dojo Robot - ROS2 Robotics Platform
 
-A modular, safety-focused ROS2 robotics platform for autonomous navigation and manipulation.
+A production-ready, safety-focused ROS2 robotics platform with automatic hardware discovery, unified configuration management, and comprehensive safety systems.
 
 ## 🚀 Quick Start
 
 ```bash
-# Build the workspace (recommended)
-colcon build --packages-up-to robot_bringup
-source install/setup.bash
+# Build the workspace
+./build_ros2.sh
 
-# Alternative (Docker-oriented consolidated script)
-# ./build_and_fix.sh
+# Real hardware with auto-discovery (recommended)
+ros2 launch robot_bringup bringup.launch.py
 
-# Real hardware (no Gazebo): Arduino only
-ros2 launch robot_bringup bringup.launch.py \
-  use_gazebo:=false use_arduino:=true use_camera:=false use_lidar:=false
+# Simulation mode (requires robot_gazebo package)
+ros2 launch robot_bringup bringup.launch.py use_simulation:=true
 
-# Real hardware: full stack (adjust sensors as needed)
-ros2 launch robot_bringup bringup.launch.py use_gazebo:=false
+# Hardware mode with specific components
+ros2 launch robot_bringup bringup.launch.py use_arduino:=true use_camera:=false use_lidar:=false
 
-# Simulation (Gazebo): requires building robot_gazebo
-ros2 launch robot_bringup bringup.launch.py use_gazebo:=true use_sim_time:=true
-
-# Or launch individual components
-ros2 launch robot_hardware hardware.launch.py    # Hardware only (supports use_arduino/use_camera/use_lidar)
-ros2 launch robot_control control.launch.py      # Control only
+# Launch with configuration validation
+ros2 launch robot_control configuration_manager.launch.py
 ```
 
 ## 🏗️ Architecture Overview
 
-The Dojo robot uses a **layered architecture** for maximum reliability and modularity:
+The Dojo robot uses a **production-ready layered architecture** with automatic hardware discovery and unified configuration management:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -39,31 +33,45 @@ The Dojo robot uses a **layered architecture** for maximum reliability and modul
 │                    PERCEPTION LAYER                         │
 │            (Computer Vision, Object Detection)              │
 ├─────────────────────────────────────────────────────────────┤
-│                     CONTROL LAYER                           │
-│         (Safety Systems, Command Filtering, Modes)          │
+│                  SAFETY & CONTROL LAYER                     │
+│    (Safety Supervisor, Emergency Stop, Velocity Limiting)   │
 ├─────────────────────────────────────────────────────────────┤
-│                    HARDWARE LAYER                           │
-│           (Arduino, Camera, LiDAR Drivers + Manager)        │
+│                CONFIGURATION MANAGEMENT                      │
+│         (Unified Config, Validation, Auto-Propagation)      │
+├─────────────────────────────────────────────────────────────┤
+│                HARDWARE ABSTRACTION LAYER                   │
+│        (Auto-Discovery, Health Monitoring, Recovery)        │
+├─────────────────────────────────────────────────────────────┤
+│                    DEVICE DRIVERS                           │
+│           (Arduino, Camera, LiDAR with Auto-Reconnect)      │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### Why This Architecture?
+### Key Features
 
-**🛡️ Safety First**: Multiple safety layers prevent accidents
-- Emergency stops at hardware and control levels
-- Obstacle detection and avoidance
-- Velocity limiting and command filtering
-- Hardware health monitoring
+**🔍 Automatic Hardware Discovery**: Zero-configuration hardware setup
+- Automatic Arduino detection on all serial ports
+- Camera capability detection and optimal configuration
+- LiDAR model identification and driver selection
+- USB device monitoring with automatic reconnection
 
-**🔧 Reliability**: Robust error handling and recovery
-- Auto-reconnection for all hardware
-- Graceful degradation when components fail
-- Real-time status monitoring and diagnostics
+**⚙️ Unified Configuration Management**: Single source of truth
+- Master configuration file (`config/robot_config.yaml`)
+- Automatic parameter validation and conflict detection
+- Consistent parameters across all system components
+- Runtime configuration updates with safety checks
 
-**📈 Scalability**: Easy to extend and modify
-- Modular design - add new sensors without breaking existing code
-- Standardized interfaces between layers
-- Centralized configuration management
+**🛡️ Comprehensive Safety Systems**: Production-ready safety
+- Multi-layered emergency stop coordination
+- Real-time obstacle detection and avoidance
+- Velocity limiting and command timeout protection
+- Watchdog timers for critical system components
+
+**🔧 Robust Hardware Management**: Enterprise-grade reliability
+- Continuous health monitoring of all components
+- Automatic recovery procedures for failed devices
+- Graceful degradation when components are unavailable
+- Real-time diagnostic reporting and alerting
 
 ## 📦 Package Structure
 
@@ -71,10 +79,19 @@ The Dojo robot uses a **layered architecture** for maximum reliability and modul
 
 | Package | Purpose | Key Features |
 |---------|---------|--------------|
-| `robot_hardware` | **Unified Hardware Interface** | Arduino, camera, LiDAR drivers + health monitoring |
-| `robot_control` | **High-Level Control** | Safety systems, command filtering, mode management |
-| `robot_interfaces` | **Custom Messages** | Standardized data structures and services |
-| `robot_bringup` | **System Orchestration** | Launch files for complete system startup |
+| `robot_control` | **Unified Control & Safety** | Configuration manager, hardware discovery, safety supervisor, emergency stop coordination |
+| `robot_hardware` | **Hardware Drivers** | Arduino, camera, LiDAR drivers with auto-discovery and health monitoring |
+| `robot_interfaces` | **Custom Messages** | Standardized data structures and services for safety and diagnostics |
+| `robot_bringup` | **System Orchestration** | Launch files with automatic mode detection and configuration validation |
+
+### Configuration System
+
+| Component | Location | Purpose |
+|-----------|----------|---------|
+| **Master Config** | `config/robot_config.yaml` | Single source of truth for all robot parameters |
+| **Configuration Manager** | `robot_control/configuration_manager.py` | Validation, conflict detection, parameter propagation |
+| **Hardware Discovery** | `robot_control/hardware_discovery.py` | Automatic device detection and capability discovery |
+| **Safety Supervisor** | `robot_control/safety_supervisor.py` | Emergency stop coordination and safety monitoring |
 
 ### Optional Packages
 
@@ -83,59 +100,108 @@ The Dojo robot uses a **layered architecture** for maximum reliability and modul
 | `robot_perception` | Computer vision, object detection | Optional |
 | `robot_navigation` | Autonomous navigation, SLAM | Optional |
 | `robot_description` | URDF models, visualization | Available |
+| `robot_gazebo` | Simulation environment | Optional (for simulation mode) |
 
-### Legacy Packages (Being Phased Out)
+## 🔌 Hardware Discovery System
 
-| Package | Replacement | Status |
-|---------|-------------|--------|
-| `arduino_bridge` | `robot_hardware` | ⚠️ Deprecated |
-| `ros2arduino_bridge` | `robot_hardware` | ⚠️ Deprecated |
-| `robot_sensors` | `robot_hardware` | ⚠️ Deprecated |
+### Automatic Hardware Detection
 
-## 🔌 Hardware Components
+The system automatically discovers and configures hardware devices:
+
+**Arduino Detection:**
+- Scans all serial ports (`/dev/ttyACM*`, `/dev/ttyUSB*`)
+- Identifies Arduino devices by communication protocol
+- Automatically configures baud rate and communication parameters
+- Monitors connection status and attempts reconnection on failure
+
+**Camera Discovery:**
+- Detects USB cameras (`/dev/video*`)
+- Queries camera capabilities (resolutions, formats, frame rates)
+- Automatically selects optimal configuration based on preferences
+- Supports multiple camera formats (MJPEG, YUYV, etc.)
+
+**LiDAR Detection:**
+- Scans serial ports for LiDAR devices
+- Identifies device model and capabilities
+- Configures appropriate driver and parameters
+- Supports RPLiDAR A1/A2 and compatible devices
 
 ### Supported Hardware
 
-- **Arduino Uno/Nano** - Motor control, encoders, sensors
-- **USB Camera** - Computer vision, streaming
-- **RPLiDAR A1/A2** - 360° laser scanning
-- **Ultrasonic Sensors** - Obstacle detection
-- **IMU** (optional) - Orientation sensing
+- **Arduino Uno/Nano** - Motor control, encoders, sensors (auto-detected)
+- **USB Camera** - Computer vision, streaming (auto-configured)
+- **RPLiDAR A1/A2** - 360° laser scanning (auto-identified)
+- **Ultrasonic Sensors** - Obstacle detection (via Arduino)
+- **IMU** (optional) - Orientation sensing (via Arduino)
 
 ### Hardware Connections
 
 ```
 Raspberry Pi 4
-├── USB0: Arduino (/dev/ttyACM0)
-├── USB1: LiDAR (/dev/ttyUSB0)  
-├── USB2: Camera (/dev/video0)
-└── GPIO: Additional sensors
+├── USB Ports: Auto-discovered devices
+│   ├── Arduino (any available port)
+│   ├── LiDAR (any available port)
+│   └── Camera (any available port)
+└── GPIO: Additional sensors via Arduino
 ```
 
-## ⚙️ Configuration
+### Hardware Health Monitoring
 
-All hardware settings are centralized in `src/robot_hardware/config/hardware.yaml`:
+- **Real-time Status**: Continuous monitoring of device connectivity
+- **Automatic Recovery**: Reconnection attempts for disconnected devices
+- **Graceful Degradation**: System continues with available devices
+- **Diagnostic Reporting**: Detailed health metrics and error reporting
+
+## ⚙️ Configuration Management
+
+### Master Configuration File
+
+All robot parameters are centralized in `config/robot_config.yaml` - the single source of truth:
 
 ```yaml
-arduino_driver:
-  ros__parameters:
-    port: "/dev/ttyACM0"
-    baud_rate: 115200
-    wheel_base: 0.2
-    wheel_radius: 0.033
-    max_speed: 0.5
-
-camera_driver:
-  ros__parameters:
-    width: 640
-    height: 480
-    fps: 30.0
-
-lidar_driver:
-  ros__parameters:
-    serial_port: "/dev/ttyUSB0"
-    frame_id: "laser"
+robot:
+  physical_parameters:
+    wheel_base: 0.26          # meters
+    wheel_radius: 0.030       # meters
+    max_linear_velocity: 0.5  # m/s
+    max_angular_velocity: 1.0 # rad/s
+    
+  hardware:
+    arduino:
+      auto_discover: true
+      fallback_port: "/dev/ttyACM0"
+      baud_rate: 115200
+      timeout: 1.0
+      
+    camera:
+      auto_discover: true
+      preferred_resolution: [640, 480]
+      fps: 30.0
+      
+    lidar:
+      auto_discover: true
+      fallback_port: "/dev/ttyUSB0"
+      scan_frequency: 10.0
+      
+  safety:
+    emergency_stop_timeout: 0.5  # seconds
+    obstacle_stop_distance: 0.3  # meters
+    command_timeout: 1.0         # seconds
+    watchdog_interval: 2.0       # seconds
+    
+  system:
+    use_simulation: false
+    log_level: "INFO"
+    diagnostics_rate: 2.0        # Hz
 ```
+
+### Configuration Features
+
+- **Automatic Validation**: Configuration conflicts detected at startup
+- **Parameter Propagation**: Master config automatically updates all subsystems
+- **Hardware Auto-Discovery**: Devices detected automatically when `auto_discover: true`
+- **Fallback Configuration**: Manual device paths used when auto-discovery fails
+- **Safety Enforcement**: Safety parameters validated and enforced across all components
 
 ## 🎮 Usage Examples
 
@@ -162,27 +228,52 @@ ros2 topic echo /diagnostics
   - `ros2 launch robot_bringup bringup.launch.py use_gazebo:=true use_sim_time:=true`
 - Sensor toggles: `use_arduino`, `use_camera`, `use_lidar` are available in both `bringup.launch.py` and `hardware.launch.py` to selectively enable drivers.
 
-### Hardware Testing
+### Hardware Discovery and Testing
 
 ```bash
-# Test individual components
+# Test hardware discovery
+ros2 launch robot_control configuration_manager.launch.py
+
+# Test individual components with auto-discovery
 ros2 launch robot_hardware hardware.launch.py use_arduino:=true use_camera:=false use_lidar:=false
 
-# Monitor hardware health
+# Monitor hardware health and discovery status
+ros2 topic echo /hardware_discovery_status
 ros2 topic echo /arduino_status
 ros2 topic echo /camera_status
 ros2 topic echo /lidar_status
+ros2 topic echo /diagnostics
 ```
 
-### Safety Features
+### Safety System Features
 
 ```bash
-# Emergency stop
+# Emergency stop (coordinated across all components)
 ros2 topic pub /emergency_stop_request std_msgs/Bool "data: true"
 
-# Check safety status
-ros2 topic echo /control_status
-ros2 topic echo /emergency_stop
+# Clear emergency stop (requires explicit confirmation)
+ros2 service call /clear_emergency_stop std_srvs/Trigger
+
+# Monitor safety status
+ros2 topic echo /safety_status
+ros2 topic echo /emergency_stop_status
+ros2 topic echo /watchdog_status
+
+# Test velocity limiting
+ros2 topic echo /cmd_vel_filtered  # Shows velocity-limited commands
+```
+
+### Configuration Management
+
+```bash
+# Validate configuration
+ros2 run robot_control configuration_manager --validate
+
+# Check for configuration conflicts
+ros2 topic echo /configuration_status
+
+# Reload configuration (with validation)
+ros2 service call /reload_configuration std_srvs/Trigger
 ```
 ## 🛠️ 
 Development Guide
@@ -242,36 +333,108 @@ def _estop_callback(self, msg):
 
 ## 🐛 Troubleshooting
 
-### Common Issues
+### Hardware Discovery Issues
 
-**Arduino not connecting:**
+**No devices detected:**
 ```bash
-# Check USB connection
-ls /dev/tty*
-# Should see /dev/ttyACM0 or similar
+# Check hardware discovery status
+ros2 topic echo /hardware_discovery_status
 
-# Check permissions
+# Manual device scan
+ros2 run robot_control hardware_discovery --scan
+
+# Check USB permissions
 sudo usermod -a -G dialout $USER
 # Logout and login again
 ```
 
-**Camera not working:**
+**Arduino not auto-detected:**
 ```bash
-# Check camera device
-ls /dev/video*
-# Should see /dev/video0
+# Check available serial ports
+ls /dev/tty{ACM,USB}*
 
-# Test camera directly
-v4l2-ctl --list-devices
+# Test manual connection
+ros2 run robot_control arduino_bridge --port /dev/ttyACM0
+
+# Check Arduino firmware compatibility
+# Ensure ROSArduinoBridge firmware is loaded
 ```
 
-**LiDAR not spinning:**
+**Camera auto-discovery fails:**
 ```bash
-# Check USB connection
-ls /dev/ttyUSB*
-# Should see /dev/ttyUSB0
+# Check camera devices
+ls /dev/video*
+v4l2-ctl --list-devices
 
-# Check power supply (LiDAR needs 5V)
+# Test camera capabilities
+ros2 run robot_control camera_driver --test-capabilities
+
+# Check camera permissions
+sudo usermod -a -G video $USER
+```
+
+**LiDAR not detected:**
+```bash
+# Check serial devices
+ls /dev/ttyUSB*
+
+# Test LiDAR communication
+ros2 run robot_control lidar_driver --test-connection
+
+# Check power supply (LiDAR needs 5V, 1.5A)
+# Verify USB cable supports data transfer
+```
+
+### Configuration Issues
+
+**Configuration validation fails:**
+```bash
+# Check configuration conflicts
+ros2 run robot_control configuration_manager --validate
+
+# View detailed validation report
+ros2 topic echo /configuration_validation_report
+
+# Reset to default configuration
+cp config/robot_config.yaml.default config/robot_config.yaml
+```
+
+**Parameter conflicts detected:**
+```bash
+# View conflict details
+ros2 topic echo /configuration_conflicts
+
+# Check parameter propagation
+ros2 param list | grep robot_config
+
+# Force parameter reload
+ros2 service call /reload_configuration std_srvs/Trigger
+```
+
+### Safety System Issues
+
+**Emergency stop not clearing:**
+```bash
+# Check safety status
+ros2 topic echo /safety_status
+
+# View safety violations
+ros2 topic echo /safety_violations
+
+# Clear emergency stop (requires manual confirmation)
+ros2 service call /clear_emergency_stop std_srvs/Trigger
+```
+
+**Watchdog timeouts:**
+```bash
+# Check watchdog status
+ros2 topic echo /watchdog_status
+
+# View component health
+ros2 topic echo /component_health
+
+# Reset watchdog timers
+ros2 service call /reset_watchdogs std_srvs/Trigger
 ```
 
 ### Debug Commands
@@ -414,34 +577,65 @@ CMD ["ros2", "launch", "robot_bringup", "bringup.launch.py"]
 
 ## 📚 API Reference
 
-### Key Topics
+### Core Topics
 
 | Topic | Type | Description |
 |-------|------|-------------|
-| `/cmd_vel` | `geometry_msgs/Twist` | Robot velocity commands |
+| `/cmd_vel` | `geometry_msgs/Twist` | Robot velocity commands (input) |
+| `/cmd_vel_filtered` | `geometry_msgs/Twist` | Velocity commands after safety filtering |
 | `/odom` | `nav_msgs/Odometry` | Robot odometry |
 | `/scan` | `sensor_msgs/LaserScan` | LiDAR scan data |
 | `/image_raw` | `sensor_msgs/Image` | Camera images |
-| `/system_status` | `std_msgs/String` | Overall system health |
-| `/emergency_stop` | `std_msgs/Bool` | Emergency stop state |
-| `/servo_cmd` | `std_msgs/Bool` | Servo control(open 5s on true) |
+
+### Hardware Discovery Topics
+
+| Topic | Type | Description |
+|-------|------|-------------|
+| `/hardware_discovery_status` | `std_msgs/String` | Hardware discovery results |
+| `/arduino_status` | `robot_interfaces/HardwareStatus` | Arduino connection and health |
+| `/camera_status` | `robot_interfaces/HardwareStatus` | Camera status and capabilities |
+| `/lidar_status` | `robot_interfaces/HardwareStatus` | LiDAR status and performance |
+
+### Safety System Topics
+
+| Topic | Type | Description |
+|-------|------|-------------|
+| `/safety_status` | `robot_interfaces/SafetyStatus` | Overall safety system status |
+| `/emergency_stop_status` | `std_msgs/Bool` | Emergency stop state |
+| `/emergency_stop_request` | `std_msgs/Bool` | Emergency stop trigger |
+| `/safety_violations` | `std_msgs/String` | Active safety violations |
+| `/watchdog_status` | `std_msgs/String` | Watchdog timer status |
+
+### Configuration Topics
+
+| Topic | Type | Description |
+|-------|------|-------------|
+| `/configuration_status` | `std_msgs/String` | Configuration validation status |
+| `/configuration_conflicts` | `std_msgs/String` | Detected parameter conflicts |
+| `/diagnostics` | `diagnostic_msgs/DiagnosticArray` | System diagnostics |
 
 ### Key Services
 
 | Service | Type | Description |
 |---------|------|-------------|
+| `/clear_emergency_stop` | `std_srvs/Trigger` | Clear emergency stop (requires confirmation) |
+| `/reload_configuration` | `std_srvs/Trigger` | Reload and validate configuration |
+| `/reset_watchdogs` | `std_srvs/Trigger` | Reset all watchdog timers |
 | `/set_control_mode` | `robot_interfaces/SetMode` | Change control mode |
 | `/calibrate_hardware` | `robot_interfaces/Calibration` | Hardware calibration |
 
-### Key Parameters
+### Configuration Parameters
 
 | Parameter | Default | Description |
 |-----------|---------|-------------|
-| `max_linear_velocity` | 0.5 | Maximum forward speed (m/s) |
-| `max_angular_velocity` | 1.0 | Maximum rotation speed (rad/s) |
-| `safety_stop_distance` | 0.3 | Emergency stop distance (m) |
-| `cmd_vel_timeout` | 1.0 | Command timeout (seconds) |
-| `servo_open_time` | 5.0 | Auto-close delay | 
+| `robot.physical_parameters.wheel_base` | 0.26 | Distance between wheels (m) |
+| `robot.physical_parameters.wheel_radius` | 0.030 | Wheel radius (m) |
+| `robot.physical_parameters.max_linear_velocity` | 0.5 | Maximum forward speed (m/s) |
+| `robot.physical_parameters.max_angular_velocity` | 1.0 | Maximum rotation speed (rad/s) |
+| `robot.safety.emergency_stop_timeout` | 0.5 | Emergency stop response time (s) |
+| `robot.safety.obstacle_stop_distance` | 0.3 | Emergency stop distance (m) |
+| `robot.safety.command_timeout` | 1.0 | Command timeout (seconds) |
+| `robot.safety.watchdog_interval` | 2.0 | Watchdog check interval (s) | 
 
 ## 🤝 Contributing
 

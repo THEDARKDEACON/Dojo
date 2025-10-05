@@ -19,6 +19,8 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/SensorData.msg"
   "msg/MotorCommand.msg"
   "msg/RobotState.msg"
+  "msg/SafetyStatus.msg"
+  "msg/EmergencyStop.msg"
   "srv/Calibration.srv"
   "srv/SetMode.srv"
   "action/Navigation.action"

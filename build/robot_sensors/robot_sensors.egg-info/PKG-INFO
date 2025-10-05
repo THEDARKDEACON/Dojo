@@ -1,7 +1,0 @@
-Metadata-Version: 2.1
-Name: robot-sensors
-Version: 0.0.1
-Summary: Camera and LiDAR sensor interfaces for the robot.
-Maintainer: You
-Maintainer-email: you@example.com
-License: Apache-2.0

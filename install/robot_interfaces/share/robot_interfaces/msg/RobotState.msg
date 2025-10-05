@@ -1,1 +1,0 @@
-/root/Dojo/Dojo/src/robot_interfaces/msg/RobotState.msg

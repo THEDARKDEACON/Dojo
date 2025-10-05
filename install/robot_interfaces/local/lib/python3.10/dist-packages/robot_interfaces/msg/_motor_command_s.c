@@ -1,1 +1,0 @@
-/root/Dojo/Dojo/build/robot_interfaces/rosidl_generator_py/robot_interfaces/msg/_motor_command_s.c

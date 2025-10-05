@@ -56,28 +56,377 @@ source_ros() {
     fi
 }
 
-# Function to install dependencies
-install_dependencies() {
-    log_info "Installing/updating dependencies..."
+# Function to check system dependencies
+check_system_dependencies() {
+    log_info "Checking system dependencies..."
+    
+    local missing_system_deps=()
+    local system_deps=("python3" "python3-pip" "python3-yaml" "python3-serial")
+    
+    for dep in "${system_deps[@]}"; do
+        if ! dpkg -l | grep -q "^ii  $dep "; then
+            missing_system_deps+=("$dep")
+        fi
+    done
+    
+    if [ ${#missing_system_deps[@]} -gt 0 ]; then
+        log_warning "Missing system dependencies:"
+        for dep in "${missing_system_deps[@]}"; do
+            echo "  - $dep"
+        done
+        
+        log_info "Installing missing system dependencies..."
+        if sudo apt update && sudo apt install -y "${missing_system_deps[@]}"; then
+            log_success "System dependencies installed successfully"
+        else
+            log_error "Failed to install some system dependencies"
+            return 1
+        fi
+    else
+        log_success "All system dependencies satisfied"
+    fi
+    
+    return 0
+}
+
+# Function to install ROS dependencies with better error handling
+install_ros_dependencies() {
+    log_info "Installing ROS package dependencies..."
     
     # Check if rosdep is initialized
     if [ ! -f "/etc/ros/rosdep/sources.list.d/20-default.list" ]; then
         log_info "Initializing rosdep..."
-        sudo rosdep init || true
+        if ! sudo rosdep init; then
+            log_error "Failed to initialize rosdep"
+            return 1
+        fi
     fi
     
-    # Update rosdep
-    rosdep update || log_warning "Failed to update rosdep"
+    # Update rosdep with retry logic
+    local rosdep_attempts=3
+    local rosdep_success=false
     
-    # Install workspace dependencies
-    log_info "Installing ROS package dependencies..."
-    rosdep install --from-paths src --ignore-src -r -y || log_warning "Some dependencies may not have been installed"
+    for ((i=1; i<=rosdep_attempts; i++)); do
+        log_info "Updating rosdep (attempt $i/$rosdep_attempts)..."
+        if rosdep update; then
+            rosdep_success=true
+            break
+        else
+            log_warning "Rosdep update attempt $i failed"
+            if [ $i -lt $rosdep_attempts ]; then
+                sleep 2
+            fi
+        fi
+    done
     
-    # Install Python dependencies if requirements.txt exists
+    if [ "$rosdep_success" = false ]; then
+        log_error "Failed to update rosdep after $rosdep_attempts attempts"
+        return 1
+    fi
+    
+    # Install workspace dependencies with detailed error reporting
+    log_info "Installing workspace dependencies..."
+    if rosdep install --from-paths src --ignore-src -r -y; then
+        log_success "ROS dependencies installed successfully"
+    else
+        log_error "Failed to install some ROS dependencies"
+        log_info "Checking which packages have missing dependencies..."
+        
+        # Try to identify problematic packages
+        rosdep check --from-paths src --ignore-src || true
+        return 1
+    fi
+    
+    return 0
+}
+
+# Function to install Python dependencies
+install_python_dependencies() {
+    log_info "Installing Python dependencies..."
+    
+    # Create requirements.txt if it doesn't exist
+    if [ ! -f "requirements.txt" ]; then
+        log_info "Creating requirements.txt with common robot dependencies..."
+        cat > requirements.txt << EOF
+# Core Python dependencies for Dojo Robot
+PyYAML>=6.0
+pyserial>=3.5
+opencv-python>=4.5.0
+numpy>=1.21.0
+scipy>=1.7.0
+matplotlib>=3.5.0
+EOF
+    fi
+    
+    # Install Python dependencies with better error handling
     if [ -f "requirements.txt" ]; then
         log_info "Installing Python dependencies from requirements.txt..."
-        pip3 install -r requirements.txt || log_warning "Failed to install some Python dependencies"
+        
+        # Try pip3 first, then pip
+        if command -v pip3 >/dev/null 2>&1; then
+            if pip3 install -r requirements.txt; then
+                log_success "Python dependencies installed successfully"
+            else
+                log_error "Failed to install Python dependencies with pip3"
+                return 1
+            fi
+        elif command -v pip >/dev/null 2>&1; then
+            if pip install -r requirements.txt; then
+                log_success "Python dependencies installed successfully"
+            else
+                log_error "Failed to install Python dependencies with pip"
+                return 1
+            fi
+        else
+            log_error "Neither pip3 nor pip found - cannot install Python dependencies"
+            return 1
+        fi
     fi
+    
+    return 0
+}
+
+# Function to install dependencies with comprehensive error handling
+install_dependencies() {
+    log_info "Installing/updating dependencies..."
+    
+    # Install system dependencies first
+    if ! check_system_dependencies; then
+        log_error "Failed to install system dependencies"
+        return 1
+    fi
+    
+    # Install Python dependencies
+    if ! install_python_dependencies; then
+        log_error "Failed to install Python dependencies"
+        return 1
+    fi
+    
+    # Install ROS dependencies
+    if ! install_ros_dependencies; then
+        log_error "Failed to install ROS dependencies"
+        return 1
+    fi
+    
+    log_success "All dependencies installed successfully"
+    return 0
+}
+
+# Function to detect and report missing dependencies
+detect_missing_dependencies() {
+    log_info "Detecting missing dependencies..."
+    
+    local missing_deps=()
+    local missing_python_deps=()
+    local missing_ros_deps=()
+    
+    # Check system packages
+    local system_packages=("python3" "python3-pip" "python3-yaml" "python3-serial" "python3-opencv")
+    for pkg in "${system_packages[@]}"; do
+        if ! dpkg -l | grep -q "^ii  $pkg "; then
+            missing_deps+=("$pkg")
+        fi
+    done
+    
+    # Check Python packages
+    local python_packages=("yaml" "serial" "cv2" "numpy" "scipy")
+    for pkg in "${python_packages[@]}"; do
+        if ! python3 -c "import $pkg" 2>/dev/null; then
+            missing_python_deps+=("$pkg")
+        fi
+    done
+    
+    # Check ROS packages
+    local ros_packages=("rclpy" "std_msgs" "geometry_msgs" "sensor_msgs" "tf2_ros")
+    for pkg in "${ros_packages[@]}"; do
+        if ! python3 -c "import $pkg" 2>/dev/null; then
+            missing_ros_deps+=("$pkg")
+        fi
+    done
+    
+    # Report findings
+    local has_missing=false
+    
+    if [ ${#missing_deps[@]} -gt 0 ]; then
+        has_missing=true
+        log_error "Missing system packages:"
+        for dep in "${missing_deps[@]}"; do
+            echo "  ❌ $dep"
+        done
+        echo ""
+        log_info "Install with: sudo apt install ${missing_deps[*]}"
+        echo ""
+    fi
+    
+    if [ ${#missing_python_deps[@]} -gt 0 ]; then
+        has_missing=true
+        log_error "Missing Python packages:"
+        for dep in "${missing_python_deps[@]}"; do
+            echo "  ❌ $dep"
+        done
+        echo ""
+        log_info "Install with: pip3 install -r requirements.txt"
+        echo ""
+    fi
+    
+    if [ ${#missing_ros_deps[@]} -gt 0 ]; then
+        has_missing=true
+        log_error "Missing ROS packages:"
+        for dep in "${missing_ros_deps[@]}"; do
+            echo "  ❌ $dep"
+        done
+        echo ""
+        log_info "Install with: rosdep install --from-paths src --ignore-src -r -y"
+        echo ""
+    fi
+    
+    if [ "$has_missing" = true ]; then
+        log_error "Missing dependencies detected. Run with --deps to install automatically."
+        return 1
+    else
+        log_success "All dependencies are satisfied"
+        return 0
+    fi
+}
+
+# Function to validate build results
+validate_build_results() {
+    log_info "Validating build results..."
+    
+    local validation_errors=()
+    
+    # Check if install directory was created
+    if [ ! -d "install" ]; then
+        validation_errors+=("Install directory not created")
+    fi
+    
+    # Check if setup.bash exists
+    if [ ! -f "install/setup.bash" ]; then
+        validation_errors+=("Setup script not generated")
+    fi
+    
+    # Check for core packages in install directory
+    local core_packages=("robot_interfaces" "robot_description" "robot_control" "robot_bringup")
+    for pkg in "${core_packages[@]}"; do
+        if [ ! -d "install/$pkg" ]; then
+            validation_errors+=("Core package not installed: $pkg")
+        fi
+    done
+    
+    # Check for Python package installations
+    if [ -d "install" ]; then
+        local python_packages_found=false
+        for pkg_dir in install/*/lib/python*/site-packages/; do
+            if [ -d "$pkg_dir" ]; then
+                python_packages_found=true
+                break
+            fi
+        done
+        
+        if [ "$python_packages_found" = false ]; then
+            validation_errors+=("No Python packages found in install directory")
+        fi
+    fi
+    
+    # Report validation results
+    if [ ${#validation_errors[@]} -gt 0 ]; then
+        log_error "Build validation failed:"
+        for error in "${validation_errors[@]}"; do
+            echo "  ❌ $error"
+        done
+        return 1
+    else
+        log_success "Build validation passed"
+        return 0
+    fi
+}
+
+# Function to perform post-build checks
+post_build_checks() {
+    log_info "Performing post-build checks..."
+    
+    # Source the workspace and check if packages are available
+    if [ -f "install/setup.bash" ]; then
+        log_info "Testing workspace sourcing..."
+        
+        # Test in a subshell to avoid affecting current environment
+        (
+            source install/setup.bash
+            
+            # Check if ROS packages are discoverable
+            if command -v ros2 >/dev/null 2>&1; then
+                log_info "Checking package discovery..."
+                
+                # Try to list packages (this will fail gracefully if packages aren't found)
+                if ros2 pkg list | grep -q "robot_"; then
+                    log_success "Robot packages are discoverable"
+                else
+                    log_warning "Robot packages may not be properly installed"
+                fi
+            else
+                log_warning "ROS 2 not available for package testing"
+            fi
+        )
+    else
+        log_error "Cannot perform post-build checks - setup.bash not found"
+        return 1
+    fi
+    
+    return 0
+}
+
+# Function to generate build report
+generate_build_report() {
+    log_info "Generating build report..."
+    
+    local report_file="build_report.txt"
+    local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+    
+    cat > "$report_file" << EOF
+Dojo Robot Build Report
+Generated: $timestamp
+Workspace: $(pwd)
+
+=== Build Configuration ===
+ROS Distribution: ${ROS_DISTRO:-"Not set"}
+Python Version: $(python3 --version 2>/dev/null || echo "Not available")
+Build Flags: $BUILD_FLAGS
+
+=== Package Summary ===
+EOF
+    
+    # Add package information
+    if [ -d "install" ]; then
+        echo "Installed Packages:" >> "$report_file"
+        for pkg_dir in install/*/; do
+            if [ -d "$pkg_dir" ]; then
+                pkg_name=$(basename "$pkg_dir")
+                echo "  - $pkg_name" >> "$report_file"
+            fi
+        done
+    else
+        echo "No packages installed" >> "$report_file"
+    fi
+    
+    echo "" >> "$report_file"
+    echo "=== Build Status ===" >> "$report_file"
+    
+    # Add validation results
+    if validate_build_results >/dev/null 2>&1; then
+        echo "Build Status: SUCCESS" >> "$report_file"
+    else
+        echo "Build Status: FAILED" >> "$report_file"
+    fi
+    
+    echo "" >> "$report_file"
+    echo "=== Next Steps ===" >> "$report_file"
+    echo "To use the workspace:" >> "$report_file"
+    echo "  source install/setup.bash" >> "$report_file"
+    echo "" >> "$report_file"
+    echo "To launch the robot:" >> "$report_file"
+    echo "  ros2 launch robot_bringup bringup.launch.py" >> "$report_file"
+    
+    log_success "Build report generated: $report_file"
 }
 
 # Function to clean build artifacts
@@ -85,6 +434,28 @@ clean_build() {
     log_info "Cleaning previous build artifacts..."
     rm -rf build/ install/ log/
     mkdir -p build install log
+}
+
+# Function to clean legacy packages from install directory
+clean_legacy_packages() {
+    log_info "Cleaning legacy packages from install directory..."
+    
+    # Legacy packages that should be removed from install
+    local legacy_packages=(
+        "arduino_bridge"
+        "ros2arduino_bridge"
+        "robot_sensors"
+        "vision_system"
+        "nv21_converter_pkg"
+        "robot_launch"
+    )
+    
+    for pkg in "${legacy_packages[@]}"; do
+        if [ -d "install/$pkg" ]; then
+            log_info "Removing legacy package from install: $pkg"
+            rm -rf "install/$pkg"
+        fi
+    done
 }
 
 # Function to get package list in dependency order
@@ -98,7 +469,9 @@ get_build_order() {
         "camera_ws"             # Replaced by robot_hardware
         "nv21_converter_pkg"    # Legacy package
         "robot_launch"          # Replaced by robot_bringup
-
+        "camera_ros"            # Legacy camera package
+        "libcamera"             # Legacy camera package
+        "sllidar_ros2"          # Legacy LiDAR package
     )
     
     # Get all packages in workspace
@@ -155,6 +528,104 @@ get_build_order() {
     echo "${ordered_packages[@]}"
 }
 
+# Function to validate backup packages are excluded
+validate_package_exclusion() {
+    log_info "Validating backup packages are properly excluded..."
+    
+    # Check if COLCON_IGNORE files exist
+    if [ ! -f "backup_packages/COLCON_IGNORE" ]; then
+        log_warning "Creating missing COLCON_IGNORE file in backup_packages/"
+        echo "# This file tells colcon to ignore this directory and all subdirectories" > backup_packages/COLCON_IGNORE
+        echo "# The backup_packages directory contains legacy packages that should not be built" >> backup_packages/COLCON_IGNORE
+    fi
+    
+    # Check individual backup package directories
+    local backup_dirs=("arduino_bridge" "camera_ws" "robot_sensors" "ros2arduino_bridge" "vision_system")
+    for dir in "${backup_dirs[@]}"; do
+        if [ -d "backup_packages/$dir" ] && [ ! -f "backup_packages/$dir/COLCON_IGNORE" ]; then
+            log_warning "Creating missing COLCON_IGNORE file in backup_packages/$dir/"
+            echo "# Legacy package - excluded from build" > "backup_packages/$dir/COLCON_IGNORE"
+        fi
+    done
+    
+    log_success "Package exclusion validation complete"
+}
+
+# Function to validate configuration before build
+validate_configuration() {
+    log_info "Validating robot configuration..."
+    
+    # Check if master configuration file exists
+    if [ ! -f "config/robot_config.yaml" ]; then
+        log_error "Master configuration file not found: config/robot_config.yaml"
+        log_info "Please ensure the configuration file exists before building"
+        return 1
+    fi
+    
+    # Check if configuration validation script exists
+    if [ ! -f "scripts/test_configuration.py" ]; then
+        log_warning "Configuration validation script not found, skipping validation"
+        return 0
+    fi
+    
+    # Run configuration validation
+    log_info "Running configuration validation script..."
+    if python3 scripts/test_configuration.py; then
+        log_success "Configuration validation passed"
+        return 0
+    else
+        log_error "Configuration validation failed"
+        log_info "Please fix configuration issues before building"
+        return 1
+    fi
+}
+
+# Function to check hardware dependencies
+check_hardware_dependencies() {
+    log_info "Checking hardware dependencies..."
+    
+    # Check for required hardware interfaces
+    local missing_deps=()
+    
+    # Check for serial port access (for Arduino)
+    if [ ! -d "/dev/serial" ] && [ ! -e "/dev/ttyACM0" ] && [ ! -e "/dev/ttyUSB0" ]; then
+        log_warning "No serial devices detected - Arduino functionality may be limited"
+    fi
+    
+    # Check for camera devices
+    if [ ! -d "/dev/v4l" ] && [ ! -e "/dev/video0" ]; then
+        log_warning "No camera devices detected - camera functionality may be limited"
+    fi
+    
+    # Check for Python dependencies
+    local python_deps=("yaml" "serial" "cv2")
+    for dep in "${python_deps[@]}"; do
+        if ! python3 -c "import $dep" 2>/dev/null; then
+            missing_deps+=("python3-$dep")
+        fi
+    done
+    
+    # Check for ROS 2 packages
+    local ros_deps=("rclpy" "std_msgs" "geometry_msgs" "sensor_msgs")
+    for dep in "${ros_deps[@]}"; do
+        if ! python3 -c "import $dep" 2>/dev/null; then
+            missing_deps+=("ros-humble-$dep")
+        fi
+    done
+    
+    if [ ${#missing_deps[@]} -gt 0 ]; then
+        log_warning "Missing dependencies detected:"
+        for dep in "${missing_deps[@]}"; do
+            echo "  - $dep"
+        done
+        log_info "Consider installing missing dependencies with: sudo apt install ${missing_deps[*]}"
+    else
+        log_success "All hardware dependencies satisfied"
+    fi
+    
+    return 0
+}
+
 # Function to build workspace
 build_workspace() {
     log_info "Starting build process..."
@@ -174,9 +645,36 @@ build_workspace() {
     
     # Try building all packages at once first (fastest)
     log_info "Attempting to build all packages..."
-    if colcon build $BUILD_FLAGS --packages-select "${packages[@]}"; then
+    
+    # Capture build output for analysis
+    local build_log="build_output.log"
+    
+    if colcon build $BUILD_FLAGS --packages-select "${packages[@]}" 2>&1 | tee "$build_log"; then
         log_success "All packages built successfully!"
+        
+        # Validate build results
+        if validate_build_results; then
+            log_success "Build validation passed"
+        else
+            log_warning "Build completed but validation failed"
+        fi
+        
         return 0
+    else
+        log_warning "Batch build failed, analyzing errors..."
+        
+        # Analyze build log for common issues
+        if grep -q "CMake Error" "$build_log"; then
+            log_error "CMake configuration errors detected"
+        fi
+        
+        if grep -q "No module named" "$build_log"; then
+            log_error "Python import errors detected - check dependencies"
+        fi
+        
+        if grep -q "fatal error.*No such file" "$build_log"; then
+            log_error "Missing header files detected - check dependencies"
+        fi
     fi
     
     log_warning "Batch build failed, trying individual package builds..."
@@ -197,7 +695,10 @@ build_workspace() {
                 rm -rf "build/$pkg" "install/$pkg"
             fi
             
-            if colcon build $BUILD_FLAGS --packages-select "$pkg"; then
+            # Capture individual package build output
+            local pkg_log="build_${pkg}_attempt_${attempt}.log"
+            
+            if colcon build $BUILD_FLAGS --packages-select "$pkg" 2>&1 | tee "$pkg_log"; then
                 log_success "Successfully built $pkg"
                 success=true
                 
@@ -205,8 +706,23 @@ build_workspace() {
                 if [ -f "install/setup.bash" ]; then
                     source install/setup.bash
                 fi
+                
+                # Clean up successful build log
+                rm -f "$pkg_log"
             else
                 log_warning "Build attempt $attempt failed for $pkg"
+                
+                # Analyze failure for specific package
+                if grep -q "CMake Error" "$pkg_log"; then
+                    log_error "  → CMake configuration error in $pkg"
+                elif grep -q "No module named" "$pkg_log"; then
+                    log_error "  → Python import error in $pkg - check dependencies"
+                elif grep -q "fatal error.*No such file" "$pkg_log"; then
+                    log_error "  → Missing header files in $pkg - check dependencies"
+                else
+                    log_error "  → Unknown build error in $pkg - check $pkg_log"
+                fi
+                
                 ((attempt++))
             fi
         done
@@ -246,6 +762,7 @@ show_usage() {
     echo "  --clean     Clean build artifacts before building"
     echo "  --deps      Install dependencies before building"
     echo "  --test      Run tests after building"
+    echo "  --skip-validation  Skip configuration validation"
     echo "  --help      Show this help message"
     echo ""
     echo "Examples:"
@@ -259,6 +776,7 @@ main() {
     local clean_build_flag=false
     local install_deps_flag=false
     local run_tests_flag=false
+    local skip_validation_flag=false
     
     # Parse command line arguments
     while [[ $# -gt 0 ]]; do
@@ -273,6 +791,10 @@ main() {
                 ;;
             --test)
                 run_tests_flag=true
+                shift
+                ;;
+            --skip-validation)
+                skip_validation_flag=true
                 shift
                 ;;
             --help)
@@ -291,22 +813,72 @@ main() {
     check_workspace
     source_ros
     
+    # Validate backup packages are properly excluded
+    validate_package_exclusion
+    
+    # Always clean legacy packages to prevent conflicts
+    clean_legacy_packages
+    
+    # Validate configuration before building (unless skipped)
+    if [ "$skip_validation_flag" = false ]; then
+        if ! validate_configuration; then
+            log_error "Configuration validation failed, aborting build"
+            log_info "Use --skip-validation to bypass this check"
+            exit 1
+        fi
+    else
+        log_warning "Skipping configuration validation as requested"
+    fi
+    
+    # Check hardware dependencies
+    check_hardware_dependencies
+    
     if [ "$install_deps_flag" = true ]; then
-        install_dependencies
+        if ! install_dependencies; then
+            log_error "Dependency installation failed, aborting build"
+            exit 1
+        fi
+    else
+        # Always check dependencies even if not installing
+        if ! detect_missing_dependencies; then
+            log_warning "Missing dependencies detected, but continuing build"
+            log_info "Use --deps flag to install dependencies automatically"
+        fi
     fi
     
     if [ "$clean_build_flag" = true ]; then
         clean_build
     fi
     
-    build_workspace
+    # Build the workspace
+    if build_workspace; then
+        log_success "Build completed successfully!"
+        
+        # Perform post-build validation
+        if validate_build_results; then
+            log_success "Build validation passed"
+        else
+            log_warning "Build validation failed - some issues detected"
+        fi
+        
+        # Perform post-build checks
+        post_build_checks
+        
+        # Generate build report
+        generate_build_report
+        
+    else
+        log_error "Build failed!"
+        log_info "Check the build logs for detailed error information"
+        exit 1
+    fi
     
     if [ "$run_tests_flag" = true ]; then
         run_tests --test
     fi
     
     # Final instructions
-    log_success "Build completed!"
+    log_success "Build process completed!"
     echo ""
     log_info "To use the workspace, run:"
     echo "  source install/setup.bash"
@@ -316,6 +888,8 @@ main() {
     echo ""
     log_info "To visualize the robot:"
     echo "  ros2 launch robot_description display.launch.py"
+    echo ""
+    log_info "Build report saved to: build_report.txt"
 }
 
 # Run main function with all arguments

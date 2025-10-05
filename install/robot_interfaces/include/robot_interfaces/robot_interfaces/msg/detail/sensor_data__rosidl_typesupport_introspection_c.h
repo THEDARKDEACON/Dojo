@@ -1,1 +1,0 @@
-/root/Dojo/Dojo/build/robot_interfaces/rosidl_typesupport_introspection_c/robot_interfaces/msg/detail/sensor_data__rosidl_typesupport_introspection_c.h

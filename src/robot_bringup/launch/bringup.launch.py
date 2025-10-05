@@ -1,31 +1,94 @@
 """
 Improved Robot Bringup Launch File
 Uses new modular hardware architecture with unified simulation support
+and automatic mode detection based on available packages and configuration.
 """
 
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, GroupAction
-from launch.conditions import IfCondition
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, GroupAction, OpaqueFunction
+from launch.conditions import IfCondition, UnlessCondition
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution, Command
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
-from ament_index_python.packages import get_package_share_directory
+from ament_index_python.packages import get_package_share_directory, PackageNotFoundError
 import os
+import sys
+
+def detect_operation_mode():
+    """Detect operation mode based on environment and available packages."""
+    # Check environment variables
+    use_simulation = os.getenv('USE_SIMULATION', 'false').lower() == 'true'
+    use_gazebo_env = os.getenv('USE_GAZEBO', 'false').lower() == 'true'
+    
+    if use_simulation or use_gazebo_env:
+        # Check if Gazebo packages are available
+        try:
+            get_package_share_directory('robot_gazebo')
+            get_package_share_directory('gazebo_ros')
+            return 'simulation'
+        except PackageNotFoundError:
+            print("WARNING: Simulation requested but Gazebo packages not available, using hardware mode")
+    
+    return 'hardware'
+
+def validate_mode_requirements(mode):
+    """Validate that requirements for the mode are met."""
+    missing_packages = []
+    
+    if mode == 'simulation':
+        required_sim_packages = ['robot_gazebo', 'gazebo_ros', 'controller_manager']
+        for package in required_sim_packages:
+            try:
+                get_package_share_directory(package)
+            except PackageNotFoundError:
+                missing_packages.append(package)
+    else:  # hardware mode
+        required_hw_packages = ['robot_hardware', 'robot_control']
+        for package in required_hw_packages:
+            try:
+                get_package_share_directory(package)
+            except PackageNotFoundError:
+                missing_packages.append(package)
+    
+    if missing_packages:
+        print(f"ERROR: Missing required packages for {mode} mode: {missing_packages}")
+        print("Please install missing packages or switch modes.")
+        return False
+    
+    return True
 
 def generate_launch_description():
-    # Launch arguments
-    use_hardware = LaunchConfiguration('use_hardware', default='true')
+    # Detect operation mode
+    detected_mode = detect_operation_mode()
+    
+    # Launch arguments with mode-aware defaults
+    operation_mode = LaunchConfiguration('operation_mode', default=detected_mode)
+    use_sim_time = LaunchConfiguration('use_sim_time', default='true' if detected_mode == 'simulation' else 'false')
+    use_gazebo = LaunchConfiguration('use_gazebo', default='true' if detected_mode == 'simulation' else 'false')
+    use_hardware = LaunchConfiguration('use_hardware', default='false' if detected_mode == 'simulation' else 'true')
+    
+    # Component flags
     use_control = LaunchConfiguration('use_control', default='true')
     use_perception = LaunchConfiguration('use_perception', default='false')
     use_navigation = LaunchConfiguration('use_navigation', default='false')
-    use_sim_time = LaunchConfiguration('use_sim_time', default='false')
     use_robot_description = LaunchConfiguration('use_robot_description', default='true')
-    # New flags
-    use_gazebo = LaunchConfiguration('use_gazebo', default='false')
+    use_config_manager = LaunchConfiguration('use_config_manager', default='true')
+    
+    # Hardware component flags (auto-detected based on available packages)
     use_arduino = LaunchConfiguration('use_arduino', default='true')
     use_camera = LaunchConfiguration('use_camera', default='true')
     use_lidar = LaunchConfiguration('use_lidar', default='true')
+    
+    # Configuration manager (loads mode-specific parameters)
+    config_manager_node = Node(
+        package='robot_control',
+        executable='configuration_manager',
+        name='configuration_manager',
+        parameters=[{'operation_mode': operation_mode}],
+        output='screen',
+        condition=IfCondition(use_config_manager)
+    )
     
     # Robot description
     robot_description_content = Command([
@@ -33,10 +96,9 @@ def generate_launch_description():
         PathJoinSubstitution([
             FindPackageShare('robot_description'),
             'urdf',
-            'robot.urdf.xacro'  # Changed from dojo_robot.urdf.xacro to robot.urdf.xacro
+            'robot.urdf.xacro'
         ]),
-        ' ',
-        'use_gazebo:=', use_gazebo,
+        ' use_gazebo:=', use_gazebo,
         ' use_sim_time:=', use_sim_time
     ])
     
@@ -51,99 +113,176 @@ def generate_launch_description():
         condition=IfCondition(use_robot_description)
     )
     
-    # Unified simulation launch (when use_gazebo=true) - DISABLED for hardware-only build
-    # unified_simulation = IncludeLaunchDescription(
-    #     PythonLaunchDescriptionSource(
-    #         os.path.join(get_package_share_directory('robot_gazebo'), 'launch', 'unified_simulation.launch.py')
-    #     ),
-    #     launch_arguments={
-    #         'use_sim_time': use_sim_time,
-    #         'use_slam': 'true',
-    #         'use_nav2': use_navigation,
-    #         'use_perception': use_perception,
-    #         'use_rviz': 'true',
-    #         'use_teleop': 'true'
-    #     }.items(),
-    #     condition=IfCondition(use_gazebo)
-    # )
+    # Simulation launch (when use_gazebo=true)
+    def get_simulation_launch():
+        """Get simulation launch if packages are available."""
+        try:
+            gazebo_share = get_package_share_directory('robot_gazebo')
+            return IncludeLaunchDescription(
+                PythonLaunchDescriptionSource(
+                    os.path.join(gazebo_share, 'launch', 'gazebo.launch.py')
+                ),
+                launch_arguments={
+                    'use_sim_time': use_sim_time,
+                    'world': LaunchConfiguration('world', default='empty.world'),
+                    'gui': LaunchConfiguration('gui', default='true'),
+                    'use_config_manager': 'false',  # We already have one
+                }.items(),
+                condition=IfCondition(use_gazebo)
+            )
+        except PackageNotFoundError:
+            print("WARNING: robot_gazebo package not found, simulation not available")
+            return None
+    
+    simulation_launch = get_simulation_launch()
     
     # Hardware layer - new unified hardware interface (when use_gazebo=false)
-    hardware_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(get_package_share_directory('robot_hardware'), 'launch', 'hardware.launch.py')
-        ),
-        launch_arguments={
-            'use_sim_time': use_sim_time,
-            'use_arduino': use_arduino,
-            'use_camera': use_camera,
-            'use_lidar': use_lidar,
-        }.items(),
-        condition=IfCondition(use_hardware)
-    )
+    def get_hardware_launch():
+        """Get hardware launch if packages are available."""
+        try:
+            hardware_share = get_package_share_directory('robot_hardware')
+            return IncludeLaunchDescription(
+                PythonLaunchDescriptionSource(
+                    os.path.join(hardware_share, 'launch', 'hardware.launch.py')
+                ),
+                launch_arguments={
+                    'use_sim_time': use_sim_time,
+                    'use_arduino': use_arduino,
+                    'use_camera': use_camera,
+                    'use_lidar': use_lidar,
+                }.items(),
+                condition=IfCondition(use_hardware)
+            )
+        except PackageNotFoundError:
+            print("WARNING: robot_hardware package not found, hardware interface not available")
+            return None
     
-    # Control layer - high-level control coordination (when use_gazebo=false)
-    control_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(get_package_share_directory('robot_control'), 'launch', 'control.launch.py')
-        ),
-        launch_arguments={
-            'use_sim_time': use_sim_time
-        }.items(),
-        condition=IfCondition(use_control)
-    )
+    hardware_launch = get_hardware_launch()
     
-    # Perception layer - optional computer vision and AI (when use_gazebo=false)
-    perception_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(get_package_share_directory('robot_perception'), 'launch', 'perception.launch.py')
-        ),
-        launch_arguments={
-            'use_sim_time': use_sim_time,
-            'camera_topic': 'image_raw',
-            'camera_info_topic': 'camera_info',
-            'enable_vision': 'true',
-            'enable_detector': 'true'
-        }.items(),
-        condition=IfCondition(use_perception)
-    )
+    # Control layer - high-level control coordination (hardware mode only)
+    def get_control_launch():
+        """Get control launch if packages are available."""
+        try:
+            control_share = get_package_share_directory('robot_control')
+            return IncludeLaunchDescription(
+                PythonLaunchDescriptionSource(
+                    os.path.join(control_share, 'launch', 'control.launch.py')
+                ),
+                launch_arguments={
+                    'use_sim_time': use_sim_time,
+                    'operation_mode': operation_mode,
+                }.items(),
+                condition=IfCondition(use_control)
+            )
+        except PackageNotFoundError:
+            print("WARNING: robot_control package not found, control layer not available")
+            return None
     
-    # Navigation layer - optional autonomous navigation (when use_gazebo=false)
-    navigation_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(get_package_share_directory('robot_navigation'), 'launch', 'nav2.launch.py')
-        ),
-        launch_arguments={
-            'use_sim_time': use_sim_time
-        }.items(),
-        condition=IfCondition(use_navigation)
-    )
+    control_launch = get_control_launch()
+    
+    # Perception layer - optional computer vision and AI
+    def get_perception_launch():
+        """Get perception launch if packages are available."""
+        try:
+            perception_share = get_package_share_directory('robot_perception')
+            return IncludeLaunchDescription(
+                PythonLaunchDescriptionSource(
+                    os.path.join(perception_share, 'launch', 'perception.launch.py')
+                ),
+                launch_arguments={
+                    'use_sim_time': use_sim_time,
+                    'camera_topic': 'image_raw',
+                    'camera_info_topic': 'camera_info',
+                    'enable_vision': 'true',
+                    'enable_detector': 'true'
+                }.items(),
+                condition=IfCondition(use_perception)
+            )
+        except PackageNotFoundError:
+            print("INFO: robot_perception package not found, perception not available")
+            return None
+    
+    perception_launch = get_perception_launch()
+    
+    # Navigation layer - optional autonomous navigation
+    def get_navigation_launch():
+        """Get navigation launch if packages are available."""
+        try:
+            navigation_share = get_package_share_directory('robot_navigation')
+            return IncludeLaunchDescription(
+                PythonLaunchDescriptionSource(
+                    os.path.join(navigation_share, 'launch', 'nav2.launch.py')
+                ),
+                launch_arguments={
+                    'use_sim_time': use_sim_time
+                }.items(),
+                condition=IfCondition(use_navigation)
+            )
+        except PackageNotFoundError:
+            print("INFO: robot_navigation package not found, navigation not available")
+            return None
+    
+    navigation_launch = get_navigation_launch()
+    
+    # Build launch list dynamically based on available packages
+    launch_nodes = [
+        config_manager_node,
+        robot_state_publisher_node,
+    ]
+    
+    # Add mode-specific launches
+    if simulation_launch:
+        launch_nodes.append(simulation_launch)
+    if hardware_launch:
+        launch_nodes.append(hardware_launch)
+    if control_launch:
+        launch_nodes.append(control_launch)
+    if perception_launch:
+        launch_nodes.append(perception_launch)
+    if navigation_launch:
+        launch_nodes.append(navigation_launch)
     
     # Group all launches for better organization
-    robot_group = GroupAction([
-        robot_state_publisher_node,
-        # unified_simulation,  # DISABLED - This will be ignored if use_gazebo=false
-        hardware_launch,     # This will be ignored if use_gazebo=true
-        control_launch,      # This will be ignored if use_gazebo=true
-        perception_launch,   # This will be ignored if use_gazebo=true
-        navigation_launch,   # This will be ignored if use_gazebo=true
-    ])
+    robot_group = GroupAction(launch_nodes)
+    
+    # Validate mode requirements
+    if not validate_mode_requirements(detected_mode):
+        sys.exit(1)
+    
+    # Print mode information
+    print(f"Robot bringup starting in {detected_mode} mode")
+    print(f"Available launches: simulation={simulation_launch is not None}, "
+          f"hardware={hardware_launch is not None}, control={control_launch is not None}, "
+          f"perception={perception_launch is not None}, navigation={navigation_launch is not None}")
     
     # Launch argument declarations
     return LaunchDescription([
-        DeclareLaunchArgument('use_hardware', default_value='true',
+        # Mode and core arguments
+        DeclareLaunchArgument('operation_mode', default_value=detected_mode,
+                           description='Operation mode: simulation or hardware'),
+        DeclareLaunchArgument('use_sim_time', 
+                           default_value='true' if detected_mode == 'simulation' else 'false',
+                           description='Use simulation (Gazebo) clock if true'),
+        DeclareLaunchArgument('use_gazebo', 
+                           default_value='true' if detected_mode == 'simulation' else 'false',
+                           description='Enable Gazebo simulation'),
+        DeclareLaunchArgument('use_hardware', 
+                           default_value='false' if detected_mode == 'simulation' else 'true',
                            description='Enable hardware interfaces'),
+        
+        # Component arguments
         DeclareLaunchArgument('use_control', default_value='true',
                            description='Enable control system'),
         DeclareLaunchArgument('use_perception', default_value='false',
                            description='Enable perception stack'),
         DeclareLaunchArgument('use_navigation', default_value='false',
                            description='Enable navigation stack'),
-        DeclareLaunchArgument('use_sim_time', default_value='true' if use_gazebo == 'true' else 'false',
-                           description='Use simulation (Gazebo) clock if true'),
         DeclareLaunchArgument('use_robot_description', default_value='true',
                            description='Load robot description'),
-        DeclareLaunchArgument('use_gazebo', default_value='false',
-                           description='Enable Gazebo simulation'),
+        DeclareLaunchArgument('use_config_manager', default_value='true',
+                           description='Use configuration manager'),
+        
+        # Hardware component arguments
         DeclareLaunchArgument('use_arduino', default_value='true',
                            description='Enable Arduino interface'),
         DeclareLaunchArgument('use_camera', default_value='true',
@@ -151,21 +290,11 @@ def generate_launch_description():
         DeclareLaunchArgument('use_lidar', default_value='true',
                            description='Enable LiDAR driver'),
         
-        # Include Gazebo launch file if use_gazebo is true - DISABLED for hardware-only build
-        # IncludeLaunchDescription(
-        #     PythonLaunchDescriptionSource([
-        #         PathJoinSubstitution([
-        #             FindPackageShare('robot_gazebo'),
-        #             'launch',
-        #             'gazebo.launch.py'
-        #         ])
-        #     ]),
-        #     condition=IfCondition(use_gazebo),
-        #     launch_arguments={
-        #         'use_sim_time': use_sim_time,
-        #         'world': 'empty.world'
-        #     }.items()
-        # ),
+        # Simulation arguments
+        DeclareLaunchArgument('world', default_value='empty.world',
+                           description='Gazebo world file'),
+        DeclareLaunchArgument('gui', default_value='true',
+                           description='Start Gazebo GUI'),
         
         # Add all robot components
         robot_group

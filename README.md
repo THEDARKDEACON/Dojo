@@ -4,6 +4,8 @@ A production-ready, safety-focused ROS2 robotics platform with automatic hardwar
 
 ## 🚀 Quick Start
 
+> **Note**: This codebase has been cleaned and organized for better maintainability. See [CLEANUP_CHANGES_LOG.md](CLEANUP_CHANGES_LOG.md) for details on changes made and [FILE_ORGANIZATION_GUIDE.md](FILE_ORGANIZATION_GUIDE.md) for file organization guidelines.
+
 ```bash
 # Build the workspace
 ./build_ros2.sh
@@ -11,8 +13,10 @@ A production-ready, safety-focused ROS2 robotics platform with automatic hardwar
 # Real hardware with auto-discovery (recommended)
 ros2 launch robot_bringup bringup.launch.py
 
-# Simulation mode (requires robot_gazebo package)
-ros2 launch robot_bringup bringup.launch.py use_simulation:=true
+# Simulation mode (streamlined launch options)
+./scripts/launch_simulation.sh
+# or
+ros2 launch robot_gazebo simulation.launch.py
 
 # Hardware mode with specific components
 ros2 launch robot_bringup bringup.launch.py use_arduino:=true use_camera:=false use_lidar:=false
@@ -467,6 +471,47 @@ ros2 run rqt_plot rqt_plot
 # Network bandwidth
 iftop
 ```
+
+## 📁 Cleaned File Structure
+
+The codebase has been systematically cleaned to remove redundancy and improve maintainability:
+
+### Key Improvements
+- **Removed backup directories**: Eliminated `backup_packages/` and `backup_redundant_launch_files/`
+- **Consolidated launch files**: Streamlined simulation and launch options
+- **Organized RViz configs**: Maximum 3 configs per package with clear purposes
+- **Cleaned URDF files**: Single source of truth for robot descriptions
+- **Deduplicated configs**: Merged similar configuration files
+- **Enhanced .gitignore**: Proper build artifact management
+
+### Current Structure
+```
+src/
+├── robot_control/          # Core control and safety systems
+├── robot_hardware/         # Hardware drivers and interfaces  
+├── robot_description/      # Robot URDF and visualization
+│   ├── urdf/
+│   │   ├── robot.urdf.xacro      # Primary robot description
+│   │   └── robot.urdf            # Compiled version
+│   └── rviz/
+│       ├── robot_display.rviz    # Basic robot visualization
+│       └── robot_simulation.rviz # Simulation visualization
+├── robot_gazebo/          # Simulation environment
+│   ├── launch/
+│   │   ├── gazebo.launch.py      # Basic Gazebo startup
+│   │   └── simulation.launch.py  # Complete simulation
+│   └── rviz/
+│       └── simulation.rviz       # Gazebo-specific visualization
+├── robot_perception/      # Sensor processing (optional)
+│   └── rviz/
+│       └── perception.rviz       # Perception visualization
+└── robot_navigation/      # Navigation system (optional)
+```
+
+### Documentation
+- **[CLEANUP_CHANGES_LOG.md](CLEANUP_CHANGES_LOG.md)**: Complete record of all changes made
+- **[FILE_ORGANIZATION_GUIDE.md](FILE_ORGANIZATION_GUIDE.md)**: Guidelines for maintaining clean structure
+- **[MAINTENANCE_GUIDELINES.md](MAINTENANCE_GUIDELINES.md)**: Best practices for ongoing maintenance
 
 ## 🔧 Build System
 

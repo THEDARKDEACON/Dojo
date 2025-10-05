@@ -53,7 +53,7 @@
   <!-- ROS2 Control Plugin -->
   <gazebo>
     <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
-      <parameters>$(find robot_gazebo)/config/ros2_control.yaml</parameters>
+      <parameters>$(find robot_gazebo)/config/ros2_controllers.yaml</parameters>
     </plugin>
   </gazebo>
 

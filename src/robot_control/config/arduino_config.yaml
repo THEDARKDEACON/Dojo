@@ -1,3 +1,8 @@
+# Arduino Interface Configuration
+# Purpose: Configuration for Arduino bridge communication
+# Used by: Arduino bridge nodes and hardware interface
+# Package: robot_control
+
 arduino_bridge:
   ros__parameters:
     baud_rate: 115200

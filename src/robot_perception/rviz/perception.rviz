@@ -6,6 +6,8 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
+        - /Object Detection1
+        - /Integrated Perception1
       Splitter Ratio: 0.5
     Tree Height: 856
   - Class: rviz_common/Selection
@@ -37,13 +39,38 @@ Visualization Manager:
       Plane Cell Count: 10
       Reference Frame: <Fixed Frame>
       Value: true
+    - Class: rviz_default_plugins/RobotModel
+      Collision Enabled: false
+      Enabled: true
+      Links:
+        All Links Enabled: true
+        Expand Joint Details: false
+        Expand Link Details: false
+        Expand Tree: false
+      Name: RobotModel
+      Robot Description: robot_description
+      TF Prefix: ""
+      Update Interval: 0
+      Value: true
+      Visual Enabled: true
+    - Class: rviz_default_plugins/Image
+      Enabled: true
+      Image Topic: /camera/image_raw
+      Max Value: 1.0
+      Median window: 5
+      Min Value: 0.0
+      Name: Camera Feed
+      Queue Size: 2
+      Transport Hint: raw
+      Unreliable: false
+      Value: true
     - Class: rviz_default_plugins/Image
       Enabled: true
       Image Topic: /perception/detections
       Max Value: 1.0
       Median window: 5
       Min Value: 0.0
-      Name: Detection Results
+      Name: Object Detection Results
       Queue Size: 2
       Transport Hint: raw
       Unreliable: false
@@ -56,11 +83,55 @@ Visualization Manager:
       Topic: /perception/detection_markers
       Unreliable: false
       Value: true
+    - Class: rviz_default_plugins/Image
+      Enabled: true
+      Image Topic: /perception/object_detections/image
+      Max Value: 1.0
+      Median window: 5
+      Min Value: 0.0
+      Name: Integrated Detection View
+      Queue Size: 2
+      Transport Hint: raw
+      Unreliable: false
+      Value: true
+    - Class: rviz_default_plugins/MarkerArray
+      Enabled: true
+      Name: Integrated Markers
+      Namespace: /perception/integrated/
+      Queue Size: 100
+      Topic: /perception/integrated/markers
+      Unreliable: false
+      Value: true
+    - Class: rviz_default_plugins/TF
+      Enabled: true
+      Frame Timeout: 15
+      Frames:
+        All Enabled: false
+        base_link:
+          Value: true
+        camera_link:
+          Value: true
+        odom:
+          Value: true
+      Marker Alpha: 1
+      Marker Scale: 0.3
+      Name: TF
+      Show Arrows: true
+      Show Axes: true
+      Show Names: true
+      Tree:
+        odom:
+          base_link:
+            camera_link:
+              {}
+      Update Interval: 0
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
     Default Light: true
-    Fixed Frame: camera_link
+    Fixed Frame: base_link
+    Frame Rate: 30
   Name: root
   Tools:
     - Class: rviz_default_plugins/Interact
@@ -85,16 +156,6 @@ Visualization Manager:
         X: 0.0
         Y: 0.0
         Z: 0.0
-      Frames:
-        Fixed Frame: camera_link
-        Frames:
-          All Enabled: true
-          base_link:
-            Value: true
-          camera_link:
-            Value: true
-          odom:
-            Value: true
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.01

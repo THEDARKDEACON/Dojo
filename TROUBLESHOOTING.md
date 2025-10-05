@@ -453,11 +453,10 @@ colcon build 2>&1 | grep -i conflict
 ```
 
 **Solutions:**
-1. **Move Legacy Packages**
+1. **Legacy Packages Removed**
    ```bash
-   # Move backup packages outside workspace
-   mkdir -p ../backup_packages
-   mv backup_packages/* ../backup_packages/
+   # Note: backup_packages directory has been removed during codebase cleanup
+   # If you encounter legacy package issues, check BACKUP_PACKAGES_REMOVAL_LOG.md
    ```
 
 2. **Use Package Exclusion**

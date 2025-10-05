@@ -1,4 +1,6 @@
-# Perception System Configuration
+# Perception System Configuration (Flat Structure)
+# This file provides a flat configuration structure for the perception system
+# Used by perception_system.launch.py and utility scripts
 
 # Camera Parameters
 camera:

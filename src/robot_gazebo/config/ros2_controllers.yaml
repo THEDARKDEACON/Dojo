@@ -1,3 +1,11 @@
+# ROS2 Controllers Configuration for Gazebo Simulation
+# Purpose: ROS2 control configuration for Gazebo simulation
+# Used by: gazebo.launch.py, dojo_robot.gazebo URDF
+# Package: robot_gazebo
+# This is the active controller configuration used by Gazebo simulation
+# Referenced by: gazebo.launch.py and dojo_robot.gazebo URDF
+# Managed by: configuration_manager.py for dynamic updates
+
 controller_manager:
   ros__parameters:
     update_rate: 100  # Hz

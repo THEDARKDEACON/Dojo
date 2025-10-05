@@ -693,7 +693,7 @@ class ConfigurationManager:
             self._update_hardware_controller_config(controller_config_path)
         
         # Update Gazebo controller config if in simulation mode or package exists
-        gazebo_config_path = os.path.join(workspace_root, "src/robot_gazebo/config/ros2_control.yaml")
+        gazebo_config_path = os.path.join(workspace_root, "src/robot_gazebo/config/ros2_controllers.yaml")
         if os.path.exists(gazebo_config_path):
             self._update_gazebo_controller_config(gazebo_config_path)
     
@@ -1020,4 +1020,5 @@ def main(args=None):
 
 
 if __name__ == '__main__':
+    main()
     main()

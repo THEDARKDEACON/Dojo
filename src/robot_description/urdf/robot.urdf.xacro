@@ -96,10 +96,10 @@
   </link>
 
   <!-- Joint between base and top floor -->
-  <joint name="base_to_top_floor" type="fixed">
+  <joint name="base_top_floor_joint" type="fixed">
     <parent link="base_link"/>
     <child link="top_floor"/>
-    <origin xyz="0 0 0.069" rpy="0 0 0"/>
+    <origin xyz="0 0 0.085" rpy="0 0 0"/>
   </joint>
 
   <!-- Wheel Macro -->
@@ -122,19 +122,19 @@
       </inertial>
     </link>
 
-    <joint name="${prefix}_wheel_joint" type="continuous">
+    <joint name="base_${prefix}_wheel_joint" type="continuous">
       <parent link="base_link"/>
       <child link="${prefix}_wheel"/>
-      <origin xyz="${x} ${y} ${z}" rpy="${M_PI_2} 0 0"/>
+      <origin xyz="${x} ${y} ${z}" rpy="0 0 0"/>
       <axis xyz="0 1 0"/>
     </joint>
   </xacro:macro>
 
   <!-- Create wheels -->
-  <xacro:wheel prefix="left" x="0" y="${base_y/2 + 0.01}" z="0"/>
-  <xacro:wheel prefix="right" x="0" y="-${base_y/2 - 0.01}" z="0"/>
-  <xacro:wheel prefix="frontleft" x="${base_x/2}" y="${base_y/2 + 0.01}" z="0"/>
-  <xacro:wheel prefix="frontright" x="${base_x/2}" y="-${base_y/2 - 0.01}" z="0"/>
+  <xacro:wheel prefix="left" x="-0.1075" y="0.13" z="0"/>
+  <xacro:wheel prefix="right" x="-0.1075" y="-0.13" z="0"/>
+  <xacro:wheel prefix="frontleft" x="0.1075" y="0.13" z="0"/>
+  <xacro:wheel prefix="frontright" x="0.1075" y="-0.13" z="0"/>
 
   <!-- Lidar -->
   <link name="lidar">
@@ -157,49 +157,115 @@
     </inertial>
   </link>
 
-  <joint name="lidar_joint" type="fixed">
-    <parent link="top_floor"/>
+  <joint name="base_lidar_joint" type="fixed">
+    <parent link="base_link"/>
     <child link="lidar"/>
-    <origin xyz="0 0 0.04" rpy="0 0 0"/>
+    <origin xyz="0 0 0.103" rpy="0 0 0"/>
   </joint>
 
   <!-- Camera -->
-  <link name="camera">
+  <link name="camera_link">
     <visual>
       <geometry>
-        <box size="0.02 0.04 0.03"/>
+        <box size="0.01 0.01 0.01"/>
       </geometry>
       <origin xyz="0 0 0" rpy="0 0 0"/>
-      <material name="black">
-        <color rgba="0.1 0.1 0.1 1"/>
-      </material>
+      <material name="black"/>
     </visual>
     <collision>
       <geometry>
-        <box size="0.02 0.04 0.03"/>
+        <box size="0.01 0.01 0.01"/>
       </geometry>
       <origin xyz="0 0 0" rpy="0 0 0"/>
     </collision>
     <inertial>
-      <mass value="0.05"/>
+      <mass value="0.1"/>
       <inertia ixx="0.00001" ixy="0.0" ixz="0.0" iyy="0.00001" iyz="0.0" izz="0.00001"/>
     </inertial>
   </link>
 
   <joint name="camera_joint" type="fixed">
     <parent link="top_floor"/>
-    <child link="camera"/>
+    <child link="camera_link"/>
     <origin xyz="0.08 0 0.01" rpy="0 0 0"/>
   </joint>
 
-  <!-- Gazebo Plugins -->
+  <!-- Gazebo Camera Sensor -->
+  <gazebo reference="camera_link">
+    <sensor type="camera" name="camera1">
+      <update_rate>30.0</update_rate>
+      <camera name="front">
+        <horizontal_fov>1.3962634</horizontal_fov>
+        <image>
+          <width>640</width>
+          <height>480</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.1</near>
+          <far>100</far>
+        </clip>
+      </camera>
+      <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+        <ros>
+          <namespace>/</namespace>
+        </ros>
+        <camera_name>camera</camera_name>
+        <frame_name>camera_link</frame_name>
+        <hack_baseline>0.07</hack_baseline>
+      </plugin>
+      <always_on>true</always_on>
+      <update_rate>30.0</update_rate>
+      <visualize>true</visualize>
+    </sensor>
+  </gazebo>
+
+  <!-- Gazebo LiDAR Sensor -->
+  <gazebo reference="lidar">
+    <sensor type="ray" name="lidar_sensor">
+      <pose>0 0 0 0 0 0</pose>
+      <visualize>true</visualize>
+      <update_rate>10</update_rate>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>360</samples>
+            <resolution>1</resolution>
+            <min_angle>-3.14159</min_angle>
+            <max_angle>3.14159</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>0.1</min>
+          <max>12.0</max>
+          <resolution>0.01</resolution>
+        </range>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.01</stddev>
+        </noise>
+      </ray>
+      <plugin name="gazebo_ros_lidar" filename="libgazebo_ros_ray_sensor.so">
+        <ros>
+          <namespace>/</namespace>
+        </ros>
+        <output_type>sensor_msgs/LaserScan</output_type>
+        <frame_name>lidar</frame_name>
+      </plugin>
+    </sensor>
+  </gazebo>
+
+  <!-- Gazebo Differential Drive Plugin -->
   <gazebo>
     <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
       <ros>
         <namespace>/</namespace>
       </ros>
-      <left_joint>left_wheel_joint</left_joint>
-      <right_joint>right_wheel_joint</right_joint>
+      <left_joint>base_left_wheel_joint</left_joint>
+      <left_joint>base_frontleft_wheel_joint</left_joint>
+      <right_joint>base_right_wheel_joint</right_joint>
+      <right_joint>base_frontright_wheel_joint</right_joint>
       <wheel_separation>${wheel_separation}</wheel_separation>
       <wheel_diameter>${2 * wheel_radius}</wheel_diameter>
       <command_topic>cmd_vel</command_topic>
@@ -208,17 +274,9 @@
       <robot_base_frame>base_link</robot_base_frame>
       <publish_odom>true</publish_odom>
       <publish_odom_tf>true</publish_odom_tf>
-      <publish_wheel_tf>false</publish_wheel_tf>
-    </plugin>
-
-    <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
-      <alwaysOn>true</alwaysOn>
-      <updateRate>30.0</updateRate>
-      <cameraName>camera</cameraName>
-      <frameName>camera</frameName>
-      <imageTopicName>image_raw</imageTopicName>
-      <cameraInfoTopicName>camera_info</cameraInfoTopicName>
-      <hackBaseline>0.07</hackBaseline>
+      <publish_wheel_tf>true</publish_wheel_tf>
+      <max_wheel_torque>0.5</max_wheel_torque>
+      <max_wheel_acceleration>1.0</max_wheel_acceleration>
     </plugin>
   </gazebo>
 </robot>

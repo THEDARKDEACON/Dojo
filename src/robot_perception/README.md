@@ -14,17 +14,20 @@ Enhanced `robot_perception` package providing advanced computer vision, LiDAR pr
 
 ## 📦 **Package Structure**
 
+> **Note**: This package has been cleaned and configuration files consolidated. See [CLEANUP_CHANGES_LOG.md](../../CLEANUP_CHANGES_LOG.md) for details.
+
 ```
 robot_perception/
 ├── config/
-│   └── perception_params.yaml         # Main configuration file
+│   ├── README.md                      # Configuration documentation
+│   └── perception_params.yaml         # Consolidated configuration file
 ├── launch/
 │   ├── perception_system.launch.py    # Launch entire perception system
 │   ├── object_detector.launch.py      # Launch object detection only
-│   └── perception_integration.launch.py  # Launch sensor fusion
+│   ├── perception_integration.launch.py  # Launch sensor fusion
+│   └── robot_perception.launch.py     # Main perception launcher
 ├── rviz/
-│   ├── object_detection.rviz         # RViz config for object detection
-│   └── perception_integration.rviz   # RViz config for sensor fusion
+│   └── perception.rviz               # Consolidated RViz config
 ├── robot_perception/
 │   ├── __init__.py                   # Package initialization
 │   ├── nodes/                        # ROS2 nodes
@@ -40,6 +43,12 @@ robot_perception/
 ├── setup.py                          # Python package setup
 └── README.md                         # This file
 ```
+
+### Removed Files (Cleanup)
+The following redundant files were removed during cleanup:
+- `config/robot_perception_params.yaml` - Merged into `perception_params.yaml`
+- `rviz/object_detection.rviz` - Consolidated into `perception.rviz`
+- `rviz/perception_integration.rviz` - Consolidated into `perception.rviz`
 
 ## 🚀 **Quick Start**
 
@@ -68,6 +77,36 @@ ros2 launch robot_perception perception_system.launch.py \
 ros2 run robot_perception object_detector
 ros2 run robot_perception perception_integrator
 ```
+
+### **RViz Visualization**
+
+> **Note**: RViz configurations have been consolidated. See [CLEANUP_CHANGES_LOG.md](../../CLEANUP_CHANGES_LOG.md) for details.
+
+The package provides one comprehensive RViz configuration (consolidated from multiple previous configs):
+
+- **`perception.rviz`** - Complete perception system visualization
+  - Shows robot model and camera feed
+  - Displays object detection results with bounding boxes
+  - Shows detection markers in 3D space
+  - Includes both raw camera feed and processed detection results
+  - Displays integrated perception markers for sensor fusion
+  - Consolidated features from previous `object_detection.rviz` and `perception_integration.rviz`
+  - **Use when**: Running perception system for debugging or monitoring
+
+#### Usage Example
+
+```bash
+# Launch RViz with perception configuration
+ros2 run rviz2 rviz2 -d src/robot_perception/rviz/perception.rviz
+
+# Or launch with perception system
+ros2 launch robot_perception perception_system.launch.py rviz:=true
+```
+
+#### Removed Configurations
+The following RViz configurations were consolidated into `perception.rviz`:
+- `object_detection.rviz` - Merged into main perception config
+- `perception_integration.rviz` - Features integrated into main config
 
 ### **Launch with Simulation**
 ```bash

@@ -1,4 +1,7 @@
-# Unified Hardware Configuration for Dojo Robot
+# Hardware System Configuration
+# Purpose: Unified hardware configuration for Dojo Robot
+# Used by: Hardware interface nodes and drivers
+# Package: robot_hardware
 
 arduino_driver:
   ros__parameters:

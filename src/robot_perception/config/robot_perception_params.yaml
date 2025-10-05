@@ -1,3 +1,7 @@
+# Robot Perception Node Parameters (ROS2 Parameter Structure)
+# This file provides ROS2-compatible parameter structure for perception nodes
+# Used by perception.launch.py and individual perception nodes
+
 /**:
   ros__parameters:
     use_sim_time: False

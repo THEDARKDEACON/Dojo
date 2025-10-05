@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
-Gazebo Simulation Launch for Dojo Robot
-Integrates with the new robot_description package and configuration manager
+Basic Gazebo Launch File for Dojo Robot
+Launches Gazebo with robot, controllers, and optional RViz
+Use this for basic simulation setup without additional features
 """
 
 from launch import LaunchDescription
@@ -130,7 +131,7 @@ def generate_launch_description():
             PathJoinSubstitution([
                 FindPackageShare('robot_gazebo'),
                 'config',
-                'ros2_control.yaml'
+                'ros2_controllers.yaml'
             ]),
             {'use_sim_time': use_sim_time}
         ],
@@ -247,5 +248,4 @@ def generate_launch_description():
         delay_controller_manager_after_spawn,
         delay_joint_state_broadcaster_after_controller_manager,
         delay_diff_drive_after_joint_state,
-    ] + ([rviz_node] if rviz_node else [])
-    ])
+    ] + ([rviz_node] if rviz_node else []))

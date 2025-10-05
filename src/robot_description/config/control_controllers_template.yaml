@@ -1,3 +1,8 @@
+# Robot Controllers Configuration (Reference/Template)
+# This file serves as a reference template for controller configurations
+# The active controller configuration is in robot_gazebo/config/ros2_controllers.yaml
+# This file is maintained for documentation and as a template for hardware deployments
+
 controller_manager:
   ros__parameters:
     update_rate: 100  # Hz

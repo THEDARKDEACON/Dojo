@@ -1,6 +1,6 @@
 """
-Unified Simulation Launch File for Dojo Robot
-Complete simulation with SLAM, camera, and object detection
+Complete Simulation Launch File for Dojo Robot
+Full-featured simulation with SLAM, navigation, perception, and teleop
 """
 
 import os
@@ -28,6 +28,7 @@ def generate_launch_description():
     # Launch arguments
     world_name = LaunchConfiguration('world', default='empty.world')
     use_sim_time = LaunchConfiguration('use_sim_time', default='true')
+    gui = LaunchConfiguration('gui', default='true')
     use_rviz = LaunchConfiguration('use_rviz', default='true')
     use_teleop = LaunchConfiguration('use_teleop', default='true')
     use_slam = LaunchConfiguration('use_slam', default='true')
@@ -40,74 +41,21 @@ def generate_launch_description():
     pkg_robot_navigation = FindPackageShare('robot_navigation')
     pkg_robot_perception = FindPackageShare('robot_perception')
 
-    # Robot description
-    robot_description_content = Command([
-        'xacro ',
-        PathJoinSubstitution([pkg_robot_description, 'urdf', 'dojo_robot.urdf.xacro']),
-        ' use_gazebo:=true'
-    ])
-    
-    robot_description = {'robot_description': robot_description_content}
-
-    # Robot state publisher
-    robot_state_publisher_node = Node(
-        package='robot_state_publisher',
-        executable='robot_state_publisher',
-        parameters=[
-            {'use_sim_time': use_sim_time},
-            robot_description
-        ],
-        output='screen'
-    )
-
-    # Gazebo launch
-    gazebo = IncludeLaunchDescription(
+    # Basic Gazebo simulation
+    gazebo_simulation = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             [PathJoinSubstitution([pkg_robot_gazebo, 'launch', 'gazebo.launch.py'])]
         ),
         launch_arguments={
-            'world': PathJoinSubstitution([pkg_robot_gazebo, 'worlds', world_name]),
+            'world': world_name,
             'use_sim_time': use_sim_time,
-            'gui': 'true',
-            'verbose': 'false',
-            'paused': 'false',
+            'gui': gui,
+            'rviz': 'false',  # We'll launch RViz separately with our config
+            'use_config_manager': 'true'
         }.items(),
     )
 
-    # Spawn robot
-    spawn_entity = Node(
-        package='gazebo_ros',
-        executable='spawn_entity.py',
-        arguments=['-topic', 'robot_description', '-entity', 'dojo_robot'],
-        output='screen',
-    )
 
-    # Controller manager
-    controller_manager = Node(
-        package='controller_manager',
-        executable='ros2_control_node',
-        parameters=[
-            robot_description,
-            PathJoinSubstitution([pkg_robot_gazebo, 'config', 'ros2_control.yaml'])
-        ],
-        output='screen',
-    )
-
-    # Joint state broadcaster
-    joint_state_broadcaster = Node(
-        package='controller_manager',
-        executable='spawner',
-        arguments=['joint_state_broadcaster', '--controller-manager', '/controller_manager'],
-        output='screen',
-    )
-
-    # Diff drive controller
-    diff_drive_controller = Node(
-        package='controller_manager',
-        executable='spawner',
-        arguments=['diff_drive_controller', '--controller-manager', '/controller_manager'],
-        output='screen',
-    )
 
     # SLAM Toolbox
     slam_toolbox = Node(
@@ -179,6 +127,8 @@ def generate_launch_description():
                             description='Gazebo world file'),
         DeclareLaunchArgument('use_sim_time', default_value='true',
                             description='Use simulation clock'),
+        DeclareLaunchArgument('gui', default_value='true',
+                            description='Start Gazebo GUI'),
         DeclareLaunchArgument('use_rviz', default_value='true',
                             description='Launch RViz'),
         DeclareLaunchArgument('use_teleop', default_value='true',
@@ -194,14 +144,8 @@ def generate_launch_description():
         SetParameter(name='use_sim_time', value=use_sim_time),
         
         # Core simulation
-        robot_state_publisher_node,
-        gazebo,
-        spawn_entity,
-        
-        # Control system
-        controller_manager,
-        joint_state_broadcaster,
-        diff_drive_controller,
+        gazebo_simulation,
+
         
         # SLAM
         slam_toolbox,

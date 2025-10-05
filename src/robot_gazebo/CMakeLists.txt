@@ -42,26 +42,8 @@ find_package(std_srvs REQUIRED)
 find_package(robot_description REQUIRED)
 find_package(robot_control REQUIRED)
 
-# Find Python dependencies
-find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
-
-# Set Python install path
-set(PYTHON_INSTALL_DIR "${PYTHON3_INSTALL_DIR}")
-
-# Add include directories
-include_directories(
-  include
-  ${rclcpp_INCLUDE_DIRS}
-  ${rclpy_INCLUDE_DIRS}
-  ${gazebo_ros_INCLUDE_DIRS}
-)
-
-# Install Python modules
-install(
-  DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/robot_gazebo/
-  DESTINATION ${PYTHON_INSTALL_DIR}/robot_gazebo
-  USE_SOURCE_PERMISSIONS
-)
+# Install Python package using setup.py
+ament_python_install_package(${PROJECT_NAME})
 
 # Install launch files
 install(
@@ -135,9 +117,6 @@ if(BUILD_TESTING)
   
   # C++ tests can be added here
   # ament_add_gtest(...)
-  
-  # Enable testing after adding all tests
-  ament_enable_testing()
 endif()
 
 # Export include directories

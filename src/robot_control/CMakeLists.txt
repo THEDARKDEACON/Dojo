@@ -1,55 +1,28 @@
 cmake_minimum_required(VERSION 3.8)
 project(robot_control)
 
-# Default to C++17
-if(NOT CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 17)
-  set(CMAKE_CXX_STANDARD_REQUIRED ON)
-  set(CMAKE_CXX_EXTENSIONS OFF)
-endif()
-
 # Find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(ament_cmake_python REQUIRED)
-find_package(ament_cmake_test REQUIRED)
 
-# Core ROS 2 dependencies
-find_package(rclcpp REQUIRED)
-find_package(rclpy REQUIRED)
-find_package(std_msgs REQUIRED)
-find_package(geometry_msgs REQUIRED)
-find_package(sensor_msgs REQUIRED)
-find_package(nav_msgs REQUIRED)
-find_package(tf2_ros REQUIRED)
-find_package(tf2_geometry_msgs REQUIRED)
-find_package(rcl_interfaces REQUIRED)
+# Install Python package using setup.py
+ament_python_install_package(${PROJECT_NAME})
 
-# Control dependencies
-find_package(controller_interface REQUIRED)
-find_package(controller_manager REQUIRED)
-find_package(hardware_interface REQUIRED)
-find_package(pluginlib REQUIRED)
-find_package(realtime_tools REQUIRED)
-find_package(diagnostic_updater REQUIRED)
-
-# Find Python dependencies
-find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
-
-# Set Python install path
-set(PYTHON_INSTALL_DIR "${PYTHON3_INSTALL_DIR}")
-
-# Add include directory
-include_directories(
-  include
-  ${rclcpp_INCLUDE_DIRS}
-  ${rclpy_INCLUDE_DIRS}
-)
-
-# Install Python package
-install(
-  DIRECTORY src/robot_control/
-  DESTINATION ${PYTHON_INSTALL_DIR}/robot_control
-  USE_SOURCE_PERMISSIONS
+# Install Python executables
+install(PROGRAMS
+  robot_control/configuration_manager.py
+  robot_control/hardware_discovery.py
+  robot_control/safety_supervisor.py
+  robot_control/hardware_manager.py
+  robot_control/arduino_bridge.py
+  robot_control/camera_driver.py
+  robot_control/lidar_driver.py
+  robot_control/diagnostic_system.py
+  robot_control/graceful_degradation.py
+  robot_control/emergency_stop_handler.py
+  robot_control/velocity_limiter.py
+  robot_control/watchdog_system.py
+  DESTINATION lib/${PROJECT_NAME}
 )
 
 # Install launch files

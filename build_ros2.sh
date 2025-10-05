@@ -528,25 +528,11 @@ get_build_order() {
     echo "${ordered_packages[@]}"
 }
 
-# Function to validate backup packages are excluded
+# Function to validate package exclusion (backup_packages removed during cleanup)
 validate_package_exclusion() {
-    log_info "Validating backup packages are properly excluded..."
-    
-    # Check if COLCON_IGNORE files exist
-    if [ ! -f "backup_packages/COLCON_IGNORE" ]; then
-        log_warning "Creating missing COLCON_IGNORE file in backup_packages/"
-        echo "# This file tells colcon to ignore this directory and all subdirectories" > backup_packages/COLCON_IGNORE
-        echo "# The backup_packages directory contains legacy packages that should not be built" >> backup_packages/COLCON_IGNORE
-    fi
-    
-    # Check individual backup package directories
-    local backup_dirs=("arduino_bridge" "camera_ws" "robot_sensors" "ros2arduino_bridge" "vision_system")
-    for dir in "${backup_dirs[@]}"; do
-        if [ -d "backup_packages/$dir" ] && [ ! -f "backup_packages/$dir/COLCON_IGNORE" ]; then
-            log_warning "Creating missing COLCON_IGNORE file in backup_packages/$dir/"
-            echo "# Legacy package - excluded from build" > "backup_packages/$dir/COLCON_IGNORE"
-        fi
-    done
+    log_info "Backup packages have been removed during codebase cleanup..."
+    # Note: backup_packages directory was removed as part of codebase cleanup
+    # This function is kept for compatibility but no longer performs backup package validation
     
     log_success "Package exclusion validation complete"
 }

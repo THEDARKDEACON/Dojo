@@ -310,7 +310,7 @@
       <left_joint>base_front_left_wheel_joint</left_joint>
       <right_joint>base_front_right_wheel_joint</right_joint>
       <wheel_separation>0.26</wheel_separation>
-      <wheel_diameter>0.065</wheel_diameter>
+      <wheel_diameter>0.060</wheel_diameter>
       <command_topic>cmd_vel</command_topic>
       <odometry_topic>odom</odometry_topic>
       <odometry_frame>odom</odometry_frame>

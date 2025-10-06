@@ -52,10 +52,14 @@ install(
     share/${PROJECT_NAME}
 )
 
-# Install Python scripts
+# Install Python executables
 install(PROGRAMS
-  setup.py
-  DESTINATION lib/${PYTHON_INSTALL_DIR}/${PROJECT_NAME}
+  ${PROJECT_NAME}/nodes/camera_processor.py
+  ${PROJECT_NAME}/nodes/object_detector.py
+  ${PROJECT_NAME}/nodes/vision_detection_node.py
+  ${PROJECT_NAME}/nodes/lidar_processor.py
+  ${PROJECT_NAME}/nodes/perception_integrator.py
+  DESTINATION lib/${PROJECT_NAME}
 )
 
 

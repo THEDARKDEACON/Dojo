@@ -1,4 +1,7 @@
+import launch
 from launch import LaunchDescription
+from launch.conditions import IfCondition
+
 from launch_ros.actions import Node
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
@@ -52,7 +55,7 @@ def generate_launch_description():
         name='rviz2',
         output='screen',
         arguments=['-d', rviz_config_path],
-        condition=launch.conditions.IfCondition(use_rviz)
+        condition=IfCondition(use_rviz)
     )
     
     # Create launch description

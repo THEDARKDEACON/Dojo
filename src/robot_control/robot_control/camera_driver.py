@@ -17,10 +17,97 @@ import cv2
 import numpy as np
 from typing import Dict, List, Tuple, Optional
 import time
+import threading
+from enum import Enum
 
 from .hardware_discovery import HardwareDiscovery
 from .device_abstraction import DeviceManager, DeviceStatus
 from .device_implementations import CameraDevice
+
+
+class TopicStatus(Enum):
+    """Enumeration for topic status."""
+    ACTIVE = "active"
+    INACTIVE = "inactive"
+    ERROR = "error"
+    RECOVERING = "recovering"
+
+
+class CameraTopicManager:
+    """Manages camera topics and their health status."""
+    
+    def __init__(self, logger):
+        self.logger = logger
+        self.topic_status: Dict[str, Dict[str, TopicStatus]] = {}
+        self.topic_error_counts: Dict[str, Dict[str, int]] = {}
+        self.topic_last_publish: Dict[str, Dict[str, float]] = {}
+        self.max_error_count = 5
+        self.topic_timeout = 5.0  # seconds
+        self._lock = threading.Lock()
+    
+    def register_camera_topics(self, camera_name: str, topic_names: List[str]):
+        """Register topics for a camera."""
+        with self._lock:
+            self.topic_status[camera_name] = {topic: TopicStatus.INACTIVE for topic in topic_names}
+            self.topic_error_counts[camera_name] = {topic: 0 for topic in topic_names}
+            self.topic_last_publish[camera_name] = {topic: 0.0 for topic in topic_names}
+    
+    def update_topic_status(self, camera_name: str, topic_name: str, status: TopicStatus, timestamp: float = None):
+        """Update the status of a specific topic."""
+        with self._lock:
+            if camera_name in self.topic_status and topic_name in self.topic_status[camera_name]:
+                self.topic_status[camera_name][topic_name] = status
+                
+                if timestamp is not None:
+                    self.topic_last_publish[camera_name][topic_name] = timestamp
+                
+                # Reset error count on successful publish
+                if status == TopicStatus.ACTIVE:
+                    self.topic_error_counts[camera_name][topic_name] = 0
+    
+    def increment_topic_error(self, camera_name: str, topic_name: str) -> bool:
+        """Increment error count for a topic. Returns True if max errors exceeded."""
+        with self._lock:
+            if camera_name in self.topic_error_counts and topic_name in self.topic_error_counts[camera_name]:
+                self.topic_error_counts[camera_name][topic_name] += 1
+                
+                if self.topic_error_counts[camera_name][topic_name] >= self.max_error_count:
+                    self.topic_status[camera_name][topic_name] = TopicStatus.ERROR
+                    return True
+        return False
+    
+    def check_topic_timeouts(self, current_time: float) -> Dict[str, List[str]]:
+        """Check for topic timeouts and return cameras with timed-out topics."""
+        timed_out = {}
+        
+        with self._lock:
+            for camera_name, topics in self.topic_last_publish.items():
+                timed_out_topics = []
+                for topic_name, last_publish in topics.items():
+                    if (current_time - last_publish) > self.topic_timeout and last_publish > 0:
+                        if self.topic_status[camera_name][topic_name] == TopicStatus.ACTIVE:
+                            self.topic_status[camera_name][topic_name] = TopicStatus.INACTIVE
+                            timed_out_topics.append(topic_name)
+                
+                if timed_out_topics:
+                    timed_out[camera_name] = timed_out_topics
+        
+        return timed_out
+    
+    def get_camera_health(self, camera_name: str) -> Dict[str, str]:
+        """Get health status for all topics of a camera."""
+        with self._lock:
+            if camera_name in self.topic_status:
+                return {topic: status.value for topic, status in self.topic_status[camera_name].items()}
+        return {}
+    
+    def is_camera_healthy(self, camera_name: str) -> bool:
+        """Check if all topics for a camera are healthy."""
+        with self._lock:
+            if camera_name in self.topic_status:
+                return all(status in [TopicStatus.ACTIVE, TopicStatus.RECOVERING] 
+                          for status in self.topic_status[camera_name].values())
+        return False
 
 
 class CameraDriver(Node):
@@ -64,6 +151,7 @@ class CameraDriver(Node):
         self.bridge = CvBridge()
         self.hardware_discovery = None
         self.device_manager = DeviceManager()
+        self.topic_manager = CameraTopicManager(self.get_logger())
         
         # Camera management
         self.camera_devices: Dict[str, CameraDevice] = {}
@@ -73,6 +161,11 @@ class CameraDriver(Node):
         self.frame_counts: Dict[str, int] = {}
         self.last_fps_check: Dict[str, float] = {}
         self.actual_fps: Dict[str, float] = {}
+        
+        # Recovery management
+        self.recovery_attempts: Dict[str, int] = {}
+        self.max_recovery_attempts = 3
+        self.recovery_cooldown: Dict[str, float] = {}
         
         # Safety system integration
         self.emergency_stop_active = False
@@ -106,6 +199,9 @@ class CameraDriver(Node):
         
         # Timer for performance monitoring
         self.perf_timer = self.create_timer(5.0, self.monitor_performance)
+        
+        # Timer for topic health monitoring
+        self.health_timer = self.create_timer(2.0, self.monitor_topic_health)
         
         # Safety system heartbeat timer
         self.heartbeat_timer = self.create_timer(1.0, self.send_heartbeat)
@@ -211,17 +307,24 @@ class CameraDriver(Node):
             self.get_logger().error(f'Failed to initialize fallback camera: {name}')
     
     def _setup_publishers(self, camera_name: str):
-        """Setup ROS publishers for a camera."""
+        """Setup ROS publishers for a camera with dual-topic support."""
         # Create unique topic names for multiple cameras
         if len(self.camera_devices) > 1:
             topic_prefix = f'/{camera_name}'
         else:
             topic_prefix = f'/{self.camera_name}'
         
-        # Image publisher
+        # Primary image publisher (for raw images)
         image_pub = self.create_publisher(
             Image,
             f'{topic_prefix}/image_raw',
+            10
+        )
+        
+        # Secondary image publisher (for detection pipeline input)
+        detection_input_pub = self.create_publisher(
+            Image,
+            f'{topic_prefix}/detection_input',
             10
         )
         
@@ -234,11 +337,28 @@ class CameraDriver(Node):
                 10
             )
         
+        # Diagnostic publisher for camera status
+        diagnostic_pub = self.create_publisher(
+            String,
+            f'{topic_prefix}/diagnostics',
+            10
+        )
+        
         self.publishers[camera_name] = {
             'image': image_pub,
+            'detection_input': detection_input_pub,
             'camera_info': camera_info_pub,
+            'diagnostics': diagnostic_pub,
             'topic_prefix': topic_prefix
         }
+        
+        # Register topics with topic manager
+        topic_names = ['image', 'detection_input', 'camera_info', 'diagnostics']
+        self.topic_manager.register_camera_topics(camera_name, topic_names)
+        
+        # Initialize recovery tracking
+        self.recovery_attempts[camera_name] = 0
+        self.recovery_cooldown[camera_name] = 0.0
     
     def _select_optimal_resolution(self, capabilities: Dict) -> List[int]:
         """Select optimal resolution based on capabilities and preferences."""
@@ -275,11 +395,15 @@ class CameraDriver(Node):
             self.get_logger().info(f'Camera {camera_name} attempting reconnection...')
     
     def capture_and_publish(self):
-        """Capture frames from all cameras and publish them."""
+        """Capture frames from all cameras and publish them with dual-topic support."""
         current_time = self.get_clock().now()
         
         for camera_name, camera_device in self.camera_devices.items():
             try:
+                # Skip if emergency stop is active
+                if self.emergency_stop_active:
+                    continue
+                    
                 # Read frame from camera
                 data = camera_device.read()
                 
@@ -290,25 +414,54 @@ class CameraDriver(Node):
                     if self.adaptive_quality:
                         frame = self._apply_adaptive_quality(camera_name, frame)
                     
-                    # Convert to ROS Image message
+                    # Create synchronized timestamp for all topics
+                    synchronized_timestamp = current_time.to_msg()
+                    
+                    # Convert to ROS Image message with synchronized timestamp
                     image_msg = self.bridge.cv2_to_imgmsg(frame, 'bgr8')
-                    image_msg.header.stamp = current_time.to_msg()
+                    image_msg.header.stamp = synchronized_timestamp
                     image_msg.header.frame_id = self.frame_id
                     
-                    # Publish image
+                    # Create detection input message (same frame, same timestamp)
+                    detection_input_msg = self.bridge.cv2_to_imgmsg(frame, 'bgr8')
+                    detection_input_msg.header.stamp = synchronized_timestamp
+                    detection_input_msg.header.frame_id = self.frame_id
+                    
+                    # Publish to both topics with synchronized timestamps
                     if camera_name in self.publishers:
-                        self.publishers[camera_name]['image'].publish(image_msg)
+                        current_timestamp = time.time()
+                        
+                        # Publish raw image
+                        success = self._safe_publish(camera_name, 'image', image_msg, current_timestamp)
+                        
+                        # Publish detection input
+                        success &= self._safe_publish(camera_name, 'detection_input', detection_input_msg, current_timestamp)
                         
                         # Publish camera info if enabled
                         if self.publishers[camera_name]['camera_info']:
                             camera_info_msg = self._create_camera_info(camera_name, data, current_time)
-                            self.publishers[camera_name]['camera_info'].publish(camera_info_msg)
+                            camera_info_msg.header.stamp = synchronized_timestamp
+                            success &= self._safe_publish(camera_name, 'camera_info', camera_info_msg, current_timestamp)
+                        
+                        # Publish diagnostic status
+                        if success:
+                            self._publish_camera_diagnostics(camera_name, 'ACTIVE', 'Camera operating normally')
+                        else:
+                            self._publish_camera_diagnostics(camera_name, 'ERROR', 'One or more topics failed to publish')
                     
                     # Update frame count for performance monitoring
                     self.frame_counts[camera_name] += 1
                     
+                else:
+                    # Handle case where no frame data is available
+                    self._publish_camera_diagnostics(camera_name, 'WARNING', 'No frame data available')
+                    
             except Exception as e:
                 self.get_logger().error(f'Error capturing from camera {camera_name}: {e}')
+                self._publish_camera_diagnostics(camera_name, 'ERROR', f'Capture failed: {e}')
+                
+                # Attempt recovery for this camera
+                self._attempt_camera_recovery(camera_name)
     
     def _apply_adaptive_quality(self, camera_name: str, frame: np.ndarray) -> np.ndarray:
         """Apply adaptive quality adjustments based on performance."""
@@ -475,6 +628,181 @@ class CameraDriver(Node):
             self.last_heartbeat_time = self.get_clock().now()
         except Exception as e:
             self.get_logger().error(f"Failed to send heartbeat: {e}")
+    
+    def _publish_camera_diagnostics(self, camera_name: str, status: str, message: str):
+        """Publish diagnostic information for a specific camera."""
+        try:
+            if camera_name in self.publishers and self.publishers[camera_name]['diagnostics']:
+                diagnostic_msg = String()
+                diagnostic_msg.data = f"{status}: {message}"
+                self.publishers[camera_name]['diagnostics'].publish(diagnostic_msg)
+        except Exception as e:
+            self.get_logger().error(f"Failed to publish diagnostics for camera {camera_name}: {e}")
+    
+    def _attempt_camera_recovery(self, camera_name: str):
+        """Attempt to recover a failed camera."""
+        if camera_name not in self.camera_devices:
+            return
+            
+        try:
+            self.get_logger().info(f"Attempting recovery for camera {camera_name}")
+            
+            # Mark all topics as recovering
+            for topic_name in ['image', 'detection_input', 'camera_info', 'diagnostics']:
+                self.topic_manager.update_topic_status(camera_name, topic_name, TopicStatus.RECOVERING)
+            
+            camera_device = self.camera_devices[camera_name]
+            
+            # Try to reconnect the camera device
+            if camera_device.disconnect():
+                time.sleep(1)  # Brief pause before reconnection
+                if camera_device.connect():
+                    self.get_logger().info(f"Successfully recovered camera {camera_name}")
+                    self._publish_camera_diagnostics(camera_name, 'RECOVERED', 'Camera reconnected successfully')
+                    
+                    # Reset recovery attempts on successful recovery
+                    self.recovery_attempts[camera_name] = 0
+                    
+                    # Topics will be marked as active when next successful publish occurs
+                    
+                else:
+                    self.get_logger().warning(f"Failed to recover camera {camera_name}")
+                    self._publish_camera_diagnostics(camera_name, 'RECOVERY_FAILED', 'Camera reconnection failed')
+                    
+                    # Mark topics as error state
+                    for topic_name in ['image', 'detection_input', 'camera_info', 'diagnostics']:
+                        self.topic_manager.update_topic_status(camera_name, topic_name, TopicStatus.ERROR)
+            else:
+                self.get_logger().warning(f"Failed to disconnect camera {camera_name} for recovery")
+                
+        except Exception as e:
+            self.get_logger().error(f"Error during camera recovery for {camera_name}: {e}")
+            self._publish_camera_diagnostics(camera_name, 'RECOVERY_ERROR', f'Recovery attempt failed: {e}')
+            
+            # Mark topics as error state
+            for topic_name in ['image', 'detection_input', 'camera_info', 'diagnostics']:
+                self.topic_manager.update_topic_status(camera_name, topic_name, TopicStatus.ERROR)
+    
+    def get_topic_status(self) -> Dict[str, Dict[str, bool]]:
+        """Get the status of all camera topics."""
+        status = {}
+        for camera_name, publishers in self.publishers.items():
+            status[camera_name] = {
+                'image_raw': publishers['image'] is not None,
+                'detection_input': publishers['detection_input'] is not None,
+                'camera_info': publishers['camera_info'] is not None,
+                'diagnostics': publishers['diagnostics'] is not None
+            }
+        return status
+    
+    def _safe_publish(self, camera_name: str, topic_name: str, message, timestamp: float) -> bool:
+        """Safely publish a message with error tracking."""
+        try:
+            if camera_name in self.publishers and topic_name in self.publishers[camera_name]:
+                publisher = self.publishers[camera_name][topic_name]
+                if publisher is not None:
+                    publisher.publish(message)
+                    self.topic_manager.update_topic_status(camera_name, topic_name, TopicStatus.ACTIVE, timestamp)
+                    return True
+                else:
+                    self.get_logger().warning(f"Publisher for {camera_name}/{topic_name} is None")
+                    return False
+        except Exception as e:
+            self.get_logger().error(f"Failed to publish to {camera_name}/{topic_name}: {e}")
+            
+            # Track error and check if max errors exceeded
+            if self.topic_manager.increment_topic_error(camera_name, topic_name):
+                self.get_logger().error(f"Max errors exceeded for {camera_name}/{topic_name}, marking as failed")
+                self._handle_topic_failure(camera_name, topic_name)
+            
+            return False
+    
+    def _handle_topic_failure(self, camera_name: str, topic_name: str):
+        """Handle failure of a specific topic."""
+        self.get_logger().warning(f"Handling failure for topic {camera_name}/{topic_name}")
+        
+        # Check if this is a critical topic failure that requires camera recovery
+        critical_topics = ['image', 'detection_input']
+        if topic_name in critical_topics:
+            self._schedule_camera_recovery(camera_name)
+    
+    def _schedule_camera_recovery(self, camera_name: str):
+        """Schedule camera recovery if not in cooldown period."""
+        current_time = time.time()
+        
+        # Check if we're in cooldown period
+        if camera_name in self.recovery_cooldown:
+            if current_time < self.recovery_cooldown[camera_name]:
+                self.get_logger().info(f"Camera {camera_name} recovery in cooldown, skipping")
+                return
+        
+        # Check if we've exceeded max recovery attempts
+        if camera_name in self.recovery_attempts:
+            if self.recovery_attempts[camera_name] >= self.max_recovery_attempts:
+                self.get_logger().error(f"Max recovery attempts exceeded for camera {camera_name}")
+                return
+        
+        # Schedule recovery
+        self.get_logger().info(f"Scheduling recovery for camera {camera_name}")
+        self._attempt_camera_recovery(camera_name)
+        
+        # Set cooldown period (exponential backoff)
+        cooldown_time = 10.0 * (2 ** self.recovery_attempts.get(camera_name, 0))
+        self.recovery_cooldown[camera_name] = current_time + cooldown_time
+        self.recovery_attempts[camera_name] = self.recovery_attempts.get(camera_name, 0) + 1
+    
+    def monitor_topic_health(self):
+        """Monitor the health of all camera topics."""
+        current_time = time.time()
+        
+        # Check for topic timeouts
+        timed_out = self.topic_manager.check_topic_timeouts(current_time)
+        
+        for camera_name, topics in timed_out.items():
+            self.get_logger().warning(f"Topics timed out for camera {camera_name}: {topics}")
+            self._publish_camera_diagnostics(camera_name, 'WARNING', f'Topics timed out: {topics}')
+        
+        # Log overall health status
+        for camera_name in self.camera_devices.keys():
+            health = self.topic_manager.get_camera_health(camera_name)
+            is_healthy = self.topic_manager.is_camera_healthy(camera_name)
+            
+            if not is_healthy:
+                self.get_logger().debug(f"Camera {camera_name} health: {health}")
+    
+    def get_system_health_report(self) -> Dict:
+        """Generate a comprehensive system health report."""
+        report = {
+            'timestamp': time.time(),
+            'cameras': {},
+            'overall_status': 'healthy'
+        }
+        
+        unhealthy_cameras = 0
+        
+        for camera_name in self.camera_devices.keys():
+            camera_health = self.topic_manager.get_camera_health(camera_name)
+            is_healthy = self.topic_manager.is_camera_healthy(camera_name)
+            
+            report['cameras'][camera_name] = {
+                'healthy': is_healthy,
+                'topics': camera_health,
+                'recovery_attempts': self.recovery_attempts.get(camera_name, 0),
+                'fps': self.actual_fps.get(camera_name, 0.0)
+            }
+            
+            if not is_healthy:
+                unhealthy_cameras += 1
+        
+        # Determine overall system status
+        if unhealthy_cameras == 0:
+            report['overall_status'] = 'healthy'
+        elif unhealthy_cameras < len(self.camera_devices):
+            report['overall_status'] = 'degraded'
+        else:
+            report['overall_status'] = 'critical'
+        
+        return report
 
 def main(args=None):
     """Main entry point for camera driver."""

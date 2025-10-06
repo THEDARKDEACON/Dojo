@@ -20,8 +20,9 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            # Add your entry points here if needed
-            # 'node_name = robot_navigation.node:main',
+            'map_diagnostic_node.py = robot_navigation.map_diagnostic_node:main',
+            'map_status_monitor.py = robot_navigation.map_status_monitor:main',
+            'frame_validator.py = robot_navigation.frame_validator:main',
         ],
     },
 )

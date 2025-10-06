@@ -16,8 +16,8 @@ controller_manager:
       type: diff_drive_controller/DiffDriveController
       left_wheel_names: ["left_wheel_joint"]
       right_wheel_names: ["right_wheel_joint"]
-      wheel_separation: 0.3  # meters
-      wheel_radius: 0.05     # meters
+      wheel_separation: 0.26  # meters
+      wheel_radius: 0.06     # meters
       wheel_separation_multiplier: 1.0
       left_wheel_radius_multiplier: 1.0
       right_wheel_radius_multiplier: 1.0

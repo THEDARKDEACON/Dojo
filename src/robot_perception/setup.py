@@ -74,6 +74,7 @@ setup(
         'scikit-learn>=0.24.0',
         'PyYAML>=5.4.1',
         'sensor-msgs-py>=4.0.0',
+        'psutil>=5.8.0',
     ],
     extras_require={
         'deep_learning': [
@@ -108,8 +109,11 @@ setup(
         'console_scripts': [
             'camera_processor = robot_perception.nodes.camera_processor:main',
             'object_detector = robot_perception.nodes.object_detector:main',
+            'vision_detection_node = robot_perception.nodes.vision_detection_node:main',
             'lidar_processor = robot_perception.nodes.lidar_processor:main',
             'perception_integrator = robot_perception.nodes.perception_integrator:main',
+            'performance_monitor = robot_perception.performance_monitor:main',
+            'resource_manager = robot_perception.resource_manager:main',
         ],
     },
     python_requires='>=3.8',

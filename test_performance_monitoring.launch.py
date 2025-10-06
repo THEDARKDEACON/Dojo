@@ -67,7 +67,7 @@ def generate_launch_description():
     # Performance test node
     performance_test_node = Node(
         package='robot_perception',
-        executable='test_performance_monitoring.py',
+        executable='test_performance_monitoring',
         name='performance_test_node',
         output='screen',
         emulate_tty=True

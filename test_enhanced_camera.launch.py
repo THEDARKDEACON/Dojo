@@ -42,7 +42,7 @@ def generate_launch_description():
     # Test node to verify dual-topic functionality
     camera_tester = Node(
         package='robot_control',
-        executable='test_enhanced_camera_driver.py',
+        executable='test_enhanced_camera_driver',
         name='camera_driver_tester',
         output='screen',
         parameters=[

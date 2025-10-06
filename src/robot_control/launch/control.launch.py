@@ -20,7 +20,7 @@ def generate_launch_description():
     # New Control Manager Node (recommended)
     control_manager_node = Node(
         package='robot_control',
-        executable='control_manager',
+        executable='control_manager.py',
         name='control_manager',
         parameters=[{'use_sim_time': use_sim_time}],
         output='screen',
@@ -30,7 +30,7 @@ def generate_launch_description():
     # Control Manager with topic remap for Gazebo diff_drive_controller
     control_manager_node_sim = Node(
         package='robot_control',
-        executable='control_manager',
+        executable='control_manager.py',
         name='control_manager',
         parameters=[{'use_sim_time': use_sim_time}],
         output='screen',

@@ -46,7 +46,7 @@ def generate_launch_description():
     # Configuration manager node
     configuration_manager_node = Node(
         package='robot_control',
-        executable='configuration_manager',
+        executable='configuration_manager.py',
         name='configuration_manager',
         output='screen',
         parameters=[{

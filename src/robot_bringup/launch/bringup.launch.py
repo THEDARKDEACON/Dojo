@@ -83,7 +83,7 @@ def generate_launch_description():
     # Configuration manager (loads mode-specific parameters)
     config_manager_node = Node(
         package='robot_control',
-        executable='configuration_manager',
+        executable='configuration_manager.py',
         name='configuration_manager',
         parameters=[{'operation_mode': operation_mode}],
         output='screen',

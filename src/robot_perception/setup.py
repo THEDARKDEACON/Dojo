@@ -114,6 +114,7 @@ setup(
             'perception_integrator = robot_perception.nodes.perception_integrator:main',
             'performance_monitor = robot_perception.performance_monitor:main',
             'resource_manager = robot_perception.resource_manager:main',
+            'test_performance_monitoring = robot_perception.test_performance_monitoring:main',
         ],
     },
     python_requires='>=3.8',

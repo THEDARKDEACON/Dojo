@@ -1,6 +1,6 @@
 arduino_driver:
   ros__parameters:
-    baud_rate: 115200
+    baud_rate: 57600
     debug: true
     encoder_ticks_per_rev: 20
     max_angular_speed: 1.0

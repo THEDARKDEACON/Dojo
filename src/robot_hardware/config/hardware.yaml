@@ -7,7 +7,7 @@ arduino_driver:
   ros__parameters:
     # Connection settings
     port: "/dev/ttyACM0"
-    baud_rate: 115200
+    baud_rate: 57600
     timeout: 1.0
     write_timeout: 1.0
     reconnect_interval: 5.0

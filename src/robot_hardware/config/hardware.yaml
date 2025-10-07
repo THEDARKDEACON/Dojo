@@ -1,0 +1,69 @@
+# Hardware System Configuration
+# Purpose: Unified hardware configuration for Dojo Robot
+# Used by: Hardware interface nodes and drivers
+# Package: robot_hardware
+
+arduino_driver:
+  ros__parameters:
+    # Connection settings
+    port: "/dev/ttyACM0"
+    baud_rate: 115200
+    timeout: 1.0
+    write_timeout: 1.0
+    reconnect_interval: 5.0
+    
+    # Communication protocol
+    start_delimiter: "<"
+    end_delimiter: ">"
+    field_separator: ","
+    debug: true
+    use_speed_commands: true
+    
+    # Motor parameters
+    motor_max: 255
+    motor_min: 0
+    wheel_base: 0.26
+    wheel_radius: 0.030
+    
+    # Encoder parameters
+    encoder_ticks_per_rev: 20
+    wheel_circumference: 0.1885
+    
+    # Safety limits
+    max_speed: 0.5
+    max_angular_speed: 1.0
+
+camera_driver:
+  ros__parameters:
+    # Camera settings
+    camera_id: 0
+    width: 640
+    height: 480
+    fps: 30.0
+    frame_id: "camera_link"
+    camera_name: "camera"
+    
+    # Publishing options
+    publish_compressed: true
+    compression_quality: 80
+
+lidar_driver:
+  ros__parameters:
+    # LiDAR settings
+    serial_port: "/dev/ttyUSB0"
+    frame_id: "laser"
+    angle_compensate: true
+    scan_mode: "Sensitivity"
+    inverted: false
+    angle_min: -3.14159
+    angle_max: 3.14159
+
+hardware_manager:
+  ros__parameters:
+    # System monitoring
+    status_update_rate: 1.0
+    diagnostics_rate: 2.0
+    
+    # Critical components (system won't be ready without these)
+    critical_components: ["arduino", "camera"]
+    optional_components: ["lidar"]

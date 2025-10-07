@@ -1,24 +1,48 @@
 #!/usr/bin/env python3
 """
-Complete Robot Simulation with Gazebo GUI, RViz, Teleop, and SLAM
-This launch file provides everything you need to see and control your robot
+Complete Robot Simulation Launch File
+This comprehensive launch file provides all robot simulation capabilities:
+- Gazebo simulation with GUI
+- Robot spawning and state publishing
+- SLAM for mapping
+- Navigation2 stack for autonomous navigation
+- Vision detection system with object detection
+- RViz visualization with all sensors
+- Teleop keyboard control
+- Command velocity multiplexing
+
+Usage Examples:
+  # Basic simulation with SLAM and vision
+  ros2 launch complete_robot_simulation.launch.py
+  
+  # Full autonomous navigation setup
+  ros2 launch complete_robot_simulation.launch.py navigation:=true
+  
+  # Headless simulation (no GUI)
+  ros2 launch complete_robot_simulation.launch.py gui:=false rviz:=false
+  
+  # Vision-only mode (no SLAM)
+  ros2 launch complete_robot_simulation.launch.py slam:=false navigation:=false
 """
 
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, ExecuteProcess, TimerAction
+from launch.actions import DeclareLaunchArgument, ExecuteProcess, TimerAction, IncludeLaunchDescription
 from launch.conditions import IfCondition
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution, Command
+from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 
 def generate_launch_description():
-    # Launch arguments
+    # Launch arguments with sensible defaults
     world = LaunchConfiguration('world', default='empty.world')
     use_sim_time = LaunchConfiguration('use_sim_time', default='true')
     gui = LaunchConfiguration('gui', default='true')
     rviz = LaunchConfiguration('rviz', default='true')
     teleop = LaunchConfiguration('teleop', default='true')
     slam = LaunchConfiguration('slam', default='true')
+    navigation = LaunchConfiguration('navigation', default='false')
+    vision = LaunchConfiguration('vision', default='true')
     
     # Get robot description
     robot_description_content = Command([
@@ -109,17 +133,56 @@ def generate_launch_description():
         condition=IfCondition(slam)
     )
     
-    # RViz with navigation and map visualization
+    # Navigation2 stack (when enabled)
+    nav2_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([
+            PathJoinSubstitution([
+                FindPackageShare('nav2_bringup'),
+                'launch',
+                'navigation_launch.py'
+            ])
+        ]),
+        launch_arguments={
+            'use_sim_time': use_sim_time,
+            'params_file': PathJoinSubstitution([
+                FindPackageShare('robot_navigation'),
+                'config',
+                'nav2_params.yaml'
+            ])
+        }.items(),
+        condition=IfCondition(navigation)
+    )
+    
+    # Vision Detection System
+    vision_detection_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([
+            PathJoinSubstitution([
+                FindPackageShare('robot_perception'),
+                'launch',
+                'vision_detection.launch.py'
+            ])
+        ]),
+        launch_arguments={
+            'use_sim_time': use_sim_time,
+            'confidence_threshold': '0.5',
+            'debug_mode': 'false'
+        }.items(),
+        condition=IfCondition(vision)
+    )
+    
+    # RViz with comprehensive visualization
+    rviz_config_file = PathJoinSubstitution([
+        FindPackageShare('robot_gazebo'),
+        'rviz',
+        'simulation_with_sensors.rviz'
+    ])
+    
     rviz_node = Node(
         package='rviz2',
         executable='rviz2',
         name='rviz2',
         output='screen',
-        arguments=['-d', PathJoinSubstitution([
-            FindPackageShare('robot_gazebo'),
-            'rviz',
-            'navigation_with_map.rviz'
-        ])],
+        arguments=['-d', rviz_config_file],
         parameters=[{'use_sim_time': use_sim_time}],
         condition=IfCondition(rviz)
     )
@@ -139,7 +202,7 @@ def generate_launch_description():
     return LaunchDescription([
         # Launch arguments
         DeclareLaunchArgument('world', default_value='empty.world',
-                            description='Gazebo world file name'),
+                            description='Gazebo world file name (e.g., empty.world, house.world)'),
         DeclareLaunchArgument('use_sim_time', default_value='true',
                             description='Use simulation (Gazebo) clock if true'),
         DeclareLaunchArgument('gui', default_value='true',
@@ -147,17 +210,23 @@ def generate_launch_description():
         DeclareLaunchArgument('rviz', default_value='true',
                             description='Start RViz visualization'),
         DeclareLaunchArgument('teleop', default_value='true',
-                            description='Start teleop keyboard'),
+                            description='Start teleop keyboard control'),
         DeclareLaunchArgument('slam', default_value='true',
                             description='Start SLAM for mapping'),
+        DeclareLaunchArgument('navigation', default_value='false',
+                            description='Start Navigation2 stack (requires existing map or SLAM)'),
+        DeclareLaunchArgument('vision', default_value='true',
+                            description='Start Vision Detection system with object detection'),
         
-        # Launch everything
+        # Launch all components
         gazebo_server,
         gazebo_client,
         robot_state_publisher,
         spawn_robot,
         twist_mux,
         slam_toolbox,
+        nav2_launch,
+        vision_detection_launch,
         rviz_node,
         teleop_node,
     ])

@@ -52,7 +52,7 @@ install(
     share/${PROJECT_NAME}
 )
 
-# Install Python executables
+# Install Python scripts as executables
 install(PROGRAMS
   ${PROJECT_NAME}/nodes/camera_processor.py
   ${PROJECT_NAME}/nodes/object_detector.py

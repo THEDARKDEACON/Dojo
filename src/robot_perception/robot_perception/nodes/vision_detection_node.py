@@ -18,8 +18,6 @@ import numpy as np
 from typing import List, Tuple, Optional
 import os
 from ament_index_python.packages import get_package_share_directory
-from ..performance_monitor import PerformanceMonitor
-from ..resource_manager import ResourceManager, ResourceLimits
 
 
 class VisionDetectionNode(Node):
@@ -116,40 +114,10 @@ class VisionDetectionNode(Node):
         self.frame_count = 0
         self.detection_count = 0
         
-        # Initialize performance monitor
-        self.performance_monitor = None
-        if self.enable_performance_monitoring:
-            self.performance_monitor = PerformanceMonitor(
-                node=self,
-                target_fps=self.target_fps,
-                cpu_threshold=self.cpu_threshold,
-                memory_threshold_mb=self.memory_threshold_mb
-            )
-            
-            # Register alert callbacks
-            self.performance_monitor.register_alert_callback('fps', self._handle_fps_alert)
-            self.performance_monitor.register_alert_callback('cpu', self._handle_cpu_alert)
-            self.performance_monitor.register_alert_callback('memory', self._handle_memory_alert)
-        
-        # Initialize resource manager
-        self.resource_manager = None
-        if self.enable_resource_management:
-            limits = ResourceLimits(
-                max_cpu_percent=self.cpu_threshold,
-                max_memory_mb=self.memory_threshold_mb,
-                min_fps=self.min_fps,
-                max_fps=self.max_fps
-            )
-            self.resource_manager = ResourceManager(node=self, limits=limits)
-        
         self.get_logger().info(f'Vision Detection Node initialized')
         self.get_logger().info(f'Subscribing to: {self.input_topic}')
         self.get_logger().info(f'Publishing detections to: {self.detections_topic}')
         self.get_logger().info(f'Publishing annotated images to: {self.detection_image_topic}')
-        if self.enable_performance_monitoring:
-            self.get_logger().info(f'Performance monitoring enabled - Target FPS: {self.target_fps}')
-        if self.enable_resource_management:
-            self.get_logger().info(f'Resource management enabled - FPS range: {self.min_fps}-{self.max_fps}')
     
     def _initialize_detection_model(self) -> None:
         """
@@ -381,18 +349,6 @@ class VisionDetectionNode(Node):
         Args:
             msg: Input image message from camera
         """
-        # Check if we should process this frame (resource management throttling)
-        if self.resource_manager and not self.resource_manager.should_process_frame():
-            # Skip this frame due to throttling
-            if self.performance_monitor:
-                self.performance_monitor.report_dropped_frame()
-            return
-        
-        # Start performance monitoring for this frame
-        processing_start = None
-        if self.performance_monitor:
-            processing_start = self.performance_monitor.start_frame_processing()
-        
         try:
             # Convert ROS image to OpenCV format
             cv_image = self.bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')
@@ -400,8 +356,8 @@ class VisionDetectionNode(Node):
             # Increment frame counter
             self.frame_count += 1
             
-            # Process image for object detection with resource management
-            detections, annotated_image = self._process_image_with_resource_management(cv_image, msg.header)
+            # Process image for object detection
+            detections, annotated_image = self._process_image(cv_image, msg.header)
             
             # Publish detection results with synchronized timestamps
             self._publish_detections(detections, msg.header)
@@ -409,43 +365,16 @@ class VisionDetectionNode(Node):
             # Publish annotated image with synchronized timestamps
             self._publish_annotated_image(annotated_image, msg.header)
             
-            # End performance monitoring and update resource manager
-            if self.performance_monitor and processing_start:
-                self.performance_monitor.end_frame_processing(processing_start, len(detections))
-                
-                # Update resource manager with current performance metrics
-                if self.resource_manager:
-                    metrics = self.performance_monitor.get_current_metrics()
-                    self.resource_manager.update_performance_metrics(
-                        metrics.cpu_usage,
-                        metrics.memory_usage_mb,
-                        metrics.frame_rate
-                    )
-            
             if self.debug_mode and self.frame_count % 30 == 0:  # Log every 30 frames
-                if self.performance_monitor:
-                    metrics = self.performance_monitor.get_current_metrics()
-                    resource_status = self.resource_manager.get_resource_status() if self.resource_manager else {}
-                    self.get_logger().info(
-                        f'Processed {self.frame_count} frames, '
-                        f'detected {len(detections)} objects in current frame, '
-                        f'FPS: {metrics.frame_rate:.1f}, CPU: {metrics.cpu_usage:.1f}%, '
-                        f'FPS Limit: {resource_status.get("fps_limit", "N/A")}'
-                    )
-                else:
-                    self.get_logger().info(
-                        f'Processed {self.frame_count} frames, '
-                        f'detected {len(detections)} objects in current frame'
-                    )
+                self.get_logger().info(
+                    f'Processed {self.frame_count} frames, '
+                    f'detected {len(detections)} objects in current frame'
+                )
                 
         except CvBridgeError as e:
             self.get_logger().error(f'CV Bridge error: {e}')
-            if self.performance_monitor:
-                self.performance_monitor.report_dropped_frame()
         except Exception as e:
             self.get_logger().error(f'Error in image callback: {e}')
-            if self.performance_monitor:
-                self.performance_monitor.report_dropped_frame()
     
     def _process_image(self, cv_image: np.ndarray, header) -> Tuple[List[dict], np.ndarray]:
         """
@@ -608,12 +537,10 @@ class VisionDetectionNode(Node):
                 2
             )
             
-            # Request memory cleanup if needed
-            if self.resource_manager and degradation_level >= 2:
-                self.resource_manager.request_memory_cleanup()
+
             
         except Exception as e:
-            self.get_logger().error(f'Error processing image with resource management: {e}')
+            self.get_logger().error(f'Error processing image: {e}')
             annotated_image = cv_image.copy()
             cv2.putText(
                 annotated_image,
@@ -831,13 +758,7 @@ class VisionDetectionNode(Node):
         self.get_logger().info(f'Processed {self.frame_count} total frames')
         self.get_logger().info(f'Total detections published: {self.detection_count}')
         
-        # Shutdown performance monitor
-        if self.performance_monitor:
-            self.performance_monitor.shutdown()
-        
-        # Shutdown resource manager
-        if self.resource_manager:
-            self.resource_manager.shutdown()
+
         
         # Clean up detection model if needed
         if self.detection_model is not None:

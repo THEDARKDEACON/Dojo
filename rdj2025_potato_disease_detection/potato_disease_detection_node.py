@@ -18,7 +18,7 @@ class PotatoDiseaseDetection(Node):
 
         self.subscription = self.create_subscription(
             Image,
-            '/image_raw',
+            '/camera/image_raw',
             self.listener_callback,
             10)
         self.publisher_ = self.create_publisher(String, '/inference_result', 10)

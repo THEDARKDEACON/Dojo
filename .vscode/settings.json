@@ -1,3 +1,4 @@
 {
-    "cmake.sourceDirectory": "/home/gareth-joel/Documents/gifted_hodgkin_x11/Dojo/build/robot_interfaces/robot_interfaces__py"
+    "cmake.sourceDirectory": "/home/gareth-joel/Documents/gifted_hodgkin_x11/Dojo/build/robot_interfaces/robot_interfaces__py",
+    "kiroAgent.configureMCP": "Disabled"
 }

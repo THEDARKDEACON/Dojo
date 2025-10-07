@@ -1,11 +1,28 @@
 """
-Improved Robot Bringup Launch File
-Uses new modular hardware architecture with unified simulation support
-and automatic mode detection based on available packages and configuration.
+Complete Robot Bringup Launch File
+Provides comprehensive robot functionality with automatic mode detection:
+- Intelligent simulation vs hardware mode detection
+- Complete simulation with SLAM, vision, and teleop (like complete_robot_simulation.launch.py)
+- Full hardware support with Arduino, camera, and LiDAR drivers
+- Modular architecture with optional perception and navigation
+- RViz visualization and keyboard control
+
+Usage Examples:
+  # Auto-detected mode with full features
+  ros2 launch robot_bringup bringup.launch.py
+  
+  # Force simulation mode with navigation
+  ros2 launch robot_bringup bringup.launch.py use_gazebo:=true use_navigation:=true
+  
+  # Hardware mode with perception
+  ros2 launch robot_bringup bringup.launch.py use_hardware:=true use_perception:=true
+  
+  # Minimal mode (no SLAM, RViz, or teleop)
+  ros2 launch robot_bringup bringup.launch.py use_slam:=false use_rviz:=false use_teleop:=false
 """
 
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, GroupAction, OpaqueFunction
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, GroupAction, OpaqueFunction, TimerAction, ExecuteProcess
 from launch.conditions import IfCondition, UnlessCondition
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution, Command
 from launch.launch_description_sources import PythonLaunchDescriptionSource
@@ -68,12 +85,17 @@ def generate_launch_description():
     use_gazebo = LaunchConfiguration('use_gazebo', default='true' if detected_mode == 'simulation' else 'false')
     use_hardware = LaunchConfiguration('use_hardware', default='false' if detected_mode == 'simulation' else 'true')
     
-    # Component flags
+    # Component flags - enable key features by default for complete robot functionality
     use_control = LaunchConfiguration('use_control', default='true')
-    use_perception = LaunchConfiguration('use_perception', default='false')
-    use_navigation = LaunchConfiguration('use_navigation', default='false')
+    use_perception = LaunchConfiguration('use_perception', default='true')  # Enable vision by default
+    use_navigation = LaunchConfiguration('use_navigation', default='false')  # Keep disabled, requires map
     use_robot_description = LaunchConfiguration('use_robot_description', default='true')
     use_config_manager = LaunchConfiguration('use_config_manager', default='true')
+    
+    # Simulation-specific features
+    use_slam = LaunchConfiguration('use_slam', default='true')  # Enable SLAM by default
+    use_rviz = LaunchConfiguration('use_rviz', default='true')  # Enable RViz by default
+    use_teleop = LaunchConfiguration('use_teleop', default='true')  # Enable teleop by default
     
     # Hardware component flags (auto-detected based on available packages)
     use_arduino = LaunchConfiguration('use_arduino', default='true')
@@ -224,6 +246,123 @@ def generate_launch_description():
     
     navigation_launch = get_navigation_launch()
     
+    # Add direct components for both simulation and hardware modes
+    def get_direct_components():
+        """Get direct components for complete functionality in both modes."""
+        components = []
+        
+        # SLAM Toolbox - works for both simulation and hardware
+        slam_config_path = None
+        if detected_mode == 'simulation':
+            slam_config_path = PathJoinSubstitution([
+                FindPackageShare('robot_gazebo'),
+                'config',
+                'slam_config.yaml'
+            ])
+        else:  # hardware mode
+            try:
+                slam_config_path = PathJoinSubstitution([
+                    FindPackageShare('robot_hardware'),
+                    'config',
+                    'slam_config.yaml'
+                ])
+            except:
+                # Fallback to robot_control config
+                slam_config_path = PathJoinSubstitution([
+                    FindPackageShare('robot_control'),
+                    'config',
+                    'slam_config.yaml'
+                ])
+        
+        slam_toolbox = Node(
+            package='slam_toolbox',
+            executable='async_slam_toolbox_node',
+            name='slam_toolbox',
+            output='screen',
+            parameters=[
+                slam_config_path,
+                {'use_sim_time': use_sim_time}
+            ],
+            condition=IfCondition(use_slam)
+        )
+        components.append(slam_toolbox)
+        
+        if detected_mode == 'simulation':
+            # SLAM Toolbox for mapping
+            slam_toolbox = Node(
+                package='slam_toolbox',
+                executable='async_slam_toolbox_node',
+                name='slam_toolbox',
+                output='screen',
+                parameters=[
+                    PathJoinSubstitution([
+                        FindPackageShare('robot_gazebo'),
+                        'config',
+                        'slam_config.yaml'
+                    ]),
+                    {'use_sim_time': use_sim_time}
+                ],
+                condition=IfCondition(use_slam)
+            )
+            components.append(slam_toolbox)
+            
+            # Twist Mux for command velocity multiplexing
+            twist_mux = Node(
+                package='twist_mux',
+                executable='twist_mux',
+                parameters=[
+                    PathJoinSubstitution([
+                        FindPackageShare('robot_control'),
+                        'config',
+                        'twist_mux_config.yaml'
+                    ]),
+                    {'use_sim_time': use_sim_time}
+                ],
+                remappings=[
+                    ('/cmd_vel_out', '/cmd_vel')
+                ],
+                output='screen'
+            )
+            components.append(twist_mux)
+            
+            # RViz with comprehensive visualization
+            try:
+                rviz_config_file = PathJoinSubstitution([
+                    FindPackageShare('robot_gazebo'),
+                    'rviz',
+                    'simulation_with_sensors.rviz'
+                ])
+                
+                rviz_node = Node(
+                    package='rviz2',
+                    executable='rviz2',
+                    name='rviz2',
+                    output='screen',
+                    arguments=['-d', rviz_config_file],
+                    parameters=[{'use_sim_time': use_sim_time}],
+                    condition=IfCondition(use_rviz)
+                )
+                components.append(rviz_node)
+            except:
+                print("INFO: RViz config not found, using default")
+                
+            # Teleop keyboard (delayed start to ensure robot is spawned)
+            teleop_node = TimerAction(
+                period=5.0,
+                actions=[
+                    ExecuteProcess(
+                        cmd=['xterm', '-e', 'ros2', 'run', 'teleop_twist_keyboard', 'teleop_twist_keyboard', '--ros-args', '-r', '/cmd_vel:=/cmd_vel_teleop'],
+                        output='screen'
+                    )
+                ],
+                condition=IfCondition(use_teleop)
+            )
+            components.append(teleop_node)
+            
+        return components
+    
+    direct_components = get_direct_components()
+    
     # Build launch list dynamically based on available packages
     launch_nodes = [
         config_manager_node,
@@ -242,6 +381,9 @@ def generate_launch_description():
     if navigation_launch:
         launch_nodes.append(navigation_launch)
     
+    # Add direct components for complete functionality
+    launch_nodes.extend(direct_components)
+    
     # Group all launches for better organization
     robot_group = GroupAction(launch_nodes)
     
@@ -250,10 +392,14 @@ def generate_launch_description():
         sys.exit(1)
     
     # Print mode information
-    print(f"Robot bringup starting in {detected_mode} mode")
+    print(f"Complete Robot bringup starting in {detected_mode} mode")
     print(f"Available launches: simulation={simulation_launch is not None}, "
           f"hardware={hardware_launch is not None}, control={control_launch is not None}, "
           f"perception={perception_launch is not None}, navigation={navigation_launch is not None}")
+    if detected_mode == 'simulation':
+        print(f"Simulation features: SLAM=enabled, RViz=enabled, Teleop=enabled, Vision=enabled")
+    else:
+        print(f"Hardware features: Arduino=enabled, Camera=enabled, LiDAR=enabled, SLAM=enabled, Vision=enabled")
     
     # Launch argument declarations
     return LaunchDescription([
@@ -273,7 +419,7 @@ def generate_launch_description():
         # Component arguments
         DeclareLaunchArgument('use_control', default_value='true',
                            description='Enable control system'),
-        DeclareLaunchArgument('use_perception', default_value='false',
+        DeclareLaunchArgument('use_perception', default_value='true',
                            description='Enable perception stack'),
         DeclareLaunchArgument('use_navigation', default_value='false',
                            description='Enable navigation stack'),
@@ -281,6 +427,14 @@ def generate_launch_description():
                            description='Load robot description'),
         DeclareLaunchArgument('use_config_manager', default_value='true',
                            description='Use configuration manager'),
+        
+        # Simulation-specific arguments
+        DeclareLaunchArgument('use_slam', default_value='true',
+                           description='Enable SLAM for mapping'),
+        DeclareLaunchArgument('use_rviz', default_value='true',
+                           description='Start RViz visualization'),
+        DeclareLaunchArgument('use_teleop', default_value='true',
+                           description='Start teleop keyboard control'),
         
         # Hardware component arguments
         DeclareLaunchArgument('use_arduino', default_value='true',

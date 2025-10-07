@@ -3,7 +3,7 @@
 /**:
   ros__parameters:
     # The output topic where twist commands are published
-    topic_out: /diff_drive_controller/cmd_vel_unstamped
+    topic_out: /cmd_vel_out
 
     # Velocity Limits - Reduced for smoother control
     # These limits apply to all input topics unless overridden

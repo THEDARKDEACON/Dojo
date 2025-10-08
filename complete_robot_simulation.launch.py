@@ -222,6 +222,22 @@ def generate_launch_description():
         ],
         condition=IfCondition(teleop)
     )
+	# Servo Node (Arduino trapdoor control)
+servo_node = Node(
+    package='servo_node',
+    executable='servo_node',
+    name='servo_node',
+    output='screen'
+)
+
+# Keyboard control for servo trapdoor
+servo_keyboard_node = Node(
+    package='servo_node',
+    executable='trapdoor_keyboard',
+    name='trapdoor_keyboard',
+    output='screen'
+)
+
     
     return LaunchDescription([
         # Launch arguments
@@ -256,4 +272,6 @@ def generate_launch_description():
         bypass_mode_launch,
         rviz_node,
         teleop_node,
+	servo_node,
+	servo_keyboard_node,
     ])

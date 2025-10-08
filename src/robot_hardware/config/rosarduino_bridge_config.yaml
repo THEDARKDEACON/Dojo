@@ -1,6 +1,9 @@
 arduino_driver:
   ros__parameters:
-    baud_rate: 57600
+    baud_rate: 115200
+    command_topic: /cmd_vel
+    controller_type: 1
+    device: /dev/ttyACM0
     debug: true
     encoder_ticks_per_rev: 20
     max_angular_speed: 1.0

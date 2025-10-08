@@ -23,11 +23,17 @@ Usage Examples:
   
   # Vision-only mode (no SLAM)
   ros2 launch complete_robot_simulation.launch.py slam:=false navigation:=false
+  
+  # Arduino Integration Bypass Mode (simplified motion control)
+  ros2 launch complete_robot_simulation.launch.py bypass_mode:=true
+  
+  # Bypass mode with minimal components (no GUI, no vision)
+  ros2 launch complete_robot_simulation.launch.py bypass_mode:=true gui:=false vision:=false
 """
 
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, ExecuteProcess, TimerAction, IncludeLaunchDescription
-from launch.conditions import IfCondition
+from launch.conditions import IfCondition, UnlessCondition
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution, Command
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
@@ -43,6 +49,7 @@ def generate_launch_description():
     slam = LaunchConfiguration('slam', default='true')
     navigation = LaunchConfiguration('navigation', default='false')
     vision = LaunchConfiguration('vision', default='true')
+    bypass_mode = LaunchConfiguration('bypass_mode', default='false')
     
     # Get robot description
     robot_description_content = Command([
@@ -98,7 +105,7 @@ def generate_launch_description():
         output='screen'
     )
     
-    # Twist Mux for command velocity multiplexing
+    # Twist Mux for command velocity multiplexing (disabled in bypass mode)
     twist_mux = Node(
         package='twist_mux',
         executable='twist_mux',
@@ -113,10 +120,11 @@ def generate_launch_description():
         remappings=[
             ('/cmd_vel_out', '/cmd_vel')
         ],
-        output='screen'
+        output='screen',
+        condition=UnlessCondition(bypass_mode)
     )
     
-    # SLAM Toolbox for mapping
+    # SLAM Toolbox for mapping (available in bypass mode but optional)
     slam_toolbox = Node(
         package='slam_toolbox',
         executable='async_slam_toolbox_node',
@@ -153,7 +161,7 @@ def generate_launch_description():
         condition=IfCondition(navigation)
     )
     
-    # Vision Detection System
+    # Vision Detection System (disabled in bypass mode)
     vision_detection_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([
             PathJoinSubstitution([
@@ -168,6 +176,22 @@ def generate_launch_description():
             'debug_mode': 'false'
         }.items(),
         condition=IfCondition(vision)
+    )
+    
+    # Bypass Mode Launch (when bypass_mode is enabled)
+    bypass_mode_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([
+            PathJoinSubstitution([
+                FindPackageShare('robot_control'),
+                'launch',
+                'bypass_mode.launch.py'
+            ])
+        ]),
+        launch_arguments={
+            'use_sim_time': use_sim_time,
+            'debug': 'false'
+        }.items(),
+        condition=IfCondition(bypass_mode)
     )
     
     # RViz with comprehensive visualization
@@ -217,6 +241,8 @@ def generate_launch_description():
                             description='Start Navigation2 stack (requires existing map or SLAM)'),
         DeclareLaunchArgument('vision', default_value='true',
                             description='Start Vision Detection system with object detection'),
+        DeclareLaunchArgument('bypass_mode', default_value='false',
+                            description='Enable Arduino Integration Bypass Mode (disables safety systems)'),
         
         # Launch all components
         gazebo_server,
@@ -227,6 +253,7 @@ def generate_launch_description():
         slam_toolbox,
         nav2_launch,
         vision_detection_launch,
+        bypass_mode_launch,
         rviz_node,
         teleop_node,
     ])

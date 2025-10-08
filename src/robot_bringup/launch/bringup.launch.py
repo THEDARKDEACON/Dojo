@@ -17,6 +17,12 @@ Usage Examples:
   # Hardware mode with perception
   ros2 launch robot_bringup bringup.launch.py use_hardware:=true use_perception:=true
   
+  # Arduino Integration Bypass Mode (simplified motion control)
+  ros2 launch robot_bringup bringup.launch.py bypass_mode:=true
+  
+  # Bypass mode with hardware detection disabled
+  ros2 launch robot_bringup bringup.launch.py bypass_mode:=true use_hardware:=false
+  
   # Minimal mode (no SLAM, RViz, or teleop)
   ros2 launch robot_bringup bringup.launch.py use_slam:=false use_rviz:=false use_teleop:=false
 """
@@ -102,6 +108,9 @@ def generate_launch_description():
     use_camera = LaunchConfiguration('use_camera', default='true')
     use_lidar = LaunchConfiguration('use_lidar', default='true')
     
+    # Bypass mode flag - Arduino Integration Bypass Mode
+    bypass_mode = LaunchConfiguration('bypass_mode', default='false')
+    
     # Configuration manager (loads mode-specific parameters)
     config_manager_node = Node(
         package='robot_control',
@@ -158,11 +167,15 @@ def generate_launch_description():
     
     simulation_launch = get_simulation_launch()
     
-    # Hardware layer - new unified hardware interface (when use_gazebo=false)
+    # Hardware layer - new unified hardware interface (when use_gazebo=false and bypass_mode=false)
     def get_hardware_launch():
         """Get hardware launch if packages are available."""
         try:
             hardware_share = get_package_share_directory('robot_hardware')
+            # Create a custom condition that checks both use_hardware=true and bypass_mode=false
+            from launch.substitutions import AndSubstitution, NotSubstitution
+            hardware_and_not_bypass = AndSubstitution(use_hardware, NotSubstitution(bypass_mode))
+            
             return IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(
                     os.path.join(hardware_share, 'launch', 'hardware.launch.py')
@@ -173,7 +186,7 @@ def generate_launch_description():
                     'use_camera': use_camera,
                     'use_lidar': use_lidar,
                 }.items(),
-                condition=IfCondition(use_hardware)
+                condition=IfCondition(hardware_and_not_bypass)
             )
         except PackageNotFoundError:
             print("WARNING: robot_hardware package not found, hardware interface not available")
@@ -181,11 +194,15 @@ def generate_launch_description():
     
     hardware_launch = get_hardware_launch()
     
-    # Control layer - high-level control coordination (hardware mode only)
+    # Control layer - high-level control coordination (hardware mode only, disabled in bypass mode)
     def get_control_launch():
         """Get control launch if packages are available."""
         try:
             control_share = get_package_share_directory('robot_control')
+            # Create a custom condition that checks both use_control=true and bypass_mode=false
+            from launch.substitutions import AndSubstitution, NotSubstitution
+            control_and_not_bypass = AndSubstitution(use_control, NotSubstitution(bypass_mode))
+            
             return IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(
                     os.path.join(control_share, 'launch', 'control.launch.py')
@@ -194,13 +211,34 @@ def generate_launch_description():
                     'use_sim_time': use_sim_time,
                     'operation_mode': operation_mode,
                 }.items(),
-                condition=IfCondition(use_control)
+                condition=IfCondition(control_and_not_bypass)
             )
         except PackageNotFoundError:
             print("WARNING: robot_control package not found, control layer not available")
             return None
     
     control_launch = get_control_launch()
+    
+    # Bypass Mode Launch - Arduino Integration Bypass Mode
+    def get_bypass_mode_launch():
+        """Get bypass mode launch if packages are available."""
+        try:
+            control_share = get_package_share_directory('robot_control')
+            return IncludeLaunchDescription(
+                PythonLaunchDescriptionSource(
+                    os.path.join(control_share, 'launch', 'bypass_mode.launch.py')
+                ),
+                launch_arguments={
+                    'use_sim_time': use_sim_time,
+                    'debug': 'false'
+                }.items(),
+                condition=IfCondition(bypass_mode)
+            )
+        except PackageNotFoundError:
+            print("WARNING: robot_control package not found, bypass mode not available")
+            return None
+    
+    bypass_mode_launch = get_bypass_mode_launch()
     
     # Perception layer - optional computer vision and AI
     def get_perception_launch():
@@ -376,6 +414,8 @@ def generate_launch_description():
         launch_nodes.append(hardware_launch)
     if control_launch:
         launch_nodes.append(control_launch)
+    if bypass_mode_launch:
+        launch_nodes.append(bypass_mode_launch)
     if perception_launch:
         launch_nodes.append(perception_launch)
     if navigation_launch:
@@ -395,6 +435,7 @@ def generate_launch_description():
     print(f"Complete Robot bringup starting in {detected_mode} mode")
     print(f"Available launches: simulation={simulation_launch is not None}, "
           f"hardware={hardware_launch is not None}, control={control_launch is not None}, "
+          f"bypass_mode={bypass_mode_launch is not None}, "
           f"perception={perception_launch is not None}, navigation={navigation_launch is not None}")
     if detected_mode == 'simulation':
         print(f"Simulation features: SLAM=enabled, RViz=enabled, Teleop=enabled, Vision=enabled")
@@ -443,6 +484,10 @@ def generate_launch_description():
                            description='Enable camera driver'),
         DeclareLaunchArgument('use_lidar', default_value='true',
                            description='Enable LiDAR driver'),
+        
+        # Bypass mode argument
+        DeclareLaunchArgument('bypass_mode', default_value='false',
+                           description='Enable Arduino Integration Bypass Mode (disables safety systems)'),
         
         # Simulation arguments
         DeclareLaunchArgument('world', default_value='empty.world',

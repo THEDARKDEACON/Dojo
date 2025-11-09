@@ -15,6 +15,9 @@
   <exec_depend>robot_description</exec_depend>
   <exec_depend>robot_navigation</exec_depend>
 
+  <!-- Gazebo Harmonic dependencies for simulation mode detection -->
+  <exec_depend>ros_gz_sim</exec_depend>
+
   <export>
     <build_type>ament_cmake</build_type>
   </export>

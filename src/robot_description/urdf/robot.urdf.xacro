@@ -26,23 +26,7 @@
     <color rgba="0.1 0.1 0.1 1"/>
   </material>
   
-  <!-- Gazebo materials -->
-  <gazebo reference="base_link">
-    <material>Gazebo/Green</material>
-  </gazebo>
-  <gazebo reference="top_floor">
-    <material>Gazebo/Green</material>
-  </gazebo>
-  <gazebo reference="lidar">
-    <material>Gazebo/White</material>
-  </gazebo>
-
-  <gazebo reference="front_right_wheel">
-    <material>Gazebo/Grey</material>
-  </gazebo>
-  <gazebo reference="front_left_wheel">
-    <material>Gazebo/Grey</material>
-  </gazebo>
+  <!-- Gazebo materials removed to avoid Ogre2 material conflicts -->
   
   <!-- Base link -->
   <link name="base_link">
@@ -157,7 +141,6 @@
 
     <!-- Gazebo caster properties for low friction -->
     <gazebo reference="${prefix}_caster">
-      <material>Gazebo/Black</material>
       <mu1>0.1</mu1>
       <mu2>0.1</mu2>
       <kp>1000000.0</kp>
@@ -229,7 +212,8 @@
     <origin xyz="0.08 0 0.01" rpy="0 0 0"/>
   </joint>
 
-  <!-- Gazebo Camera Sensor -->
+  <!-- Gazebo Harmonic Camera Sensor - Temporarily disabled to avoid Ogre2 rendering issues -->
+  <!-- 
   <gazebo reference="camera_link">
     <sensor type="camera" name="camera1">
       <update_rate>30.0</update_rate>
@@ -245,40 +229,31 @@
           <far>100</far>
         </clip>
       </camera>
-      <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
-        <ros>
-          <namespace>/</namespace>
-          <remapping>image_raw:=camera/image_raw</remapping>
-          <remapping>camera_info:=camera/camera_info</remapping>
-        </ros>
-        <camera_name>camera</camera_name>
-        <frame_name>camera_link</frame_name>
-        <hack_baseline>0.07</hack_baseline>
-      </plugin>
       <always_on>true</always_on>
       <update_rate>30.0</update_rate>
-      <visualize>true</visualize>
+      <visualize>false</visualize>
     </sensor>
   </gazebo>
+  -->
 
-  <!-- Gazebo LiDAR Sensor -->
+  <!-- Gazebo Harmonic 2D Laser Scanner - Full 360-degree coverage for SLAM -->
   <gazebo reference="lidar">
-    <sensor type="ray" name="lidar_sensor">
+    <sensor name="lidar_sensor" type="gpu_ray">
       <pose>0 0 0 0 0 0</pose>
-      <visualize>true</visualize>
-      <update_rate>10</update_rate>
+      <topic>lidar</topic>
+      <update_rate>10.0</update_rate>
       <ray>
         <scan>
           <horizontal>
             <samples>360</samples>
-            <resolution>1</resolution>
+            <resolution>1.0</resolution>
             <min_angle>-3.14159</min_angle>
             <max_angle>3.14159</max_angle>
           </horizontal>
         </scan>
         <range>
           <min>0.1</min>
-          <max>12.0</max>
+          <max>10.0</max>
           <resolution>0.01</resolution>
         </range>
         <noise>
@@ -287,48 +262,46 @@
           <stddev>0.01</stddev>
         </noise>
       </ray>
-      <plugin name="gazebo_ros_lidar" filename="libgazebo_ros_ray_sensor.so">
-        <ros>
-          <namespace>/</namespace>
-          <remapping>~/out:=scan</remapping>
-        </ros>
-        <output_type>sensor_msgs/LaserScan</output_type>
-        <frame_name>lidar</frame_name>
-      </plugin>
+      <always_on>true</always_on>
+      <visualize>true</visualize>
     </sensor>
   </gazebo>
 
-  <!-- Gazebo Differential Drive Plugin for Front-Wheel Drive -->
+  <!-- Gazebo Harmonic Differential Drive Plugin for Front-Wheel Drive -->
   <gazebo>
-    <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
-      <ros>
-        <namespace>/</namespace>
-      </ros>
+    <plugin filename="gz-sim8-diff-drive-system" name="gz::sim::systems::DiffDrive">
       <left_joint>base_front_left_wheel_joint</left_joint>
       <right_joint>base_front_right_wheel_joint</right_joint>
       <wheel_separation>${wheel_separation}</wheel_separation>
-      <wheel_diameter>${2 * wheel_radius}</wheel_diameter>
-      <command_topic>cmd_vel</command_topic>
-      <odometry_topic>odom</odometry_topic>
-      <odometry_frame>odom</odometry_frame>
-      <robot_base_frame>base_link</robot_base_frame>
-      <publish_odom>true</publish_odom>
-      <publish_odom_tf>true</publish_odom_tf>
-      <publish_wheel_tf>true</publish_wheel_tf>
-      
-      <!-- Smoother turning parameters -->
-      <max_wheel_torque>0.5</max_wheel_torque>
-      <max_wheel_acceleration>1.0</max_wheel_acceleration>
-      <update_rate>50.0</update_rate>
-      
-      <!-- Front-wheel drive specific parameters -->
-      <wheel_separation_multiplier>1.0</wheel_separation_multiplier>
-      <wheel_radius_multiplier>1.0</wheel_radius_multiplier>
-      
-      <!-- Additional smoothing parameters -->
-      <covariance_x>0.0001</covariance_x>
-      <covariance_y>0.0001</covariance_y>
-      <covariance_yaw>0.01</covariance_yaw>
+      <wheel_radius>${wheel_radius}</wheel_radius>
+      <topic>cmd_vel</topic>
+      <odom_topic>odom</odom_topic>
+      <frame_id>odom</frame_id>
+      <child_frame_id>base_link</child_frame_id>
+      <odom_publish_frequency>50.0</odom_publish_frequency>
+      <max_linear_acceleration>1.0</max_linear_acceleration>
+      <max_angular_acceleration>2.0</max_angular_acceleration>
+      <max_linear_velocity>0.5</max_linear_velocity>
+      <max_angular_velocity>1.0</max_angular_velocity>
     </plugin>
+    
+    <!-- Joint State Publisher for wheel positions -->
+    <plugin filename="gz-sim8-joint-state-publisher-system" name="gz::sim::systems::JointStatePublisher">
+      <topic>joint_states</topic>
+    </plugin>
+    
+    <!-- Sensors System for LiDAR and Camera - Using Ogre instead of Ogre2 -->
+    <plugin filename="gz-sim8-sensors-system" name="gz::sim::systems::Sensors">
+      <render_engine>ogre</render_engine>
+    </plugin>
+    
+    <!-- Pose Publisher disabled - using DiffDrive plugin for odometry instead -->
+    <!-- 
+    <plugin filename="gz-sim8-pose-publisher-system" name="gz::sim::systems::PosePublisher">
+      <publish_link_pose>false</publish_link_pose>
+      <use_pose_vector_msg>false</use_pose_vector_msg>
+      <static_publisher>false</static_publisher>
+    </plugin>
+    -->
   </gazebo>
 </robot>

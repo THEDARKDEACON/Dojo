@@ -367,8 +367,8 @@ class ResourceManager:
         gc.collect()
         
         self.node.get_logger().info('Resource Manager shutdown complete')
-def
- main(args=None):
+
+def main(args=None):
     """Main entry point for standalone resource manager node."""
     rclpy.init(args=args)
     

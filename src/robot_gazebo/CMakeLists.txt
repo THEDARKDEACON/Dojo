@@ -23,12 +23,10 @@ find_package(nav_msgs REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 
-# Gazebo packages
-find_package(gazebo_ros REQUIRED)
-find_package(gazebo_ros2_control REQUIRED)
-find_package(gazebo_plugins REQUIRED)
-find_package(gazebo_dev REQUIRED)
-find_package(gazebo_msgs REQUIRED)
+# Gazebo packages (Harmonic)
+find_package(ros_gz_sim REQUIRED)
+find_package(ros_gz_bridge REQUIRED)
+find_package(ros_gz_image REQUIRED)
 
 # Control and hardware
 find_package(ros2_control REQUIRED)
@@ -39,6 +37,8 @@ find_package(pluginlib REQUIRED)
 find_package(std_srvs REQUIRED)
 
 # Robot description and control
+find_package(urdf REQUIRED)
+find_package(xacro REQUIRED)
 find_package(robot_description REQUIRED)
 find_package(robot_control REQUIRED)
 
@@ -59,6 +59,12 @@ install(
   DESTINATION share/${PROJECT_NAME}/config
   PATTERN "*.yaml"
   PATTERN "*.yml"
+)
+
+# Install RViz configuration files
+install(
+  DIRECTORY rviz/
+  DESTINATION share/${PROJECT_NAME}/rviz
   PATTERN "*.rviz"
 )
 
@@ -132,10 +138,10 @@ ament_export_dependencies(
   nav_msgs
   tf2_ros
   tf2_geometry_msgs
-  gazebo_ros
-  gazebo_ros2_control
-  gazebo_dev
-  gazebo_msgs
+  ros_gz_sim
+  ros_gz_bridge
+  ros_gz_image
+
   ros2_control
   ros2_controllers
   controller_manager
@@ -145,28 +151,6 @@ ament_export_dependencies(
   xacro
   rcl_interfaces
   std_srvs
-  robot_description
-  robot_control
-)
-
-# Export dependencies
-ament_export_dependencies(
-  rclcpp
-  rclpy
-  std_msgs
-  sensor_msgs
-  geometry_msgs
-  nav_msgs
-  tf2_ros
-  gazebo_ros
-  gazebo_ros2_control
-  gazebo_dev
-  gazebo_msgs
-  ros2_control
-  ros2_controllers
-  controller_manager
-  hardware_interface
-  pluginlib
   robot_description
   robot_control
 )

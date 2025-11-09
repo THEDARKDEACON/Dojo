@@ -48,7 +48,7 @@ def detect_operation_mode():
         # Check if Gazebo packages are available
         try:
             get_package_share_directory('robot_gazebo')
-            get_package_share_directory('gazebo_ros')
+            get_package_share_directory('ros_gz_sim')
             return 'simulation'
         except PackageNotFoundError:
             print("WARNING: Simulation requested but Gazebo packages not available, using hardware mode")
@@ -60,7 +60,7 @@ def validate_mode_requirements(mode):
     missing_packages = []
     
     if mode == 'simulation':
-        required_sim_packages = ['robot_gazebo', 'gazebo_ros', 'controller_manager']
+        required_sim_packages = ['robot_gazebo', 'ros_gz_sim', 'controller_manager']
         for package in required_sim_packages:
             try:
                 get_package_share_directory(package)

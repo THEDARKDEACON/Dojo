@@ -21,7 +21,7 @@ def generate_launch_description():
     # Vision detection node
     vision_detection_node = Node(
         package='robot_perception',
-        executable='vision_detection_node.py',
+        executable='object_detector',
         name='vision_detection_node',
         output='screen',
         parameters=[

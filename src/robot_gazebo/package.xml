@@ -29,14 +29,14 @@
   <depend>xacro</depend>
   <depend>rcl_interfaces</depend>
   
-  <!-- Gazebo dependencies -->
-  <exec_depend>gazebo_ros_pkgs</exec_depend>
-  <exec_depend>gazebo_ros</exec_depend>
-  <exec_depend>gazebo_ros2_control</exec_depend>
-  <exec_depend>gazebo_ros2_control_demos</exec_depend>
-  <exec_depend>gazebo_plugins</exec_depend>
-  <exec_depend>gazebo_dev</exec_depend>
-  <exec_depend>gazebo_msgs</exec_depend>
+  <!-- Gazebo Harmonic dependencies -->
+  <exec_depend>ros_gz_sim</exec_depend>
+  <exec_depend>ros_gz_bridge</exec_depend>
+  <exec_depend>ros_gz_interfaces</exec_depend>
+  <exec_depend>ros_gz_image</exec_depend>
+  <exec_depend>gz_ros2_control</exec_depend>
+
+  <exec_depend>sdformat_urdf</exec_depend>
   
   <!-- ROS2 Control -->
   <exec_depend>ros2_control</exec_depend>

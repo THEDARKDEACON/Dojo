@@ -1,14 +1,25 @@
 <?xml version="1.0" ?>
-<sdf version="1.6">
+<sdf version="1.8">
   <world name="default">
+    <!-- Essential Gazebo Harmonic plugins -->
+    <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics"/>
+    <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands"/>
+    <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster"/>
+    <plugin filename="gz-sim-contact-system" name="gz::sim::systems::Contact"/>
+    <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu"/>
+    <plugin filename="gz-sim-air-pressure-system" name="gz::sim::systems::AirPressure"/>
+    <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+    
     <!-- A global light source -->
     <include>
-      <uri>model://sun</uri>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Sun</uri>
     </include>
     
     <!-- A ground plane -->
     <include>
-      <uri>model://ground_plane</uri>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Ground Plane</uri>
     </include>
     
     <!-- Lighting -->
@@ -16,27 +27,28 @@
       <ambient>0.5 0.5 0.5 1.0</ambient>
       <background>0.7 0.7 0.7 1.0</background>
       <shadows>true</shadows>
+      <grid>false</grid>
     </scene>
     
     <!-- Physics -->
-    <physics type="ode">
+    <physics name="1ms" type="ignored">
       <max_step_size>0.001</max_step_size>
       <real_time_factor>1.0</real_time_factor>
       <real_time_update_rate>1000</real_time_update_rate>
-      <gravity>0 0 -9.8</gravity>
-      <ode>
-        <solver>
-          <type>quick</type>
-          <iters>50</iters>
-          <sor>1.4</sor>
-        </solver>
-        <constraints>
-          <cfm>0.0</cfm>
-          <erp>0.2</erp>
-          <contact_max_correcting_vel>100.0</contact_max_correcting_vel>
-          <contact_surface_layer>0.001</contact_surface_layer>
-        </constraints>
-      </ode>
     </physics>
+    
+    <!-- Gravity -->
+    <gravity>0 0 -9.8</gravity>
+    <magnetic_field>6e-06 2.3e-05 -4.2e-05</magnetic_field>
+    <atmosphere type="adiabatic"/>
+    
+    <!-- Spherical coordinates -->
+    <spherical_coordinates>
+      <surface_model>EARTH_WGS84</surface_model>
+      <latitude_deg>0</latitude_deg>
+      <longitude_deg>0</longitude_deg>
+      <elevation>0</elevation>
+      <heading_deg>0</heading_deg>
+    </spherical_coordinates>
   </world>
 </sdf>

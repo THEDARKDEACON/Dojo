@@ -4,6 +4,9 @@
   ros__parameters:
     # The output topic where twist commands are published
     topic_out: /cmd_vel_out
+    
+    # Use stamped twist messages
+    use_stamped: false
 
     # Velocity Limits - Reduced for smoother control
     # These limits apply to all input topics unless overridden
@@ -36,6 +39,12 @@
         #   x: {max_velocity: 0.3, min_velocity: -0.3}
         # angular:
         #   z: {max_velocity: 0.5, min_velocity: -0.5}
+
+      # Autonomous mapping controller (medium-low priority)
+      autonomous_mapping:
+        topic: /cmd_vel_autonomous
+        timeout: 2.0
+        priority: 50
 
       # Teleoperation input (medium priority)
       teleop:

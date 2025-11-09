@@ -41,15 +41,16 @@ from launch_ros.substitutions import FindPackageShare
 
 def generate_launch_description():
     # Launch arguments with sensible defaults
-    world = LaunchConfiguration('world', default='empty.world')
+    world = LaunchConfiguration('world', default='mapping_world.world')
     use_sim_time = LaunchConfiguration('use_sim_time', default='true')
     gui = LaunchConfiguration('gui', default='true')
     rviz = LaunchConfiguration('rviz', default='true')
-    teleop = LaunchConfiguration('teleop', default='true')
+    teleop = LaunchConfiguration('teleop', default='false')  # Disabled by default for autonomous operation
     slam = LaunchConfiguration('slam', default='true')
     navigation = LaunchConfiguration('navigation', default='false')
-    vision = LaunchConfiguration('vision', default='true')
+    vision = LaunchConfiguration('vision', default='false')  # Disabled by default until ultralytics is installed
     bypass_mode = LaunchConfiguration('bypass_mode', default='false')
+    autonomous_exploration = LaunchConfiguration('autonomous_exploration', default='true')  # Enable by default for autonomous mapping
     
     # Get robot description
     robot_description_content = Command([
@@ -70,17 +71,19 @@ def generate_launch_description():
         world
     ])
     
-    # Start Gazebo server
-    gazebo_server = ExecuteProcess(
-        cmd=['gzserver', '--verbose', '-s', 'libgazebo_ros_init.so', '-s', 'libgazebo_ros_factory.so', world_file],
-        output='screen'
-    )
-    
-    # Start Gazebo client (GUI)
-    gazebo_client = ExecuteProcess(
-        cmd=['gzclient'],
-        output='screen',
-        condition=IfCondition(gui)
+    # Start Gazebo Harmonic simulation
+    gazebo_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([
+            PathJoinSubstitution([
+                FindPackageShare('ros_gz_sim'),
+                'launch',
+                'gz_sim.launch.py'
+            ])
+        ]),
+        launch_arguments={
+            'gz_args': [world_file, ' -r -v 4'],
+            'on_exit_shutdown': 'true'
+        }.items()
     )
     
     # Robot state publisher
@@ -91,10 +94,10 @@ def generate_launch_description():
         output='screen'
     )
     
-    # Spawn robot in Gazebo
+    # Spawn robot in Gazebo Harmonic
     spawn_robot = Node(
-        package='gazebo_ros',
-        executable='spawn_entity.py',
+        package='ros_gz_sim',
+        executable='create',
         arguments=[
             '-entity', 'dojo_robot',
             '-topic', 'robot_description',
@@ -102,6 +105,35 @@ def generate_launch_description():
             '-y', '0.0',
             '-z', '0.1'
         ],
+        output='screen'
+    )
+    
+    # ROS-Gazebo Bridge for topic communication (sensors temporarily disabled due to Ogre2 conflicts)
+    gz_bridge = Node(
+        package='ros_gz_bridge',
+        executable='parameter_bridge',
+        arguments=[
+            '/cmd_vel@geometry_msgs/msg/Twist@gz.msgs.Twist',
+            '/odom@nav_msgs/msg/Odometry@gz.msgs.Odometry',
+            '/joint_states@sensor_msgs/msg/JointState@gz.msgs.Model',
+            '/tf@tf2_msgs/msg/TFMessage@gz.msgs.Pose_V',
+            '/clock@rosgraph_msgs/msg/Clock@gz.msgs.Clock'
+        ],
+        parameters=[{'use_sim_time': use_sim_time}],
+        output='screen'
+    )
+    
+    # LiDAR bridge for scan data (required for SLAM)
+    lidar_bridge = Node(
+        package='ros_gz_bridge',
+        executable='parameter_bridge',
+        arguments=[
+            '/lidar@sensor_msgs/msg/LaserScan@gz.msgs.LaserScan'
+        ],
+        remappings=[
+            ('/lidar', '/scan')
+        ],
+        parameters=[{'use_sim_time': use_sim_time}],
         output='screen'
     )
     
@@ -194,6 +226,39 @@ def generate_launch_description():
         condition=IfCondition(bypass_mode)
     )
     
+    # Simple Autonomous Movement (starts immediately)
+    simple_autonomous_movement = TimerAction(
+        period=10.0,  # Start after 10 seconds to let system initialize
+        actions=[
+            ExecuteProcess(
+                cmd=['python3', 'start_autonomous_movement.py'],
+                output='screen',
+                name='start_autonomous_movement',
+                cwd='.'
+            )
+        ]
+    )
+    
+    # Autonomous Exploration (when enabled)
+    autonomous_exploration_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([
+            PathJoinSubstitution([
+                FindPackageShare('robot_navigation'),
+                'launch',
+                'autonomous_exploration.launch.py'
+            ])
+        ]),
+        launch_arguments={
+            'use_sim_time': use_sim_time,
+            'exploration_radius': '4.0',
+            'min_frontier_size': '20'
+        }.items(),
+        condition=IfCondition(autonomous_exploration)
+    )
+    
+    # Advanced features are now launched separately for modularity
+    # Use: ros2 launch robot_semantic_slam cutting_edge_features.launch.py
+    
     # RViz with comprehensive visualization
     rviz_config_file = PathJoinSubstitution([
         FindPackageShare('robot_gazebo'),
@@ -225,35 +290,40 @@ def generate_launch_description():
     
     return LaunchDescription([
         # Launch arguments
-        DeclareLaunchArgument('world', default_value='empty.world',
-                            description='Gazebo world file name (e.g., empty.world, house.world)'),
+        DeclareLaunchArgument('world', default_value='mapping_world.world',
+                            description='Gazebo world file name (e.g., mapping_world.world, house.world, empty.world)'),
         DeclareLaunchArgument('use_sim_time', default_value='true',
                             description='Use simulation (Gazebo) clock if true'),
         DeclareLaunchArgument('gui', default_value='true',
                             description='Start Gazebo GUI'),
         DeclareLaunchArgument('rviz', default_value='true',
                             description='Start RViz visualization'),
-        DeclareLaunchArgument('teleop', default_value='true',
-                            description='Start teleop keyboard control'),
+        DeclareLaunchArgument('teleop', default_value='false',
+                            description='Start teleop keyboard control (disabled by default for autonomous operation)'),
         DeclareLaunchArgument('slam', default_value='true',
                             description='Start SLAM for mapping'),
         DeclareLaunchArgument('navigation', default_value='false',
                             description='Start Navigation2 stack (requires existing map or SLAM)'),
-        DeclareLaunchArgument('vision', default_value='true',
-                            description='Start Vision Detection system with object detection'),
+        DeclareLaunchArgument('vision', default_value='false',
+                            description='Start Vision Detection system with object detection (requires ultralytics)'),
         DeclareLaunchArgument('bypass_mode', default_value='false',
                             description='Enable Arduino Integration Bypass Mode (disables safety systems)'),
+        DeclareLaunchArgument('autonomous_exploration', default_value='true',
+                            description='Enable autonomous frontier-based exploration for mapping (enabled by default)'),
         
         # Launch all components
-        gazebo_server,
-        gazebo_client,
+        gazebo_launch,
         robot_state_publisher,
         spawn_robot,
+        gz_bridge,
+        lidar_bridge,
         twist_mux,
         slam_toolbox,
+        simple_autonomous_movement,
         nav2_launch,
         vision_detection_launch,
         bypass_mode_launch,
+        autonomous_exploration_launch,
         rviz_node,
         teleop_node,
     ])

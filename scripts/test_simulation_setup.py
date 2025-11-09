@@ -61,7 +61,7 @@ def main():
     # Check ROS packages
     print("\n📦 Checking ROS Packages:")
     required_packages = [
-        "gazebo_ros",
+        "ros_gz_sim",
         "robot_state_publisher",
         "joint_state_publisher", 
         "slam_toolbox",

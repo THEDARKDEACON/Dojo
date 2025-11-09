@@ -317,8 +317,7 @@ class PerformanceMonitor:
             f'  Final memory usage: {metrics.memory_usage_mb:.1f}MB'
         )
 
-def
- main(args=None):
+def main(args=None):
     """Main entry point for standalone performance monitor node."""
     rclpy.init(args=args)
     

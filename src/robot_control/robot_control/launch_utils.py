@@ -34,7 +34,7 @@ class LaunchModeManager:
             'robot_perception',
             'robot_navigation',
             'robot_description',
-            'gazebo_ros',
+            'ros_gz_sim',
             'controller_manager',
             'diff_drive_controller',
             'joint_state_broadcaster'
@@ -56,7 +56,7 @@ class LaunchModeManager:
     def is_gazebo_available(self) -> bool:
         """Check if Gazebo simulation is available."""
         return (self.is_package_available('robot_gazebo') and 
-                self.is_package_available('gazebo_ros') and
+                self.is_package_available('ros_gz_sim') and
                 self._is_gazebo_installed())
     
     def _is_gazebo_installed(self) -> bool:
@@ -142,8 +142,8 @@ class LaunchModeManager:
             if not self.is_package_available('robot_gazebo'):
                 missing_requirements.append('robot_gazebo package')
             
-            if not self.is_package_available('gazebo_ros'):
-                missing_requirements.append('gazebo_ros package')
+            if not self.is_package_available('ros_gz_sim'):
+                missing_requirements.append('ros_gz_sim package')
             
             if not self._is_gazebo_installed():
                 missing_requirements.append('Gazebo installation')

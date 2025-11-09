@@ -126,3 +126,20 @@ setup.ps1
 
 # Arduino IDE files
 *.ino.bak
+
+# Model files (should be downloaded during build)
+*.pt
+*.onnx
+*.weights
+*.pth
+
+# Test outputs and validation reports
+*_test_output.txt
+*_validation_report.txt
+build_*.log
+test_*.log
+
+# Temporary launch and config files
+*.launch.py.bak
+*.yaml.bak
+*.xml.bak

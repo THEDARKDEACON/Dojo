@@ -47,11 +47,11 @@ check_workspace() {
 
 # Function to source ROS environment
 source_ros() {
-    if [ -f "/opt/ros/humble/setup.bash" ]; then
-        log_info "Sourcing ROS 2 Humble environment"
-        source "/opt/ros/humble/setup.bash"
+    if [ -f "/opt/ros/jazzy/setup.bash" ]; then
+        log_info "Sourcing ROS 2 Jazzy environment"
+        source "/opt/ros/jazzy/setup.bash"
     else
-        log_error "ROS 2 Humble not found. Please install ROS 2 Humble first."
+        log_error "ROS 2 Jazzy not found. Please install ROS 2 Jazzy first."
         exit 1
     fi
 }
@@ -595,7 +595,7 @@ check_hardware_dependencies() {
     local ros_deps=("rclpy" "std_msgs" "geometry_msgs" "sensor_msgs")
     for dep in "${ros_deps[@]}"; do
         if ! python3 -c "import $dep" 2>/dev/null; then
-            missing_deps+=("ros-humble-$dep")
+            missing_deps+=("ros-jazzy-$dep")
         fi
     done
     

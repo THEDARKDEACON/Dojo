@@ -19,7 +19,7 @@ import sys
 
 def check_gazebo_availability():
     """Check if required Gazebo packages are available."""
-    required_packages = ['gazebo_ros', 'controller_manager', 'diff_drive_controller']
+    required_packages = ['ros_gz_sim', 'controller_manager', 'diff_drive_controller']
     missing_packages = []
     
     for package in required_packages:
@@ -83,7 +83,7 @@ def generate_launch_description():
     
     # Start Gazebo server and client separately for better control
     gazebo_server = ExecuteProcess(
-        cmd=['gzserver', '--verbose', '-s', 'libgazebo_ros_init.so', '-s', 'libgazebo_ros_factory.so', world_file],
+        cmd=['gz', 'sim', '-v', '4', '-s', world_file],
         output='screen'
     )
     
@@ -103,8 +103,8 @@ def generate_launch_description():
     
     # Spawn robot in Gazebo
     spawn_robot_node = Node(
-        package='gazebo_ros',
-        executable='spawn_entity.py',
+        package='ros_gz_sim',
+        executable='create',
         arguments=[
             '-entity', 'dojo_robot',
             '-topic', 'robot_description',

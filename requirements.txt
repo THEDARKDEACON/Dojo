@@ -1,10 +1,13 @@
-# Dojo Robot Python Dependencies
+# Dojo Robot Python Dependencies - ROS2 Jazzy + Gazebo Harmonic
 # Core robotics libraries
 pyserial>=3.5
 opencv-python>=4.5.0
 numpy>=1.20.0
 scipy>=1.7.0
 PyYAML>=5.4.0
+
+# Gazebo Harmonic Python bindings
+gz-python>=1.0.0
 
 # System monitoring and utilities
 psutil>=5.8.0
@@ -27,11 +30,11 @@ pytest-mock>=3.6.0
 sphinx>=4.0.0
 sphinx-rtd-theme>=0.5.0
 
-# Optional deep learning (uncomment if needed)
-# torch>=1.9.0
-# torchvision>=0.10.0
-# ultralytics>=8.0.0
-# onnxruntime>=1.8.0
+# Deep learning for vision detection
+torch>=1.9.0
+torchvision>=0.10.0
+ultralytics>=8.0.0
+onnxruntime>=1.8.0
 
 # Optional scientific computing (uncomment if needed)
 # scikit-learn>=1.0.0

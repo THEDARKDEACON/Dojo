@@ -1,0 +1,29 @@
+Dojo Robot Build Report
+Generated: 2025-11-04 15:15:17
+Workspace: /home/gareth-joel/Downloads/Dojo
+
+=== Build Configuration ===
+ROS Distribution: jazzy
+Python Version: Python 3.12.3
+Build Flags: --symlink-install --event-handlers console_direct+
+
+=== Package Summary ===
+Installed Packages:
+  - robot_bringup
+  - robot_control
+  - robot_description
+  - robot_gazebo
+  - robot_hardware
+  - robot_interfaces
+  - robot_navigation
+  - robot_perception
+
+=== Build Status ===
+Build Status: SUCCESS
+
+=== Next Steps ===
+To use the workspace:
+  source install/setup.bash
+
+To launch the robot:
+  ros2 launch robot_bringup bringup.launch.py

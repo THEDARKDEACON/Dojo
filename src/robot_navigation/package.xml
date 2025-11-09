@@ -66,6 +66,13 @@
   <depend>rviz2</depend>
   <depend>rviz_common</depend>
   <depend>rviz_rendering</depend>
+  <depend>visualization_msgs</depend>
+  
+  <!-- Python dependencies for autonomous exploration -->
+  <exec_depend>python3-numpy</exec_depend>
+  <exec_depend>python3-opencv</exec_depend>
+  <exec_depend>python3-scipy</exec_depend>
+  <exec_depend>python3-sklearn</exec_depend>
   
   <!-- Robot description -->
   <exec_depend>robot_description</exec_depend>

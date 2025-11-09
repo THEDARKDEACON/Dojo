@@ -50,11 +50,35 @@ def generate_launch_description():
         }]
     )
     
-    # RViz with enhanced configuration
+    # PointCloud Processor Node
+    pointcloud_processor_node = Node(
+        package='robot_semantic_slam',
+        executable='pointcloud_processor',
+        name='pointcloud_processor',
+        output='screen',
+        parameters=[{
+            'use_sim_time': use_sim_time,
+            'update_rate': 10.0,  # 10 Hz as per requirements
+            'z_height': 0.3,  # Default height for 2D scan
+            'point_size': 0.05,
+            # Task 3.2: Scan accumulation parameters
+            'accumulation_time': 10.0,  # 10 seconds accumulation window
+            'voxel_size': 0.05,  # 5cm voxel size for downsampling
+            'max_points': 1000000,  # 1 million points maximum
+            'enable_accumulation': True,  # Enable dense mapping
+            # Task 3.3: Height-based color mapping parameters
+            'color_mode': 'height',  # 'height', 'intensity', or 'fixed'
+            'min_height': -0.5,  # Minimum height for color mapping (red)
+            'max_height': 2.0,  # Maximum height for color mapping (violet)
+            'color_scheme': 'rainbow',  # 'rainbow', 'jet', 'hot', 'cool'
+        }]
+    )
+    
+    # RViz with enhanced 3D point cloud configuration
     rviz_config_file = PathJoinSubstitution([
         FindPackageShare('robot_gazebo'),
         'rviz',
-        'simulation_with_sensors.rviz'
+        'pointcloud_3d_visualization.rviz'
     ])
     
     rviz_node = Node(
@@ -71,5 +95,6 @@ def generate_launch_description():
         visualization_rate_arg,
         use_rviz_arg,
         enhanced_viz_node,
+        pointcloud_processor_node,
         rviz_node,
     ])

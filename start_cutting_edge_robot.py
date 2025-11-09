@@ -38,16 +38,21 @@ class CuttingEdgeRobotLauncher:
         """Check if system is ready"""
         print("🔍 Checking system readiness...")
         
-        # Check ROS 2
+        # Check ROS 2 by sourcing and testing
         try:
-            result = subprocess.run(['ros2', '--version'], capture_output=True, text=True)
+            result = subprocess.run(
+                ['bash', '-c', 'source /opt/ros/jazzy/setup.bash && ros2 --version'],
+                capture_output=True, text=True
+            )
             if result.returncode == 0:
                 print("  ✅ ROS 2 is ready")
             else:
                 print("  ❌ ROS 2 not found")
+                print("  💡 Make sure ROS 2 Jazzy is installed")
                 return False
-        except FileNotFoundError:
-            print("  ❌ ROS 2 not installed")
+        except Exception as e:
+            print(f"  ❌ ROS 2 check failed: {e}")
+            print("  💡 Make sure ROS 2 Jazzy is installed at /opt/ros/jazzy")
             return False
         
         # Check if workspace is built
@@ -95,7 +100,7 @@ class CuttingEdgeRobotLauncher:
         # Build launch command
         cmd = [
             'bash', '-c',
-            'source install/setup.bash && ros2 launch complete_robot_simulation.launch.py'
+            'source /opt/ros/jazzy/setup.bash && source install/setup.bash && ros2 launch complete_robot_simulation.launch.py'
         ]
         
         # Add world parameter

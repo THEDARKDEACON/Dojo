@@ -5,47 +5,41 @@
 [![ROS2 Jazzy](https://img.shields.io/badge/ROS2-Jazzy-blue)](https://docs.ros.org/en/jazzy/)
 [![Gazebo Harmonic](https://img.shields.io/badge/Gazebo-Harmonic-orange)](https://gazebosim.org/)
 [![Python 3.12+](https://img.shields.io/badge/Python-3.12+-green)](https://python.org/)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Autonomous-Mapping-brightgreen" alt="Autonomous Mapping"/>
-  <img src="https://img.shields.io/badge/Object-Detection-blue" alt="Object Detection"/>
-  <img src="https://img.shields.io/badge/Semantic-SLAM-purple" alt="Semantic SLAM"/>
-  <img src="https://img.shields.io/badge/Nav2-Integration-red" alt="Nav2"/>
-</p>
 
 ---
 
 ## 🌟 Overview
 
-Dojo Robot is a state-of-the-art autonomous mobile robot built on ROS2 Jazzy and Gazebo Harmonic. It combines cutting-edge technologies including **semantic SLAM**, **YOLO object detection**, **LiDAR-camera fusion**, and **Nav2 navigation** to create an intelligent system capable of understanding and navigating complex environments.
+Dojo Robot is a state-of-the-art autonomous mobile robot built on ROS2 Jazzy and Gazebo Harmonic. It combines cutting-edge technologies including **semantic SLAM**, **YOLO object detection**, **LiDAR-camera fusion**, **behavior tree safety**, and **autonomous navigation** to create an intelligent system capable of understanding and navigating complex environments.
 
 ### Key Capabilities
 
 - 🗺️ **Semantic SLAM** - Object-aware mapping with YOLO v8 integration
-- 🎯 **Intelligent Navigation** - Natural language commands with Nav2
+- 🎯 **Intelligent Navigation** - Natural language commands and semantic waypoints
 - 👁️ **Computer Vision** - Real-time object detection (80+ classes)
-- 🛡️ **Advanced Safety** - Predictive collision avoidance
-- 💾 **Persistent Memory** - Objects survive restarts with 5-minute timeout
-- 🚀 **Autonomous Exploration** - Frontier-based mapping
-- 📊 **Real-time Monitoring** - Performance dashboard and visualization
+- 🛡️ **Advanced Safety** - Multi-layer predictive collision avoidance with behavior trees
+- 💾 **Persistent Memory** - Objects survive restarts with confidence decay
+- 🚀 **Autonomous Exploration** - Frontier-based mapping with obstacle avoidance
+- 📊 **Real-time Monitoring** - Performance dashboard and 3D visualization
+- 🧠 **Human Detection** - Special safety protocols for human proximity
 
 ---
 
 ## ⚡ Quick Start
 
 ```bash
-# Clone and build
-git clone <repository-url>
-cd dojo-robot
-./build_ros2.sh
+# Build the workspace
+cd ~/Downloads/Dojo
+colcon build
 
-# Launch complete system
+# Source the workspace
 source install/setup.bash
-ros2 launch complete_robot_simulation.launch.py
 
-# Or launch with semantic SLAM features
-ros2 launch robot_semantic_slam cutting_edge_features.launch.py
+# Launch basic robot simulation
+ros2 launch robot_gazebo gazebo.launch.py
+
+# Or launch with all cutting-edge features
+python3 start_cutting_edge_robot.py
 ```
 
 **That's it!** The robot will start with autonomous mapping, object detection, and intelligent navigation.
@@ -60,19 +54,16 @@ Talk to your robot using simple commands:
 
 ```bash
 # Navigate to objects
-ros2 topic pub /text_command std_msgs/msg/String "data: 'go to chair'" --once
-
-# Multi-step navigation
-ros2 topic pub /text_command std_msgs/msg/String "data: 'go to chair then table then door'" --once
+ros2 topic pub /text_command std_msgs/String "data: 'go to chair'" --once
 
 # Find objects
-ros2 topic pub /text_command std_msgs/msg/String "data: 'find bottle'" --once
+ros2 topic pub /text_command std_msgs/String "data: 'find bottle'" --once
 
 # List detected objects
-ros2 topic pub /text_command std_msgs/msg/String "data: 'list objects'" --once
+ros2 topic pub /text_command std_msgs/String "data: 'list objects'" --once
 
-# Cancel navigation
-ros2 topic pub /text_command std_msgs/msg/String "data: 'cancel navigation'" --once
+# Get status
+ros2 topic pub /text_command std_msgs/String "data: 'status'" --once
 ```
 
 ### 2. Semantic Object Detection
@@ -90,14 +81,21 @@ The robot uses YOLO v8 to detect and track 80+ object classes:
 
 - **Autonomous Exploration**: Frontier-based exploration for complete coverage
 - **Semantic Maps**: Objects are remembered with positions and confidence
-- **Persistent Storage**: Maps survive robot restarts
-- **LiDAR-Camera Fusion**: Accurate 3D object localization (±10cm accuracy)
+- **Persistent Storage**: Maps survive robot restarts with automatic save
+- **LiDAR-Camera Fusion**: Accurate 3D object localization with weighted averaging
+- **Spatial Indexing**: Fast object queries using KDTree
 
-### 4. Advanced Safety
+### 4. Advanced Safety System
 
-- **Predictive Avoidance**: 3-second collision prediction
-- **Multi-Level Safety**: Critical, Warning, Caution, Normal zones
-- **Human Detection**: Maintains 1.5m safety distance
+- **Behavior Tree Architecture**: Hierarchical safety decision making
+- **Predictive Avoidance**: 3-second collision prediction horizon
+- **Multi-Level Safety Zones**: 
+  - Critical (0.3m) - Emergency stop
+  - Warning (0.8m) - Slow down
+  - Caution (1.5m) - Monitor
+  - Normal (3.0m) - Safe operation
+- **Human Detection**: Special protocols maintaining 1.5m safety distance
+- **Multi-Threat Prioritization**: Handles multiple simultaneous threats
 - **Emergency Stop**: <100ms response time
 
 ---
@@ -190,33 +188,52 @@ The robot uses YOLO v8 to detect and track 80+ object classes:
 
 ### Basic Simulation
 ```bash
-ros2 launch complete_robot_simulation.launch.py
+source install/setup.bash
+ros2 launch robot_gazebo gazebo.launch.py
 ```
-Includes: Gazebo, SLAM, autonomous exploration, RViz
+Includes: Gazebo, robot model, LiDAR, camera, RViz
 
-### With Navigation
+### With SLAM
 ```bash
-ros2 launch complete_robot_simulation.launch.py navigation:=true
+ros2 launch robot_gazebo gazebo.launch.py slam:=true
 ```
-Adds: Nav2 stack for goal-based navigation
+Adds: SLAM Toolbox for real-time mapping
 
-### With Semantic Features
+### With Autonomous Exploration
 ```bash
-ros2 launch robot_semantic_slam cutting_edge_features.launch.py
+ros2 launch robot_navigation autonomous_exploration.launch.py
 ```
-Adds: YOLO detection, semantic SLAM, natural language interface, advanced safety
+Adds: Frontier-based autonomous mapping
 
-### Headless Mode
+### With Semantic SLAM
 ```bash
-ros2 launch complete_robot_simulation.launch.py gui:=false rviz:=false
+ros2 launch robot_semantic_slam semantic_slam.launch.py
 ```
-For: CI/CD, testing, remote operation
+Adds: YOLO detection, semantic mapping, object persistence
+
+### With Advanced Safety
+```bash
+ros2 launch robot_semantic_slam advanced_safety.launch.py
+```
+Adds: Behavior tree safety, human detection, multi-threat handling
+
+### With Enhanced Visualization
+```bash
+ros2 launch robot_semantic_slam enhanced_visualization.launch.py
+```
+Adds: Performance dashboard, 3D point clouds, annotated camera feed
+
+### All Cutting-Edge Features
+```bash
+python3 start_cutting_edge_robot.py
+```
+Includes: Everything above in one integrated system
 
 ### Custom World
 ```bash
-ros2 launch complete_robot_simulation.launch.py world:=house.world
+ros2 launch robot_gazebo gazebo.launch.py world:=house.world
 ```
-Available worlds: `house.world`, `office_small.world`, `warehouse.world`, `outdoor.world`, and 50+ more
+Available worlds: `house.world`, `empty.world`, `mapping_world.world`, `minimal.world`
 
 ---
 
@@ -238,20 +255,36 @@ Available worlds: `house.world`, `office_small.world`, `warehouse.world`, `outdo
 ## 🗂️ Project Structure
 
 ```
-dojo-robot/
+Dojo/
 ├── src/
-│   ├── robot_description/      # URDF models
-│   ├── robot_gazebo/           # Simulation worlds
-│   ├── robot_control/          # Control systems
-│   ├── robot_navigation/       # Nav2 integration
-│   ├── robot_perception/       # Vision systems
-│   └── robot_semantic_slam/    # Semantic SLAM (NEW!)
-│       ├── semantic_slam_node.py       # Main SLAM node
-│       ├── semantic_interface.py       # Natural language
-│       ├── advanced_safety_system.py   # Safety system
-│       └── enhanced_visualizer.py      # Visualization
-├── docs/                       # Documentation
-├── complete_robot_simulation.launch.py
+│   ├── robot_description/          # URDF robot models
+│   ├── robot_gazebo/              # Gazebo simulation
+│   │   ├── launch/                # Launch files
+│   │   ├── worlds/                # Simulation worlds
+│   │   └── rviz/                  # RViz configurations
+│   ├── robot_control/             # Robot control systems
+│   ├── robot_navigation/          # Autonomous navigation
+│   │   ├── autonomous_explorer.py
+│   │   └── autonomous_movement_controller.py
+│   └── robot_semantic_slam/       # Semantic SLAM system
+│       ├── robot_semantic_slam/
+│       │   ├── semantic_slam_node.py       # Main SLAM node
+│       │   ├── semantic_interface.py       # Natural language interface
+│       │   ├── advanced_safety_system.py   # Behavior tree safety
+│       │   ├── enhanced_visualizer.py      # Visualization & dashboard
+│       │   └── pointcloud_processor.py     # 3D point cloud processing
+│       ├── launch/
+│       │   ├── semantic_slam.launch.py
+│       │   ├── advanced_safety.launch.py
+│       │   ├── enhanced_visualization.launch.py
+│       │   └── cutting_edge_features.launch.py
+│       └── test/                   # Unit tests
+├── docs/                          # Documentation
+│   ├── IMPLEMENTATION_GUIDE.md
+│   ├── TROUBLESHOOTING.md
+│   ├── BEHAVIOR_TREE_SAFETY.md
+│   └── RVIZ_3D_VISUALIZATION_GUIDE.md
+├── start_cutting_edge_robot.py    # Quick launcher script
 └── README.md
 ```
 
@@ -315,22 +348,23 @@ cd src/robot_semantic_slam
 python3 -m pytest test/ -v
 ```
 
-### Run Integration Tests
+Available unit tests:
+- `test_lidar_camera_fusion.py` - LiDAR-camera fusion accuracy
+- `test_object_persistence.py` - Object storage and decay
+- `test_semantic_navigation.py` - Navigation integration
+- `test_behavior_tree_safety.py` - Safety system logic
+
+### Manual Testing
+
 ```bash
 # Terminal 1: Launch system
 ros2 launch robot_semantic_slam cutting_edge_features.launch.py
 
-# Terminal 2: Run validation
-python3 test_task_1_1_validation.py  # YOLO integration
-python3 test_task_1_2_validation.py  # LiDAR fusion
-python3 test_task_1_3_validation.py  # Persistence
-python3 test_task_1_4_validation.py  # Navigation
+# Terminal 2: Send test commands
+ros2 topic pub /text_command std_msgs/String "data: 'list objects'" --once
+ros2 topic echo /semantic_map
+ros2 topic echo /safety_status
 ```
-
-### Test Coverage
-- **Unit Tests**: 50+ test cases
-- **Integration Tests**: 4 validation scripts
-- **Coverage**: 80%+ code coverage
 
 ---
 
@@ -338,11 +372,10 @@ python3 test_task_1_4_validation.py  # Navigation
 
 Comprehensive documentation available in `/docs`:
 
-- **Quick Start**: `docs/SEMANTIC_SLAM_QUICK_START.md`
-- **LiDAR Fusion**: `docs/LIDAR_CAMERA_FUSION_REFERENCE.md`
-- **Persistence**: `docs/OBJECT_PERSISTENCE_REFERENCE.md`
-- **Implementation**: `docs/IMPLEMENTATION_GUIDE.md`
-- **Troubleshooting**: `docs/TROUBLESHOOTING.md`
+- **Implementation Guide**: `docs/IMPLEMENTATION_GUIDE.md` - Detailed system architecture
+- **Behavior Tree Safety**: `docs/BEHAVIOR_TREE_SAFETY.md` - Safety system design
+- **3D Visualization**: `docs/RVIZ_3D_VISUALIZATION_GUIDE.md` - Point cloud setup
+- **Troubleshooting**: `docs/TROUBLESHOOTING.md` - Common issues and solutions
 
 ---
 
@@ -396,43 +429,29 @@ See `docs/TROUBLESHOOTING.md` for more solutions.
 
 ## 🗺️ Roadmap
 
-### ✅ Completed (Priority 1)
-- [x] Semantic SLAM with YOLO integration
-- [x] LiDAR-camera fusion for accurate positioning
-- [x] Object persistence with timeout and decay
-- [x] Nav2 integration with multi-step navigation
-- [x] Advanced safety system
-- [x] Natural language interface
+### ✅ Completed
+- [x] Semantic SLAM with YOLO v8 integration
+- [x] LiDAR-camera fusion for accurate 3D positioning
+- [x] Object persistence with confidence decay
+- [x] Behavior tree safety system
+- [x] Human detection with special safety protocols
+- [x] Multi-threat prioritization
+- [x] Natural language command interface
+- [x] 3D point cloud visualization
+- [x] Real-time performance dashboard
+- [x] Autonomous exploration
 
-### 🚧 In Progress (Priority 2)
-- [ ] 3D point cloud visualization
-- [ ] Real-time performance dashboard
-- [ ] Multi-world simulation environments
-- [ ] Reinforcement learning navigation
+### 🚧 In Progress
+- [ ] Complete ROS 2 Jazzy migration
+- [ ] Enhanced visualization features
+- [ ] Performance optimization
 
-### 📋 Planned (Priority 3)
+### 📋 Planned
 - [ ] Multi-robot swarm coordination
-- [ ] Predictive maintenance system
 - [ ] LLM integration for task planning
+- [ ] Reinforcement learning navigation
 - [ ] Digital twin technology
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Please read our contributing guidelines:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+- [ ] Cloud integration for distributed mapping
 
 ---
 
@@ -440,30 +459,11 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - **ROS2 Community** - For the excellent robotics framework
 - **Ultralytics** - For YOLO v8 object detection
-- **Nav2 Team** - For professional navigation stack
 - **Gazebo Team** - For realistic simulation
-
----
-
-## 📞 Contact
-
-- **Issues**: [GitHub Issues](https://github.com/your-repo/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/your-repo/discussions)
-
----
-
-## 🌟 Star History
-
-If you find this project useful, please consider giving it a star! ⭐
+- **SLAM Toolbox** - For robust SLAM implementation
 
 ---
 
 <p align="center">
-  <b>Built with ❤️ using ROS2, Gazebo, and cutting-edge AI</b>
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/github/stars/your-repo?style=social" alt="GitHub stars"/>
-  <img src="https://img.shields.io/github/forks/your-repo?style=social" alt="GitHub forks"/>
-  <img src="https://img.shields.io/github/watchers/your-repo?style=social" alt="GitHub watchers"/>
+  <b>Built with ❤️ using ROS2 Jazzy, Gazebo Harmonic, and cutting-edge AI</b>
 </p>

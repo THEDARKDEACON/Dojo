@@ -46,6 +46,7 @@ setup(
             'enhanced_visualizer = robot_semantic_slam.enhanced_visualizer:main',
             'advanced_safety_system = robot_semantic_slam.advanced_safety_system:main',
             'semantic_interface = robot_semantic_slam.semantic_interface:main',
+            'pointcloud_processor = robot_semantic_slam.pointcloud_processor:main',
         ],
     },
 )

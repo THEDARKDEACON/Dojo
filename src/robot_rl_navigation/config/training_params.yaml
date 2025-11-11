@@ -1,0 +1,73 @@
+training:
+  ros__parameters:
+    # Algorithm settings
+    algorithm: "ppo"  # Options: "ppo", "sac"
+    total_timesteps: 100000
+    learning_rate: 0.0003
+    batch_size: 64
+    n_steps: 2048  # For PPO
+    n_epochs: 10  # For PPO
+    gamma: 0.99  # Discount factor
+    gae_lambda: 0.95  # For PPO
+    
+    # Network architecture
+    policy_network: "MlpPolicy"
+    net_arch: [256, 256]  # Hidden layer sizes
+    activation_fn: "relu"  # Options: "relu", "tanh"
+    
+    # Environment settings
+    max_episode_steps: 1000
+    num_envs: 1  # Number of parallel environments
+    
+    # Reward function weights
+    reward_weights:
+      progress: 1.0  # Reward for moving toward goal
+      safety: 2.0  # Penalty for being near obstacles
+      efficiency: 0.5  # Reward for energy efficiency
+      smoothness: 0.3  # Reward for smooth actions
+      goal_reached: 100.0  # Bonus for reaching goal
+      collision: -100.0  # Penalty for collision
+    
+    # Curriculum learning
+    enable_curriculum: true
+    curriculum_stages:
+      - name: "easy"
+        timesteps: 20000
+        description: "Simple environment with few obstacles"
+        world: "minimal.world"
+        max_obstacles: 3
+        goal_distance_range: [2.0, 5.0]
+        
+      - name: "medium"
+        timesteps: 40000
+        description: "Moderate complexity"
+        world: "house.world"
+        max_obstacles: 6
+        goal_distance_range: [3.0, 8.0]
+        
+      - name: "hard"
+        timesteps: 40000
+        description: "Complex environment with many obstacles"
+        world: "warehouse.world"
+        max_obstacles: 10
+        goal_distance_range: [5.0, 15.0]
+    
+    # Checkpointing
+    save_freq: 10000  # Save checkpoint every N timesteps
+    checkpoint_dir: "models/checkpoints"
+    best_model_save_path: "models/best_model"
+    
+    # Logging
+    tensorboard_log: "./rl_logs"
+    log_interval: 100  # Log every N timesteps
+    verbose: 1  # 0: no output, 1: info, 2: debug
+    
+    # Evaluation
+    eval_freq: 5000  # Evaluate every N timesteps
+    n_eval_episodes: 10  # Number of episodes for evaluation
+    eval_log_path: "./eval_logs"
+    
+    # Early stopping
+    enable_early_stopping: true
+    patience: 50000  # Stop if no improvement for N timesteps
+    min_improvement: 0.01  # Minimum improvement to reset patience

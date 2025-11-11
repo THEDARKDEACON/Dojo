@@ -23,12 +23,13 @@ class PerformanceDashboardNode(Node):
     def __init__(self):
         super().__init__('performance_dashboard')
         
-        # Declare parameters
-        self.declare_parameter('update_rate', 1.0)  # Hz
+        # Declare parameters (optimized for lower overhead)
+        self.declare_parameter('update_rate', 0.5)  # Hz (reduced from 1Hz for lower overhead)
         self.declare_parameter('cpu_warning_threshold', 80.0)  # %
         self.declare_parameter('cpu_critical_threshold', 90.0)  # %
         self.declare_parameter('memory_warning_threshold', 80.0)  # %
         self.declare_parameter('memory_critical_threshold', 90.0)  # %
+        self.declare_parameter('enable_detailed_markers', False)  # Disable detailed markers for performance
         
         # Get parameters
         update_rate = self.get_parameter('update_rate').value
@@ -36,6 +37,7 @@ class PerformanceDashboardNode(Node):
         self.cpu_critical = self.get_parameter('cpu_critical_threshold').value
         self.memory_warning = self.get_parameter('memory_warning_threshold').value
         self.memory_critical = self.get_parameter('memory_critical_threshold').value
+        self.enable_detailed_markers = self.get_parameter('enable_detailed_markers').value
         
         # Performance metrics
         self.metrics = {
@@ -331,7 +333,11 @@ class PerformanceDashboardNode(Node):
         self.metrics_pub.publish(metrics_msg)
     
     def publish_dashboard_markers(self):
-        """Publish dashboard visualization markers for RViz"""
+        """Publish dashboard visualization markers for RViz (optimized)"""
+        # Skip detailed markers if disabled for performance
+        if not self.enable_detailed_markers:
+            return
+        
         markers = MarkerArray()
         
         # Create dashboard panel
@@ -346,9 +352,10 @@ class PerformanceDashboardNode(Node):
         progress_bars = self.create_progress_bars()
         markers.markers.extend(progress_bars)
         
-        # Create visual alert indicators
-        alert_markers = self.create_alert_indicators()
-        markers.markers.extend(alert_markers)
+        # Create visual alert indicators (only if there are alerts)
+        if self.current_alerts:
+            alert_markers = self.create_alert_indicators()
+            markers.markers.extend(alert_markers)
         
         self.dashboard_pub.publish(markers)
     

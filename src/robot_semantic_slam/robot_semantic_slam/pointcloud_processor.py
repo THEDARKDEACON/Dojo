@@ -29,11 +29,12 @@ class PointCloudProcessor(Node):
         self.declare_parameter('z_height', 0.3)  # Default height for 2D scan
         self.declare_parameter('point_size', 0.05)  # Point size in meters
         
-        # Task 3.2: Scan accumulation parameters
-        self.declare_parameter('accumulation_time', 10.0)  # seconds
-        self.declare_parameter('voxel_size', 0.05)  # meters
-        self.declare_parameter('max_points', 1000000)  # Maximum points in dense map
+        # Task 3.2: Scan accumulation parameters (optimized for performance)
+        self.declare_parameter('accumulation_time', 8.0)  # seconds (reduced from 10s)
+        self.declare_parameter('voxel_size', 0.08)  # meters (increased for more aggressive downsampling)
+        self.declare_parameter('max_points', 500000)  # Maximum points in dense map (reduced from 1M)
         self.declare_parameter('enable_accumulation', True)  # Enable dense mapping
+        self.declare_parameter('cleanup_frequency', 2.0)  # Hz for cleanup (optimized)
         
         # Task 3.3: Height-based color mapping parameters
         self.declare_parameter('color_mode', 'height')  # 'height', 'intensity', or 'fixed'
@@ -83,9 +84,10 @@ class PointCloudProcessor(Node):
         publish_period = 1.0 / self.update_rate
         self.publish_timer = self.create_timer(publish_period, self.publish_pointcloud)
         
-        # Timer for dense map cleanup
+        # Timer for dense map cleanup (optimized frequency)
         if self.enable_accumulation:
-            self.cleanup_timer = self.create_timer(1.0, self.cleanup_old_scans)
+            cleanup_freq = self.get_parameter('cleanup_frequency').value
+            self.cleanup_timer = self.create_timer(1.0 / cleanup_freq, self.cleanup_old_scans)
         
         self.get_logger().info(f"🌐 PointCloud Processor initialized")
         self.get_logger().info(f"   Update rate: {self.update_rate} Hz")

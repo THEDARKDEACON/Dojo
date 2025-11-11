@@ -1,0 +1,21 @@
+/**:
+  ros__parameters:
+    # Swarm Coordinator Parameters
+    heartbeat_rate: 1.0  # Hz
+    heartbeat_timeout: 5.0  # seconds
+    auction_timeout: 2.0  # seconds
+    
+    # Formation Controller Parameters
+    formation_type: "line"  # line, wedge, circle, column, diamond
+    spacing: 2.0  # meters
+    formation_radius: 3.0  # meters (for circle formation)
+    control_rate: 10.0  # Hz
+    max_linear_vel: 0.5  # m/s
+    max_angular_vel: 1.0  # rad/s
+    collision_distance: 1.0  # meters
+    
+    # Collaborative Mapper Parameters
+    update_rate: 1.0  # Hz
+    merge_distance_threshold: 1.0  # meters
+    confidence_threshold: 0.5
+    sync_timeout: 0.5  # seconds

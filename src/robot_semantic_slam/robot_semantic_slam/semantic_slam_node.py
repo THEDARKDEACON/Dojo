@@ -33,9 +33,17 @@ class SemanticSLAMNode(Node):
     def __init__(self):
         super().__init__('semantic_slam_node')
         
-        # Initialize YOLO model
+        # Initialize YOLO model with optimization
         self.yolo_model = YOLO('yolov8n.pt')  # Lightweight model for real-time
+        self.yolo_model.fuse()  # Fuse model layers for faster inference
         self.bridge = CvBridge()
+        
+        # Frame skipping for performance optimization
+        self.declare_parameter('detection_frequency', 5.0)  # Hz (reduced from 10Hz)
+        self.declare_parameter('skip_frames', 2)  # Process every Nth frame
+        self.detection_frequency = self.get_parameter('detection_frequency').value
+        self.skip_frames = self.get_parameter('skip_frames').value
+        self.frame_counter = 0
         
         # Semantic map storage with persistence
         self.semantic_map = {}  # {object_id: {class, position, confidence, timestamp, last_seen, detections}}
@@ -97,10 +105,10 @@ class SemanticSLAMNode(Node):
         self.current_map = None
         self.current_scan = None
         
-        # Timers for periodic operations
-        self.publish_timer = self.create_timer(1.0, self.publish_semantic_map)
-        self.cleanup_timer = self.create_timer(60.0, self.cleanup_old_objects)  # Every minute
-        self.persistence_timer = self.create_timer(30.0, self.save_semantic_map)  # Every 30 seconds
+        # Timers for periodic operations (optimized frequencies)
+        self.publish_timer = self.create_timer(0.2, self.publish_semantic_map)  # 5Hz for real-time updates
+        self.cleanup_timer = self.create_timer(120.0, self.cleanup_old_objects)  # Every 2 minutes (reduced frequency)
+        self.persistence_timer = self.create_timer(60.0, self.save_semantic_map)  # Every 60 seconds (reduced frequency)
         
         self.get_logger().info("🚀 Semantic SLAM Node initialized with persistence - Ready for object-aware navigation!")
         self.get_logger().info(f"📁 Persistence file: {self.persistence_file}")
@@ -109,12 +117,17 @@ class SemanticSLAMNode(Node):
         self.get_logger().info(f"🗑️  Min confidence threshold: {self.min_confidence}")
     
     def image_callback(self, msg: Image):
-        """Process camera images with YOLO detection"""
+        """Process camera images with YOLO detection (optimized with frame skipping)"""
+        # Frame skipping optimization
+        self.frame_counter += 1
+        if self.frame_counter % self.skip_frames != 0:
+            return
+        
         try:
             cv_image = self.bridge.imgmsg_to_cv2(msg, "bgr8")
             
-            # Run YOLO detection
-            results = self.yolo_model(cv_image)
+            # Run YOLO detection with optimizations
+            results = self.yolo_model(cv_image, verbose=False, device='cpu')  # Explicit device selection
             
             # Process detections
             annotated_image = cv_image.copy()

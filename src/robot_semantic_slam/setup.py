@@ -48,6 +48,7 @@ setup(
             'semantic_interface = robot_semantic_slam.semantic_interface:main',
             'pointcloud_processor = robot_semantic_slam.pointcloud_processor:main',
             'performance_dashboard = robot_semantic_slam.performance_dashboard:main',
+            'system_monitor = robot_semantic_slam.system_monitor:main',
         ],
     },
 )

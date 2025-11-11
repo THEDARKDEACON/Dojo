@@ -1,0 +1,14 @@
+# Python dependencies for robot_rl_navigation package
+
+# Core RL libraries
+stable-baselines3>=2.0.0
+gymnasium>=0.29.0
+torch>=2.0.0
+
+# Utilities
+numpy>=1.24.0
+tensorboard>=2.13.0
+
+# Optional: For advanced features
+# sb3-contrib  # Additional algorithms
+# optuna  # Hyperparameter optimization

@@ -290,9 +290,9 @@
       <topic>joint_states</topic>
     </plugin>
     
-    <!-- Sensors System for LiDAR and Camera - Using Ogre instead of Ogre2 -->
+    <!-- Sensors System for LiDAR and Camera - Using Ogre2 for Gazebo Harmonic -->
     <plugin filename="gz-sim8-sensors-system" name="gz::sim::systems::Sensors">
-      <render_engine>ogre</render_engine>
+      <render_engine>ogre2</render_engine>
     </plugin>
     
     <!-- Pose Publisher disabled - using DiffDrive plugin for odometry instead -->

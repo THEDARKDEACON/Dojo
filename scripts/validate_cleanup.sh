@@ -160,7 +160,7 @@ validate_hardware_capabilities() {
     # Check for key hardware launch files
     local hw_launch_files=(
         "src/robot_bringup/launch/bringup.launch.py"
-        "src/robot_control/launch/robot_control.launch.py"
+        "src/robot_control/launch/control.launch.py"
     )
     
     for launch_file in "${hw_launch_files[@]}"; do

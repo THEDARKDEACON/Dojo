@@ -37,6 +37,12 @@ def generate_launch_description():
         description='Enable natural language command interface'
     )
     
+    use_performance_dashboard_arg = DeclareLaunchArgument(
+        'use_performance_dashboard',
+        default_value='true',
+        description='Enable real-time performance monitoring dashboard'
+    )
+    
     use_sim_time_arg = DeclareLaunchArgument(
         'use_sim_time',
         default_value='true',
@@ -48,6 +54,7 @@ def generate_launch_description():
     use_enhanced_viz = LaunchConfiguration('use_enhanced_viz')
     use_advanced_safety = LaunchConfiguration('use_advanced_safety')
     use_semantic_interface = LaunchConfiguration('use_semantic_interface')
+    use_performance_dashboard = LaunchConfiguration('use_performance_dashboard')
     use_sim_time = LaunchConfiguration('use_sim_time')
     
     # Semantic SLAM Launch
@@ -119,12 +126,33 @@ def generate_launch_description():
         condition=IfCondition(use_semantic_interface)
     )
     
+    # Performance Dashboard Launch
+    performance_dashboard_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([
+            PathJoinSubstitution([
+                FindPackageShare('robot_semantic_slam'),
+                'launch',
+                'performance_dashboard.launch.py'
+            ])
+        ]),
+        launch_arguments={
+            'use_sim_time': use_sim_time,
+            'update_rate': '1.0',
+            'cpu_warning_threshold': '80.0',
+            'cpu_critical_threshold': '90.0',
+            'memory_warning_threshold': '80.0',
+            'memory_critical_threshold': '90.0'
+        }.items(),
+        condition=IfCondition(use_performance_dashboard)
+    )
+    
     return LaunchDescription([
         # Launch arguments
         use_semantic_slam_arg,
         use_enhanced_viz_arg,
         use_advanced_safety_arg,
         use_semantic_interface_arg,
+        use_performance_dashboard_arg,
         use_sim_time_arg,
         
         # Modular feature launches
@@ -132,4 +160,5 @@ def generate_launch_description():
         enhanced_viz_launch,
         advanced_safety_launch,
         semantic_interface_launch,
+        performance_dashboard_launch,
     ])

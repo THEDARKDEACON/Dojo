@@ -38,9 +38,29 @@ source install/setup.bash
 # Launch basic robot simulation
 ros2 launch robot_gazebo gazebo.launch.py
 
+# Launch with specific world
+ros2 launch robot_gazebo gazebo.launch.py world:=office_small.world
+
 # Or launch with all cutting-edge features
 python3 start_cutting_edge_robot.py
 ```
+
+**World Selection**: Choose from 54 simulation environments:
+```bash
+# Office environment
+ros2 launch robot_gazebo gazebo.launch.py world:=office_small.world
+
+# Warehouse
+ros2 launch robot_gazebo gazebo.launch.py world:=warehouse.world
+
+# Outdoor terrain
+ros2 launch robot_gazebo gazebo.launch.py world:=outdoor.world
+
+# Empty world (fastest)
+ros2 launch robot_gazebo gazebo.launch.py world:=empty.world
+```
+
+See [World Selection Guide](docs/WORLD_SELECTION_GUIDE.md) for all 54 available worlds.
 
 **That's it!** The robot will start with autonomous mapping, object detection, and intelligent navigation.
 

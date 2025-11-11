@@ -81,16 +81,10 @@ def generate_launch_description():
         world_name
     ])
     
-    # Start Gazebo server and client separately for better control
+    # Start Gazebo Harmonic (combined server and client)
     gazebo_server = ExecuteProcess(
-        cmd=['gz', 'sim', '-v', '4', '-s', world_file],
+        cmd=['gz', 'sim', '-v', '4', '-r', world_file],
         output='screen'
-    )
-    
-    gazebo_client = ExecuteProcess(
-        cmd=['gzclient'],
-        output='screen',
-        condition=IfCondition(gui)
     )
     
     # Robot state publisher
@@ -192,7 +186,6 @@ def generate_launch_description():
         # Launch nodes
         config_manager_node,
         gazebo_server,
-        gazebo_client,
         robot_state_publisher_node,
         spawn_robot_node,
         joint_state_publisher_node,

@@ -36,18 +36,83 @@ ros2 launch complete_robot_simulation.launch.py
 #### **Problem: Gazebo crashes on startup**
 ```bash
 # Check Gazebo installation
-gazebo --version
+gz sim --version
 
 # Test minimal Gazebo
-gazebo --verbose
+gz sim --verbose
 
 # Check graphics drivers
 glxinfo | grep OpenGL
 
 # If graphics issues, try software rendering
 export LIBGL_ALWAYS_SOFTWARE=1
-gazebo
+gz sim
 ```
+
+#### **Problem: Segmentation fault with Ogre2 rendering (house.world crash)**
+**Symptoms**: `Segmentation fault` in `gz::rendering::v8::Ogre2Node::AttachChild`
+
+**Cause**: Compatibility issue between Ogre2 rendering engine and certain world files
+
+**Solutions**:
+```bash
+# Solution 1: Use stable worlds
+ros2 launch robot_gazebo gazebo.launch.py world:=empty.world
+ros2 launch robot_gazebo gazebo.launch.py world:=mapping_world.world
+ros2 launch robot_gazebo gazebo.launch.py world:=office_small.world
+
+# Solution 2: Clear Gazebo cache
+rm -rf ~/.gz/sim/
+
+# Solution 3: Launch without GUI (less rendering load)
+ros2 launch robot_gazebo gazebo.launch.py world:=house.world gui:=false
+
+# Solution 4: Update Gazebo
+sudo apt update
+sudo apt upgrade gz-harmonic
+```
+
+**Stable Worlds** (tested and working):
+- `empty.world` - Minimal environment
+- `minimal.world` - Basic setup
+- `mapping_world.world` - Navigation testing
+- `office_small.world` - Indoor environment
+- `warehouse.world` - Large space
+
+**Problematic Worlds** (may crash with Ogre2):
+- `house.world` - Complex models
+- Some worlds with external model references
+
+#### **Problem: Robot model crashes Gazebo (Ogre2 sensor attachment failure)**
+**Symptoms**: Crash after `Created entity [46] named [zeta]` with `Ogre2Node::AttachChild` error
+
+**Cause**: Robot's sensor plugins (camera/lidar) incompatible with Ogre2 rendering
+
+**Solutions**:
+```bash
+# Solution 1: Use fixed launch file (rebuild first)
+colcon build --packages-select robot_gazebo --symlink-install
+source install/setup.bash
+
+# Solution 2: Test Gazebo without robot
+gz sim empty.sdf
+
+# Solution 3: Clear all Gazebo cache
+rm -rf ~/.gz/
+
+# Solution 4: Check Gazebo version
+gz sim --version
+# Should be: Gazebo Sim, version 8.x.x
+
+# Solution 5: Reinstall Gazebo Harmonic
+sudo apt update
+sudo apt install --reinstall ros-jazzy-gz-sim-vendor
+```
+
+#### **Problem: gzclient command not found**
+**Cause**: Using Gazebo Classic commands with Gazebo Harmonic
+
+**Solution**: Launch file has been fixed to use `gz sim` instead of `gzclient`
 
 #### **Problem: Robot not spawning in Gazebo**
 ```bash

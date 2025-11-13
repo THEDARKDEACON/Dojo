@@ -1,0 +1,28 @@
+health_monitor:
+  ros__parameters:
+    update_rate: 1.0  # Hz
+    motor_current_threshold: 5.0  # Amps
+    motor_temp_threshold: 70.0  # Celsius
+    battery_voltage_min: 10.5  # Volts
+    cpu_usage_threshold: 80.0  # Percent
+    memory_usage_threshold: 90.0  # Percent
+    enable_logging: true
+    log_file: 'health_metrics.json'
+
+anomaly_detector:
+  ros__parameters:
+    training_samples: 1000
+    contamination: 0.1  # Expected anomaly rate (10%)
+    anomaly_threshold: -0.5
+    model_file: 'anomaly_model.pkl'
+    auto_train: true
+    retrain_interval: 3600.0  # seconds (1 hour)
+
+maintenance_scheduler:
+  ros__parameters:
+    prediction_horizon: 3600.0  # seconds (1 hour)
+    failure_threshold: 0.8  # 80% probability
+    sequence_length: 50
+    model_file: 'failure_predictor.pkl'
+    maintenance_log: 'maintenance_log.json'
+    enable_adaptive_adjustment: true

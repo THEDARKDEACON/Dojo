@@ -1,0 +1,62 @@
+llm_controller:
+  ros__parameters:
+    # LLM Provider Configuration
+    llm_provider: "ollama"  # Options: "openai", "anthropic", "ollama", "llama"
+    
+    # OpenAI Configuration
+    openai_api_key: ""  # Set via environment variable OPENAI_API_KEY
+    openai_model: "gpt-4"
+    openai_temperature: 0.7
+    openai_max_tokens: 1000
+    
+    # Anthropic Configuration
+    anthropic_api_key: ""  # Set via environment variable ANTHROPIC_API_KEY
+    anthropic_model: "claude-3-sonnet-20240229"
+    anthropic_temperature: 0.7
+    anthropic_max_tokens: 1000
+    
+    # Ollama Configuration (local LLM)
+    ollama_base_url: "http://localhost:11434"
+    ollama_model: "llama2"  # or "mistral", "codellama", etc.
+    ollama_temperature: 0.7
+    
+    # LLaMA Configuration (local)
+    llama_model_path: ""  # Path to local LLaMA model
+    llama_temperature: 0.7
+    llama_max_tokens: 1000
+    
+    # Robot Context
+    robot_capabilities:
+      - "navigate to locations"
+      - "detect and identify objects"
+      - "avoid obstacles"
+      - "follow paths"
+      - "explore environments"
+      - "maintain safety distances"
+    
+    # Task Planning
+    max_task_depth: 5  # Maximum task decomposition depth
+    task_timeout: 300.0  # seconds
+    enable_clarification: true
+    clarification_timeout: 30.0  # seconds
+    
+    # Explanation Generation
+    generate_explanations: true
+    explanation_verbosity: "medium"  # "low", "medium", "high"
+    
+    # Safety
+    require_confirmation: true  # Require confirmation for critical actions
+    critical_actions:
+      - "emergency_stop"
+      - "disable_safety"
+      - "high_speed_navigation"
+    
+    # Performance
+    response_timeout: 10.0  # seconds
+    cache_responses: true
+    cache_size: 100
+    
+    # Logging
+    log_level: "INFO"
+    log_llm_requests: true
+    log_llm_responses: true

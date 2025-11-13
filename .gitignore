@@ -138,8 +138,108 @@ setup.ps1
 *_validation_report.txt
 build_*.log
 test_*.log
+*_TEST_REPORT.md
+*_COMPLETION_SUMMARY.md
+*_COMPLETE.md
+TASK_*.md
+TASKS_*.md
+*_SUMMARY.md
+*_VALIDATION_REPORT.md
+*_QUICKSTART.md
+priority1_validation_report.json
+validation_results.json
+test_report_template.json
+*_test_results.json
+swarm_test_results.json
+rl_navigation_test_results.json
+
+# Development and testing scripts (not for production)
+profile_*.py
+*_test.py
+comprehensive_*.py
+validate_*.py
+verify_*.py
+test_*.py
+
+# Cleanup and planning files (development only)
+CODEBASE_CLEANUP_PLAN.md
+CLEANUP_SUMMARY.md
+*_CLEANUP_REPORT.md
+*_PLAN.md
+*_REPORT.md
+
+# Integration and validation reports (development only)
+PRIORITY1_VALIDATION_REPORT.md
+*_INTEGRATION_REPORT.md
+docs/*_INTEGRATION_REPORT.md
+docs/*_REPORT.md
+docs/CODEBASE_STRUCTURE_ANALYSIS.md
+docs/FILE_STRUCTURE_DIAGRAM.md
 
 # Temporary launch and config files
 *.launch.py.bak
 *.yaml.bak
 *.xml.bak
+
+# Development helper scripts (root level)
+install_vision_deps.sh
+start_cutting_edge_robot.py
+
+# Development scripts directory (keep structure, ignore some files)
+scripts/backup_system.sh
+scripts/rollback_phase.sh
+scripts/validate_cleanup.sh
+scripts/validate_integration.sh
+scripts/validate_system_integration.py
+scripts/validate_system_structure.py
+scripts/verify_optimizations.sh
+scripts/test_*.py
+scripts/*_test.py
+scripts/README_cleanup_tools.md
+
+# Trained models and checkpoints (regenerated)
+*.pkl
+*.h5
+*.keras
+models/
+checkpoints/
+trained_models/
+*_model.pt
+*_policy.zip
+
+# Data files generated during testing
+health_metrics.json
+maintenance_log.json
+anomaly_model.pkl
+failure_predictor.pkl
+
+# Performance profiling outputs
+*.prof
+*.pstats
+profile_output/
+
+# Test data and results (generated during testing)
+test_data/
+test_results/
+test_output/
+validation_output/
+*_results/
+results/
+
+# Simulation recordings and data
+recordings/
+*.bag
+simulation_data/
+
+# Temporary development files
+TODO.md
+NOTES.md
+SCRATCH.md
+WIP_*.md
+DRAFT_*.md
+
+# Local development configuration
+.env
+.env.local
+local_config.yaml
+dev_config.yaml

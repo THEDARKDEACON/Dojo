@@ -48,7 +48,6 @@ setup(
             'emergency_stop_handler.py = robot_control.emergency_stop_handler:main',
             'velocity_limiter.py = robot_control.velocity_limiter:main',
             'watchdog_system.py = robot_control.watchdog_system:main',
-            'test_enhanced_camera_driver.py = robot_control.test_enhanced_camera_driver:main',
         ],
     },
 )

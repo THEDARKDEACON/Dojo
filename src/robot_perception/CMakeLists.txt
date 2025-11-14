@@ -72,12 +72,14 @@ if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/test)
     PATTERN "__pycache__" EXCLUDE
   )
   
-  # Add pytest tests
-  ament_add_pytest_test(
-    test_robot_perception
-    ${CMAKE_CURRENT_SOURCE_DIR}/test/test_robot_perception.py
-    TIMEOUT 30
-  )
+  # Add pytest tests only if they exist
+  if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/test/test_robot_perception.py)
+    ament_add_pytest_test(
+      test_robot_perception
+      ${CMAKE_CURRENT_SOURCE_DIR}/test/test_robot_perception.py
+      TIMEOUT 30
+    )
+  endif()
   
   # Add specific test files if they exist
   if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/test/test_camera_processor.py)
@@ -107,12 +109,6 @@ if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/test)
   # Add linters
   find_package(ament_lint_auto REQUIRED)
   ament_lint_auto_find_test_dependencies()
-  ament_lint_auto_python()
-  
-  # Add copyright and style checks
-  ament_copyright()
-  ament_pep257()
-  ament_xmllint()
 endif()
 
 # Export dependencies

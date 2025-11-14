@@ -23,7 +23,6 @@ install(PROGRAMS
   robot_control/emergency_stop_handler.py
   robot_control/velocity_limiter.py
   robot_control/watchdog_system.py
-  robot_control/test_enhanced_camera_driver.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

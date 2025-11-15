@@ -101,6 +101,12 @@ def generate_launch_description():
         description='Enable natural language command interface'
     )
     
+    gaussian_splatting_arg = DeclareLaunchArgument(
+        'gaussian_splatting',
+        default_value='true',
+        description='Enable Gaussian Splatting 3D reconstruction'
+    )
+    
     # Additional features
     autonomous_exploration_arg = DeclareLaunchArgument(
         'autonomous_exploration',
@@ -129,6 +135,7 @@ def generate_launch_description():
     performance_dashboard = LaunchConfiguration('performance_dashboard')
     advanced_safety = LaunchConfiguration('advanced_safety')
     semantic_interface = LaunchConfiguration('semantic_interface')
+    gaussian_splatting = LaunchConfiguration('gaussian_splatting')
     autonomous_exploration = LaunchConfiguration('autonomous_exploration')
     vision = LaunchConfiguration('vision')
     
@@ -155,6 +162,7 @@ def generate_launch_description():
             '📊 Real-Time Performance Dashboard\n',
             '🛡️  Advanced Safety System with Behavior Trees\n',
             '🗣️  Natural Language Command Interface\n',
+            '✨ Gaussian Splatting 3D Reconstruction\n',
             '🌍 Multi-World Support\n',
             '='*80, '\n',
             'World: ', world, '\n',
@@ -223,6 +231,7 @@ def generate_launch_description():
             'use_performance_dashboard': performance_dashboard,
             'use_advanced_safety': advanced_safety,
             'use_semantic_interface': semantic_interface,
+            'use_gaussian_splatting': gaussian_splatting,
         }.items(),
     )
     
@@ -283,13 +292,13 @@ def generate_launch_description():
     # SYSTEM MONITOR
     # ============================================================================
     
-    system_monitor = Node(
-        package='robot_semantic_slam',
-        executable='system_monitor.py',
-        name='system_monitor',
-        output='screen',
-        parameters=[{'use_sim_time': use_sim_time}],
-    )
+    # system_monitor = Node(
+    #     package='robot_semantic_slam',
+    #     executable='system_monitor.py',
+    #     name='system_monitor',
+    #     output='screen',
+    #     parameters=[{'use_sim_time': use_sim_time}],
+    # )
     
     # ============================================================================
     # LAUNCH DESCRIPTION
@@ -308,6 +317,7 @@ def generate_launch_description():
         performance_dashboard_arg,
         advanced_safety_arg,
         semantic_interface_arg,
+        gaussian_splatting_arg,
         autonomous_exploration_arg,
         vision_arg,
         
@@ -350,9 +360,9 @@ def generate_launch_description():
             actions=[rviz_node]
         ),
         
-        # System monitor
-        TimerAction(
-            period=2.0,
-            actions=[system_monitor]
-        ),
+        # System monitor (disabled - executable not found)
+        # TimerAction(
+        #     period=2.0,
+        #     actions=[system_monitor]
+        # ),
     ])

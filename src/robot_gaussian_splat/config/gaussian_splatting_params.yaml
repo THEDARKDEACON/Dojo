@@ -1,0 +1,55 @@
+gaussian_splatting:
+  ros__parameters:
+    # Sensor synchronization settings
+    sync_tolerance: 0.05  # seconds - maximum time difference for sensor alignment
+    
+    # Topic names for sensor inputs
+    camera_topic: "/camera/image_raw"  # RGB camera image topic
+    camera_info_topic: "/camera/camera_info"  # Camera calibration info topic
+    pointcloud_topic: "/scan"  # LiDAR point cloud topic (can also use /velodyne_points)
+    
+    # Visualization settings
+    visualization_enabled: true  # Enable/disable real-time RViz visualization
+    visualization_rate: 1.0  # Hz - how often to publish visualization markers
+    visualization_limit: 10000  # Maximum number of primitives to visualize (for performance)
+    
+    # Reconstruction management settings
+    max_primitives: 1000000  # Maximum primitives before automatic downsampling
+    downsample_voxel_size: 0.05  # meters - voxel size for downsampling (adaptive)
+    
+    # Splat generation parameters
+    neighbor_count: 10  # Number of neighbors for covariance computation
+    neighbor_radius: 0.1  # meters - search radius for neighbor finding
+    min_neighbors: 3  # Minimum neighbors required for valid covariance
+    default_opacity: 0.8  # Default opacity when density cannot be computed
+    
+    # Output settings
+    output_directory: "~/gaussian_splats"  # Default directory for exports
+    auto_save_enabled: false  # Automatically save model periodically
+    auto_save_interval: 300.0  # seconds - interval for auto-save (if enabled)
+    
+    # Performance settings
+    processing_queue_size: 10  # Queue size for synchronized messages
+    enable_threading: true  # Use threading for parallel processing
+    max_processing_time: 0.1  # seconds - max time per frame processing
+    
+    # Quality settings
+    filter_invalid_points: true  # Remove NaN/Inf points from point clouds
+    min_point_distance: 0.1  # meters - minimum distance from camera
+    max_point_distance: 50.0  # meters - maximum distance from camera
+    color_validation: true  # Validate color values are in valid range
+    
+    # Diagnostic settings
+    publish_diagnostics: true  # Publish system diagnostics
+    diagnostic_rate: 1.0  # Hz - diagnostic publishing rate
+    publish_progress: true  # Publish reconstruction progress percentage
+    log_level: "info"  # Options: "debug", "info", "warn", "error"
+    
+    # Frame settings
+    fixed_frame: "map"  # Fixed frame for visualization
+    camera_frame: "camera_link"  # Camera frame ID
+    
+    # Advanced settings
+    use_octree_indexing: true  # Enable octree spatial indexing
+    octree_max_depth: 10  # Maximum octree depth
+    memory_limit_mb: 4096  # Soft memory limit in MB (triggers downsampling)

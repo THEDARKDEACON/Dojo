@@ -10,29 +10,37 @@
 
 ## 🌟 Overview
 
-Dojo Robot is a state-of-the-art autonomous mobile robot built on ROS2 Jazzy and Gazebo Harmonic. It combines cutting-edge technologies including **semantic SLAM**, **YOLO object detection**, **LiDAR-camera fusion**, **behavior tree safety**, and **autonomous navigation** to create an intelligent system capable of understanding and navigating complex environments.
+Dojo Robot is a state-of-the-art autonomous mobile robot built on ROS2 Jazzy and Gazebo Harmonic. It combines cutting-edge technologies including **semantic SLAM**, **YOLO object detection**, **Gaussian Splatting 3D reconstruction**, **LiDAR-camera fusion**, **behavior tree safety**, and **autonomous navigation** to create an intelligent system capable of understanding, mapping, and navigating complex environments with photorealistic 3D reconstruction.
 
-### 🎉 Priority 1 Features - OPTIMIZED & PRODUCTION-READY ✅
+### 🎉 Cutting-Edge Features - PRODUCTION-READY ✅
 
-**Status**: All Priority 1 features are integrated, optimized, and production-ready!
+**Status**: All core features are integrated, optimized, and production-ready!
 
+#### Core Perception & Mapping
 - ✅ **Semantic SLAM** - Object-aware mapping with YOLO v8 integration (optimized 5Hz detection)
+- ✅ **Gaussian Splatting 3D Reconstruction** - Photorealistic scene reconstruction from camera + LiDAR
 - ✅ **3D Point Cloud Visualization** - Real-time and accumulated views with height-based coloring
-- ✅ **Performance Dashboard** - Real-time system monitoring with alerts
-- ✅ **Advanced Safety System** - Behavior tree-based multi-threat handling
-- ✅ **Natural Language Interface** - Semantic navigation commands
+- ✅ **LiDAR-Camera Fusion** - Synchronized sensor data processing with temporal alignment
+
+#### Intelligence & Safety
+- ✅ **Advanced Safety System** - Behavior tree-based multi-threat handling with predictive collision avoidance
+- ✅ **Natural Language Interface** - Semantic navigation commands and object queries
+- ✅ **Performance Dashboard** - Real-time system monitoring with CPU/memory alerts
+
+#### System Integration
 - ✅ **Multi-World Support** - 50+ simulation environments
-- ✅ **Unified Launch System** - Single entry point with feature flags
+- ✅ **Unified Launch System** - Single entry point with modular feature flags
 - ✅ **System Monitoring** - Health tracking and diagnostics
 - ✅ **Performance Optimization** - 10Hz operation with <2GB RAM
 
 **Performance**: 30% CPU reduction | 500MB memory reduction | All targets met
 
-See [Priority 1 Integration Report](docs/PRIORITY1_INTEGRATION_REPORT.md) and [Optimization Report](TASK_9.2_OPTIMIZATIONS.md) for details.
+See [Priority 1 Integration Report](docs/PRIORITY1_INTEGRATION_REPORT.md) and [Gaussian Splatting Guide](docs/GAUSSIAN_SPLATTING_GUIDE.md) for details.
 
 ### Key Capabilities
 
 - 🗺️ **Semantic SLAM** - Object-aware mapping with YOLO v8 integration
+- ✨ **Gaussian Splatting** - Photorealistic 3D scene reconstruction from synchronized sensors
 - 🎯 **Intelligent Navigation** - Natural language commands and semantic waypoints
 - 👁️ **Computer Vision** - Real-time object detection (80+ classes)
 - 🛡️ **Advanced Safety** - Multi-layer predictive collision avoidance with behavior trees
@@ -40,24 +48,33 @@ See [Priority 1 Integration Report](docs/PRIORITY1_INTEGRATION_REPORT.md) and [O
 - 🚀 **Autonomous Exploration** - Frontier-based mapping with obstacle avoidance
 - 📊 **Real-time Monitoring** - Performance dashboard and 3D visualization
 - 🧠 **Human Detection** - Special safety protocols for human proximity
+- 📦 **3D Model Export** - Export reconstructions in PLY and JSON formats
 
 ---
 
 ## ⚡ Quick Start
 
-### Priority 1 Features (Fully Integrated) ✅
+### Launch the Complete System
 
-Launch the complete system with all cutting-edge features:
-
+**Option 1: Simple Python Launcher (Recommended)**
 ```bash
-# Build the workspace
+# Build the workspace (first time only)
 cd ~/Downloads/Dojo
 colcon build --symlink-install
 
+# Launch with default world (mapping_world)
+./launch_dojo_robot.py
+
+# Launch with specific world
+./launch_dojo_robot.py house
+```
+
+**Option 2: Direct ROS2 Launch**
+```bash
 # Source the workspace
 source install/setup.bash
 
-# Launch complete system with all Priority 1 features
+# Launch complete system with all features
 ros2 launch robot_gazebo complete_robot_simulation.launch.py
 
 # Or launch with specific world
@@ -66,13 +83,14 @@ ros2 launch robot_gazebo complete_robot_simulation.launch.py world:=house
 
 **What's Included**:
 - ✅ Semantic SLAM with YOLO object detection
+- ✅ Gaussian Splatting 3D reconstruction
 - ✅ 3D point cloud visualization
 - ✅ Real-time performance dashboard
 - ✅ Advanced safety system with behavior trees
 - ✅ Natural language command interface
 - ✅ Multi-world support (50+ environments)
 
-See [Quick Start Guide](QUICKSTART_PRIORITY1.md) for detailed instructions.
+See [Quick Start Guide](QUICKSTART.md) for detailed instructions.
 
 **World Selection**: Choose from 54 simulation environments:
 ```bash
@@ -97,7 +115,36 @@ See [World Selection Guide](docs/WORLD_SELECTION_GUIDE.md) for all 54 available 
 
 ## 🎯 What Can It Do?
 
-### 1. Natural Language Navigation
+### 1. Photorealistic 3D Reconstruction
+
+Generate Gaussian Splat reconstructions of mapped environments:
+
+```bash
+# Save current reconstruction to PLY format
+ros2 service call /gaussian_splat/save_model robot_gaussian_splat/srv/SaveSplatModel \
+    "{filepath: '/tmp/reconstruction.ply', format: 'ply'}"
+
+# Save to JSON format (includes full parameters)
+ros2 service call /gaussian_splat/save_model robot_gaussian_splat/srv/SaveSplatModel \
+    "{filepath: '/tmp/reconstruction.json', format: 'json'}"
+
+# Get reconstruction statistics
+ros2 service call /gaussian_splat/get_stats robot_gaussian_splat/srv/GetSplatStats
+
+# Clear reconstruction and start fresh
+ros2 service call /gaussian_splat/clear_model std_srvs/srv/Trigger
+```
+
+**Features**:
+- Real-time reconstruction from camera + LiDAR
+- Synchronized sensor data (50ms tolerance)
+- Automatic downsampling at 1M primitives
+- Export to PLY/JSON for external tools
+- RViz visualization of Gaussian primitives
+
+See [Gaussian Splatting Guide](docs/GAUSSIAN_SPLATTING_GUIDE.md) for details.
+
+### 2. Natural Language Navigation
 
 Talk to your robot using simple commands:
 
@@ -115,7 +162,7 @@ ros2 topic pub /text_command std_msgs/String "data: 'list objects'" --once
 ros2 topic pub /text_command std_msgs/String "data: 'status'" --once
 ```
 
-### 2. Semantic Object Detection
+### 3. Semantic Object Detection
 
 The robot uses YOLO v8 to detect and track 80+ object classes:
 
@@ -126,7 +173,7 @@ The robot uses YOLO v8 to detect and track 80+ object classes:
 - **Vehicles**: car, bicycle, motorcycle, bus, truck
 - And many more!
 
-### 3. Intelligent Mapping
+### 4. Intelligent Mapping
 
 - **Autonomous Exploration**: Frontier-based exploration for complete coverage
 - **Semantic Maps**: Objects are remembered with positions and confidence
@@ -134,7 +181,7 @@ The robot uses YOLO v8 to detect and track 80+ object classes:
 - **LiDAR-Camera Fusion**: Accurate 3D object localization with weighted averaging
 - **Spatial Indexing**: Fast object queries using KDTree
 
-### 4. Advanced Safety System
+### 5. Advanced Safety System
 
 - **Behavior Tree Architecture**: Hierarchical safety decision making
 - **Predictive Avoidance**: 3-second collision prediction horizon
@@ -152,26 +199,26 @@ The robot uses YOLO v8 to detect and track 80+ object classes:
 ## 🏗️ System Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                     Dojo Robot System                       │
-└─────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────┐
+│                        Dojo Robot System                            │
+└─────────────────────────────────────────────────────────────────────┘
 
-┌──────────────┐  ┌──────────────┐  ┌──────────────┐
-│   Sensors    │  │  Perception  │  │  Navigation  │
-│              │  │              │  │              │
-│ • LiDAR      │─▶│ • YOLO v8    │─▶│ • Nav2       │
-│ • Camera     │  │ • SLAM       │  │ • Semantic   │
-│ • IMU        │  │ • Fusion     │  │ • Multi-step │
-└──────────────┘  └──────────────┘  └──────────────┘
-                         │                   │
-                         ▼                   ▼
-                  ┌──────────────┐  ┌──────────────┐
-                  │    Safety    │  │ Persistence  │
-                  │              │  │              │
-                  │ • Predictive │  │ • Disk Save  │
-                  │ • Multi-tier │  │ • Timeout    │
-                  │ • Emergency  │  │ • Decay      │
-                  └──────────────┘  └──────────────┘
+┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐
+│   Sensors    │  │  Perception  │  │ Reconstruction│  │  Navigation  │
+│              │  │              │  │              │  │              │
+│ • LiDAR      │─▶│ • YOLO v8    │─▶│ • Gaussian   │─▶│ • Nav2       │
+│ • Camera     │  │ • SLAM       │  │   Splatting  │  │ • Semantic   │
+│ • IMU        │  │ • Fusion     │  │ • 3D Models  │  │ • Multi-step │
+└──────────────┘  └──────────────┘  └──────────────┘  └──────────────┘
+                         │                   │                  │
+                         ▼                   ▼                  ▼
+                  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐
+                  │    Safety    │  │ Persistence  │  │Visualization │
+                  │              │  │              │  │              │
+                  │ • Predictive │  │ • Disk Save  │  │ • RViz       │
+                  │ • Multi-tier │  │ • Timeout    │  │ • Dashboard  │
+                  │ • Emergency  │  │ • Decay      │  │ • 3D Splats  │
+                  └──────────────┘  └──────────────┘  └──────────────┘
 ```
 
 ---
@@ -260,6 +307,7 @@ ros2 launch robot_gazebo complete_robot_simulation.launch.py \
 
 **Available Feature Flags**:
 - `semantic_slam` - YOLO object detection and semantic mapping
+- `gaussian_splatting` - Gaussian Splatting 3D reconstruction
 - `pointcloud_viz` - 3D point cloud visualization
 - `performance_dashboard` - Real-time system monitoring
 - `advanced_safety` - Behavior tree safety system
@@ -290,6 +338,11 @@ ros2 launch robot_semantic_slam advanced_safety.launch.py
 **Performance Dashboard Only**:
 ```bash
 ros2 launch robot_semantic_slam performance_dashboard.launch.py
+```
+
+**Gaussian Splatting Only**:
+```bash
+ros2 launch robot_gaussian_splat gaussian_splatting.launch.py
 ```
 
 **All Cutting-Edge Features (Alternative)**:
@@ -328,25 +381,38 @@ Dojo/
 │   ├── robot_navigation/          # Autonomous navigation
 │   │   ├── autonomous_explorer.py
 │   │   └── autonomous_movement_controller.py
-│   └── robot_semantic_slam/       # Semantic SLAM system
-│       ├── robot_semantic_slam/
-│       │   ├── semantic_slam_node.py       # Main SLAM node
-│       │   ├── semantic_interface.py       # Natural language interface
-│       │   ├── advanced_safety_system.py   # Behavior tree safety
-│       │   ├── enhanced_visualizer.py      # Visualization & dashboard
-│       │   └── pointcloud_processor.py     # 3D point cloud processing
+│   ├── robot_semantic_slam/       # Semantic SLAM system
+│   │   ├── robot_semantic_slam/
+│   │   │   ├── semantic_slam_node.py       # Main SLAM node
+│   │   │   ├── semantic_interface.py       # Natural language interface
+│   │   │   ├── advanced_safety_system.py   # Behavior tree safety
+│   │   │   ├── enhanced_visualizer.py      # Visualization & dashboard
+│   │   │   └── pointcloud_processor.py     # 3D point cloud processing
+│   │   ├── launch/
+│   │   │   ├── semantic_slam.launch.py
+│   │   │   ├── advanced_safety.launch.py
+│   │   │   ├── enhanced_visualization.launch.py
+│   │   │   └── cutting_edge_features.launch.py
+│   │   └── test/                   # Unit tests
+│   └── robot_gaussian_splat/      # Gaussian Splatting reconstruction
+│       ├── robot_gaussian_splat/
+│       │   ├── gaussian_splatting_node.py  # Main reconstruction node
+│       │   ├── sensor_synchronizer.py      # Camera-LiDAR sync
+│       │   ├── splat_generator.py          # Gaussian primitive generation
+│       │   ├── reconstruction_manager.py   # Model management
+│       │   └── visualization_publisher.py  # RViz markers
 │       ├── launch/
-│       │   ├── semantic_slam.launch.py
-│       │   ├── advanced_safety.launch.py
-│       │   ├── enhanced_visualization.launch.py
-│       │   └── cutting_edge_features.launch.py
+│       │   └── gaussian_splatting.launch.py
+│       ├── config/
+│       │   └── gaussian_splatting_params.yaml
 │       └── test/                   # Unit tests
 ├── docs/                          # Documentation
 │   ├── IMPLEMENTATION_GUIDE.md
 │   ├── TROUBLESHOOTING.md
 │   ├── BEHAVIOR_TREE_SAFETY.md
+│   ├── GAUSSIAN_SPLATTING_GUIDE.md
 │   └── RVIZ_3D_VISUALIZATION_GUIDE.md
-├── start_cutting_edge_robot.py    # Quick launcher script
+├── launch_dojo_robot.py          # Simple launcher script
 └── README.md
 ```
 
@@ -389,6 +455,9 @@ ros2 run robot_semantic_slam semantic_slam_node --ros-args \
 | `/navigation_progress` | Float32 | Progress (0-100%) |
 | `/semantic_response` | String | Command responses |
 | `/performance_metrics` | Float32MultiArray | System metrics |
+| `/gaussian_splat/visualization` | MarkerArray | Gaussian primitives |
+| `/gaussian_splat/diagnostics` | DiagnosticArray | Reconstruction status |
+| `/gaussian_splat/progress` | Float32 | Reconstruction progress |
 
 ### Subscribed Topics
 
@@ -464,7 +533,9 @@ ros2 topic echo /safety_status
 
 Comprehensive documentation available in `/docs`:
 
+- **Launch System Guide**: `LAUNCH_SYSTEM_GUIDE.md` - Complete launch system reference
 - **Implementation Guide**: `docs/IMPLEMENTATION_GUIDE.md` - Detailed system architecture
+- **Gaussian Splatting Guide**: `docs/GAUSSIAN_SPLATTING_GUIDE.md` - 3D reconstruction system
 - **Behavior Tree Safety**: `docs/BEHAVIOR_TREE_SAFETY.md` - Safety system design
 - **3D Visualization**: `docs/RVIZ_3D_VISUALIZATION_GUIDE.md` - Point cloud setup
 - **Troubleshooting**: `docs/TROUBLESHOOTING.md` - Common issues and solutions

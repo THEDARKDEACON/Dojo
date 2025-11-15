@@ -1,0 +1,8 @@
+# Request (empty)
+---
+# Response
+int64 primitive_count
+float64 memory_usage_mb
+float64[] bounds_min
+float64[] bounds_max
+int64 frames_processed

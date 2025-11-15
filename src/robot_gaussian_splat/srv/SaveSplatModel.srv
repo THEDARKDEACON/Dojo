@@ -1,0 +1,8 @@
+# Request
+string filepath
+string format  # "ply" or "json"
+---
+# Response
+bool success
+string message
+int64 primitive_count

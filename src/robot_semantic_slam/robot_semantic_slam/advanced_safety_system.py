@@ -292,7 +292,7 @@ class AdvancedSafetySystem(Node):
         self.prediction_timer = self.create_timer(0.2, self.update_predictions)  # 5 Hz
         self.behavior_tree_timer = self.create_timer(0.05, self.tick_behavior_tree)  # 20 Hz
         self.visualization_timer = self.create_timer(0.2, self.publish_human_markers)  # 5 Hz
-        self.threat_viz_timer = self.create_timer(0.2, self.publish_threat_markers)  # 5 Hz
+        self.threat_viz_timer = self.create_timer(0.2, self.publish_human_markers)  # 5 Hz
         
         self.get_logger().info("🛡️ Advanced Safety System initialized - Multi-layer protection active!")
         self.get_logger().info(f"👤 Human safety distance: {self.human_safety_distance}m")

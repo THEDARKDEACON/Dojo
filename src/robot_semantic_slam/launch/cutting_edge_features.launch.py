@@ -43,6 +43,12 @@ def generate_launch_description():
         description='Enable real-time performance monitoring dashboard'
     )
     
+    use_gaussian_splatting_arg = DeclareLaunchArgument(
+        'use_gaussian_splatting',
+        default_value='true',
+        description='Enable Gaussian Splatting 3D reconstruction'
+    )
+    
     use_sim_time_arg = DeclareLaunchArgument(
         'use_sim_time',
         default_value='true',
@@ -55,6 +61,7 @@ def generate_launch_description():
     use_advanced_safety = LaunchConfiguration('use_advanced_safety')
     use_semantic_interface = LaunchConfiguration('use_semantic_interface')
     use_performance_dashboard = LaunchConfiguration('use_performance_dashboard')
+    use_gaussian_splatting = LaunchConfiguration('use_gaussian_splatting')
     use_sim_time = LaunchConfiguration('use_sim_time')
     
     # Semantic SLAM Launch
@@ -146,6 +153,26 @@ def generate_launch_description():
         condition=IfCondition(use_performance_dashboard)
     )
     
+    # Gaussian Splatting Launch
+    gaussian_splatting_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([
+            PathJoinSubstitution([
+                FindPackageShare('robot_gaussian_splat'),
+                'launch',
+                'gaussian_splatting.launch.py'
+            ])
+        ]),
+        launch_arguments={
+            'use_sim_time': use_sim_time,
+            'camera_topic': '/camera/image_raw',
+            'camera_info_topic': '/camera/camera_info',
+            'pointcloud_topic': '/scan',
+            'visualization_enabled': 'true',
+            'launch_rviz': 'false'
+        }.items(),
+        condition=IfCondition(use_gaussian_splatting)
+    )
+    
     return LaunchDescription([
         # Launch arguments
         use_semantic_slam_arg,
@@ -153,6 +180,7 @@ def generate_launch_description():
         use_advanced_safety_arg,
         use_semantic_interface_arg,
         use_performance_dashboard_arg,
+        use_gaussian_splatting_arg,
         use_sim_time_arg,
         
         # Modular feature launches
@@ -161,4 +189,5 @@ def generate_launch_description():
         advanced_safety_launch,
         semantic_interface_launch,
         performance_dashboard_launch,
+        gaussian_splatting_launch,
     ])

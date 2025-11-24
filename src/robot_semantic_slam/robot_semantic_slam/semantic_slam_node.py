@@ -25,7 +25,16 @@ from typing import Dict, List, Tuple, Optional
 from scipy.spatial import KDTree
 import tf2_ros
 import tf2_geometry_msgs
-from ultralytics import YOLO
+import sys
+try:
+    from ultralytics import YOLO
+    YOLO_AVAILABLE = True
+except ImportError as e:
+    print(f"DEBUG: Failed to import ultralytics: {e}", file=sys.stderr)
+    print(f"DEBUG: sys.executable: {sys.executable}", file=sys.stderr)
+    print(f"DEBUG: sys.path: {sys.path}", file=sys.stderr)
+    YOLO_AVAILABLE = False
+    YOLO = None
 
 class SemanticSLAMNode(Node):
     """Advanced Semantic SLAM with object-aware navigation"""
@@ -34,8 +43,16 @@ class SemanticSLAMNode(Node):
         super().__init__('semantic_slam_node')
         
         # Initialize YOLO model with optimization
-        self.yolo_model = YOLO('yolov8n.pt')  # Lightweight model for real-time
-        self.yolo_model.fuse()  # Fuse model layers for faster inference
+        if YOLO_AVAILABLE:
+            try:
+                self.yolo_model = YOLO('yolov8n.pt')  # Lightweight model for real-time
+                self.yolo_model.fuse()  # Fuse model layers for faster inference
+            except Exception as e:
+                self.get_logger().warn(f"Failed to load YOLO model: {e}. YOLO detection disabled.")
+                self.yolo_model = None
+        else:
+            self.get_logger().warn("YOLO not available. Object detection will be disabled.")
+            self.yolo_model = None
         self.bridge = CvBridge()
         
         # Frame skipping for performance optimization
@@ -127,6 +144,8 @@ class SemanticSLAMNode(Node):
             cv_image = self.bridge.imgmsg_to_cv2(msg, "bgr8")
             
             # Run YOLO detection with optimizations
+            if self.yolo_model is None:
+                return  # Skip detection if YOLO not available
             results = self.yolo_model(cv_image, verbose=False, device='cpu')  # Explicit device selection
             
             # Process detections
@@ -762,12 +781,15 @@ def main(args=None):
     except KeyboardInterrupt:
         node.get_logger().info("Shutting down - saving semantic map...")
         node.save_semantic_map()
+    except Exception as e:
+        node.get_logger().error(f'Error in semantic SLAM node: {e}')
     finally:
         # Final save before shutdown
-        node.save_semantic_map()
-        node.get_logger().info(f"💾 Final save complete. {len(node.semantic_map)} objects persisted.")
-        node.destroy_node()
-        rclpy.shutdown()
+        if 'node' in locals():
+            node.save_semantic_map()
+            node.get_logger().info(f"💾 Final save complete. {len(node.semantic_map)} objects persisted.")
+            node.destroy_node()
+        # Don't call rclpy.shutdown() - let launch system handle it
 
 if __name__ == '__main__':
     main()

@@ -1013,21 +1013,6 @@ class AdvancedSafetySystem(Node):
         cosy_cosp = 1 - 2 * (orientation.y * orientation.y + orientation.z * orientation.z)
         return np.arctan2(siny_cosp, cosy_cosp)
 
-def main(args=None):
-    rclpy.init(args=args)
-    node = AdvancedSafetySystem()
-    
-    try:
-        rclpy.spin(node)
-    except KeyboardInterrupt:
-        pass
-    finally:
-        node.destroy_node()
-        rclpy.shutdown()
-
-if __name__ == '__main__':
-    main()
-
     def publish_threat_markers(self):
         """Publish RViz markers for all active threats with prioritization visualization"""
         from visualization_msgs.msg import Marker, MarkerArray
@@ -1217,10 +1202,12 @@ def main(args=None):
     try:
         rclpy.spin(node)
     except KeyboardInterrupt:
-        pass
+        node.get_logger().info('Shutting down advanced safety system...')
+    except Exception as e:
+        node.get_logger().error(f'Error in advanced safety system: {e}')
     finally:
         node.destroy_node()
-        rclpy.shutdown()
+        # Don't call rclpy.shutdown() - let launch system handle it
 
 if __name__ == '__main__':
     main()

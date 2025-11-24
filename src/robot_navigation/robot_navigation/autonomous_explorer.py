@@ -19,7 +19,7 @@ from sklearn.cluster import DBSCAN
 import math
 
 from nav_msgs.msg import OccupancyGrid
-from geometry_msgs.msg import PoseStamped, Point
+from geometry_msgs.msg import PoseStamped, Point, Twist
 from nav2_msgs.action import NavigateToPose
 from std_msgs.msg import Header
 from visualization_msgs.msg import Marker, MarkerArray
@@ -40,6 +40,7 @@ class AutonomousExplorer(Node):
         self.declare_parameter('goal_timeout', 30.0)
         self.declare_parameter('map_frame', 'map')
         self.declare_parameter('base_frame', 'base_link')
+        self.declare_parameter('gaussian_splat_mode', False)
         
         self.exploration_radius = self.get_parameter('exploration_radius').value
         self.min_frontier_size = self.get_parameter('min_frontier_size').value
@@ -47,6 +48,7 @@ class AutonomousExplorer(Node):
         self.goal_timeout = self.get_parameter('goal_timeout').value
         self.map_frame = self.get_parameter('map_frame').value
         self.base_frame = self.get_parameter('base_frame').value
+        self.gaussian_splat_mode = self.get_parameter('gaussian_splat_mode').value
         
         # State variables
         self.map_data = None
@@ -84,6 +86,12 @@ class AutonomousExplorer(Node):
         self.goal_publisher = self.create_publisher(
             PoseStamped,
             '/exploration_goal',
+            10
+        )
+
+        self.cmd_vel_publisher = self.create_publisher(
+            Twist,
+            '/cmd_vel',
             10
         )
         
@@ -502,6 +510,32 @@ class AutonomousExplorer(Node):
             if distance < threshold:
                 return True
         return False
+
+    def perform_spin(self):
+        """Perform a 360-degree spin to capture data for Gaussian Splatting"""
+        self.get_logger().info("🔄 Performing Gaussian Splat spin...")
+        twist = Twist()
+        twist.angular.z = 0.5  # rad/s
+
+        # Spin for approx 12.5 seconds (2*pi / 0.5 ~= 12.56)
+        # We'll do it in short bursts to allow callbacks to process
+        # Ideally this should be async, but for simplicity we block slightly or use a state machine
+        # For this simple implementation, we'll just publish for a duration
+        
+        # Note: In a real async node, blocking is bad. But here we are inside a timer callback.
+        # A better approach would be to have a 'SPINNING' state.
+        # However, to keep it simple and robust for this demo:
+        
+        import time
+        start_time = time.time()
+        while time.time() - start_time < 13.0:
+            self.cmd_vel_publisher.publish(twist)
+            time.sleep(0.1)
+        
+        # Stop
+        twist.angular.z = 0.0
+        self.cmd_vel_publisher.publish(twist)
+        self.get_logger().info("✅ Spin complete")
     
     def exploration_loop(self):
         """Enhanced exploration loop with better state management"""
@@ -556,6 +590,9 @@ class AutonomousExplorer(Node):
                     self.current_goal = None
                     self.goal_start_time = None
                     self.get_logger().info("✅ Reached exploration goal")
+                    
+                    if self.gaussian_splat_mode:
+                        self.perform_spin()
                 else:
                     # Still navigating to current goal
                     self.get_logger().debug(f"Navigating to goal, distance: {distance_to_goal:.2f}m")

@@ -42,6 +42,7 @@ setup(
             'autonomous_explorer = robot_navigation.autonomous_explorer:main',
             'autonomous_movement_controller = robot_navigation.autonomous_movement_controller:main',
             'simple_autonomous_movement = robot_navigation.simple_autonomous_movement:main',
+            'semantic_navigator = robot_navigation.semantic_navigator:main',
         ],
     },
 )

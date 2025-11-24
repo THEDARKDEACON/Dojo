@@ -243,3 +243,8 @@ DRAFT_*.md
 .env.local
 local_config.yaml
 dev_config.yaml
+
+# Data collection
+data/
+rosbags/
+

@@ -26,6 +26,7 @@
   <depend>tf2_ros</depend>
   <depend>tf2_geometry_msgs</depend>
   <depend>rcl_interfaces</depend>
+  <depend>robot_navigation_interfaces</depend>
   
   <!-- Navigation2 stack -->
   <depend>navigation2</depend>

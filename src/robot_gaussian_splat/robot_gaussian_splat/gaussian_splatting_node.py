@@ -487,12 +487,13 @@ def main(args=None):
         node = GaussianSplattingNode()
         rclpy.spin(node)
     except KeyboardInterrupt:
-        pass
+        node.get_logger().info('Shutting down Gaussian Splatting node...')
     except Exception as e:
-        print(f"Error in GaussianSplattingNode: {e}")
+        node.get_logger().error(f'Error in Gaussian Splatting node: {e}')
     finally:
-        if rclpy.ok():
-            rclpy.shutdown()
+        if 'node' in locals():
+            node.destroy_node()
+        # Don't call rclpy.shutdown() - let launch system handle it
 
 
 if __name__ == '__main__':

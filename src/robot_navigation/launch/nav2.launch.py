@@ -30,7 +30,9 @@ def generate_launch_description():
         parameters=[
             {'use_sim_time': use_sim_time},
             {'autostart': True},
-            {'node_names': ['controller_server', 'planner_server', 'recoveries_server', 'bt_navigator']}
+            {'node_names': ['controller_server', 'planner_server', 'behavior_server', 'bt_navigator']},
+            {'bond_timeout': 4.0},  # Increase timeout for slower systems
+            {'attempt_respawn_reconnection': True},  # Retry on failure
         ]
     )
     
@@ -40,7 +42,7 @@ def generate_launch_description():
         executable='controller_server',
         output='screen',
         parameters=[params_file],
-        remappings=[('cmd_vel', 'cmd_vel')]
+        remappings=[('cmd_vel', '/rosbot_xl_base_controller/cmd_vel')]  # ROSbot XL topic
     )
     
     # Planner server
@@ -59,6 +61,14 @@ def generate_launch_description():
         parameters=[params_file]
     )
     
+    # Behavior server (replaces deprecated recoveries_server)
+    behavior_server = Node(
+        package='nav2_behaviors',
+        executable='behavior_server',
+        output='screen',
+        parameters=[params_file]
+    )
+    
     return LaunchDescription([
         DeclareLaunchArgument(
             'use_sim_time',
@@ -70,8 +80,10 @@ def generate_launch_description():
             default_value=params_file,
             description='Full path to the ROS2 parameters file to use'
         ),
-        lifecycle_manager,
         controller_server,
         planner_server,
+        behavior_server,
         bt_navigator,
+        lifecycle_manager,  # Last - manages above nodes
     ])
+

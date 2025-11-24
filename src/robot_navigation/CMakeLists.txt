@@ -169,5 +169,31 @@ install(
   DESTINATION share/${PROJECT_NAME}
 )
 
-# Register the package with ament
+# Install Python executables
+install(PROGRAMS robot_navigation/autonomous_explorer.py
+  DESTINATION lib/${PROJECT_NAME}
+  RENAME autonomous_explorer
+)
+install(PROGRAMS robot_navigation/autonomous_movement_controller.py
+  DESTINATION lib/${PROJECT_NAME}
+  RENAME autonomous_movement_controller
+)
+install(PROGRAMS robot_navigation/semantic_navigator.py
+  DESTINATION lib/${PROJECT_NAME}
+  RENAME semantic_navigator
+)
+install(PROGRAMS robot_navigation/frame_validator.py
+  DESTINATION lib/${PROJECT_NAME}
+  RENAME frame_validator
+)
+install(PROGRAMS robot_navigation/map_diagnostic_node.py
+  DESTINATION lib/${PROJECT_NAME}
+  RENAME map_diagnostic_node
+)
+install(PROGRAMS robot_navigation/map_status_monitor.py
+  DESTINATION lib/${PROJECT_NAME}
+  RENAME map_status_monitor
+)
+
 ament_package()
+

@@ -39,8 +39,6 @@ find_package(std_srvs REQUIRED)
 # Robot description and control
 find_package(urdf REQUIRED)
 find_package(xacro REQUIRED)
-find_package(robot_description REQUIRED)
-find_package(robot_control REQUIRED)
 
 # Install Python package using setup.py
 ament_python_install_package(${PROJECT_NAME})
@@ -151,8 +149,6 @@ ament_export_dependencies(
   xacro
   rcl_interfaces
   std_srvs
-  robot_description
-  robot_control
 )
 
 # Register the package with ament

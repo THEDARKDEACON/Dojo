@@ -1,0 +1,14 @@
+{
+    "box": {
+        "centroid": {"x": 5.2, "y": 3.1},
+        "radius": 0.5
+    },
+    "chair": {
+        "centroid": {"x": 2.0, "y": 2.0},
+        "radius": 0.3
+    },
+    "door": {
+        "centroid": {"x": 8.0, "y": 5.0},
+        "radius": 0.8
+    }
+}

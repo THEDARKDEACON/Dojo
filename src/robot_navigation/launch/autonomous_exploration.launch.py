@@ -20,6 +20,7 @@ def generate_launch_description():
     exploration_radius = LaunchConfiguration('exploration_radius', default='3.0')
     min_frontier_size = LaunchConfiguration('min_frontier_size', default='15')
     robot_radius = LaunchConfiguration('robot_radius', default='0.22')
+    gaussian_splat_mode = LaunchConfiguration('gaussian_splat_mode', default='false')
     
     # Autonomous Explorer Node
     autonomous_explorer = Node(
@@ -34,7 +35,8 @@ def generate_launch_description():
             {'robot_radius': robot_radius},
             {'goal_timeout': 45.0},
             {'map_frame': 'map'},
-            {'base_frame': 'base_link'}
+            {'base_frame': 'base_link'},
+            {'gaussian_splat_mode': gaussian_splat_mode}
         ]
     )
     
@@ -59,6 +61,11 @@ def generate_launch_description():
             'robot_radius',
             default_value='0.22',
             description='Robot radius for collision checking'
+        ),
+        DeclareLaunchArgument(
+            'gaussian_splat_mode',
+            default_value='false',
+            description='Enable optimization for Gaussian Splatting (360 spins)'
         ),
         
         # Launch nodes

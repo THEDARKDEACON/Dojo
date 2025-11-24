@@ -305,10 +305,12 @@ def main(args=None):
     try:
         rclpy.spin(node)
     except KeyboardInterrupt:
-        pass
+        node.get_logger().info('Shutting down enhanced visualizer...')
+    except Exception as e:
+        node.get_logger().error(f'Error in enhanced visualizer: {e}')
     finally:
         node.destroy_node()
-        rclpy.shutdown()
+        # Don't call rclpy.shutdown() - let launch system handle it
 
 if __name__ == '__main__':
     main()

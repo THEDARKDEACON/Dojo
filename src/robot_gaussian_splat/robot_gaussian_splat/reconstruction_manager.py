@@ -10,7 +10,13 @@ import json
 import logging
 from typing import List, Dict, Optional
 import numpy as np
-from plyfile import PlyData, PlyElement
+try:
+    from plyfile import PlyData, PlyElement
+    PLYFILE_AVAILABLE = True
+except ImportError:
+    PLYFILE_AVAILABLE = False
+    PlyData = None
+    PlyElement = None
 
 from .data_models import GaussianPrimitive, SplatModel
 
@@ -238,6 +244,8 @@ class ReconstructionManager:
                 vertex_array = np.array(vertex_data, dtype=vertex_dtype)
                 
                 # Create PLY element
+                if not PLYFILE_AVAILABLE:
+                    raise ImportError("plyfile module not available. Install with: pip install plyfile")
                 vertex_element = PlyElement.describe(vertex_array, 'vertex')
                 
                 # Write PLY file

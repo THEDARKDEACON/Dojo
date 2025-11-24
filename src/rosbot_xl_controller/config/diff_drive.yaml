@@ -1,0 +1,68 @@
+/**/controller_manager:
+  ros__parameters:
+    use_sim_time: true
+    update_rate: 25 # Hz
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+    rosbot_xl_base_controller:
+      type: diff_drive_controller/DiffDriveController
+    imu_broadcaster:
+      type: imu_sensor_broadcaster/IMUSensorBroadcaster
+
+/**/imu_broadcaster:
+  ros__parameters:
+    tf_frame_prefix_enable: false
+    use_namespace_as_sensor_name_prefix: true
+    sensor_name: imu
+    frame_id: imu_link
+    static_covariance_orientation: [1.9e-3, 0.0, 0.0, 0.0, 1.9e-3, 0.0, 0.0, 0.0, 1.9e-3] # Values taken from datasheet
+    static_covariance_angular_velocity: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0e-3] # Values measured experimentally
+    static_covariance_linear_acceleration: [6.4e-2, 0.0, 0.0, 0.0, 2.2e-2, 0.0, 0.0, 0.0, 0.0] # Values measured experimentally
+
+/**/rosbot_xl_base_controller:
+  ros__parameters:
+    left_wheel_names: [fl_wheel_joint, rl_wheel_joint]
+    right_wheel_names: [fr_wheel_joint, rr_wheel_joint]
+
+    wheel_separation: 0.248
+    wheel_radius: 0.048
+
+    wheel_separation_multiplier: 1.0
+    left_wheel_radius_multiplier: 1.0
+    right_wheel_radius_multiplier: 1.0
+
+    publish_rate: 50.0
+    odom_frame_id: odom
+    base_frame_id: base_link
+    pose_covariance_diagonal : [0.001, 0.001, 0.0, 0.0, 0.0, 0.01]
+    twist_covariance_diagonal: [0.001, 0.0, 0.0, 0.0, 0.0, 0.01]
+
+    open_loop: true
+    enable_odom_tf: true
+    use_stamped_vel: false
+
+    cmd_vel_timeout: 0.5
+    #publish_limited_velocity: true
+    #velocity_rolling_window_size: 10
+
+    # Velocity and acceleration limits
+    # Whenever a min_* is unspecified, default to -max_*
+    linear.x.has_velocity_limits: true
+    linear.x.has_acceleration_limits: true
+    linear.x.has_jerk_limits: false
+    linear.x.max_velocity: 1.0
+    linear.x.min_velocity: -1.0
+    linear.x.max_acceleration: 1.0
+    linear.x.max_jerk: 0.0
+    linear.x.min_jerk: 0.0
+
+    angular.z.has_velocity_limits: true
+    angular.z.has_acceleration_limits: true
+    angular.z.has_jerk_limits: false
+    angular.z.max_velocity: 1.0
+    angular.z.min_velocity: -1.0
+    angular.z.max_acceleration: 1.0
+    angular.z.min_acceleration: -1.0
+    angular.z.max_jerk: 0.0
+    angular.z.min_jerk: 0.0

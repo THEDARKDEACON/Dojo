@@ -220,7 +220,7 @@ class PointCloudProcessor(Node):
         # Pack point data
         buffer = []
         for point in points:
-            buffer.append(struct.pack('fffi', point[0], point[1], point[2], point[3]))
+            buffer.append(struct.pack('fffI', point[0], point[1], point[2], point[3]))
         
         pointcloud.data = b''.join(buffer)
         
@@ -432,21 +432,6 @@ class PointCloudProcessor(Node):
         
         return pointcloud
 
-def main(args=None):
-    rclpy.init(args=args)
-    node = PointCloudProcessor()
-    
-    try:
-        rclpy.spin(node)
-    except KeyboardInterrupt:
-        pass
-    finally:
-        node.destroy_node()
-        rclpy.shutdown()
-
-if __name__ == '__main__':
-    main()
-
     def get_point_color(self, x: float, y: float, z: float, intensity: float) -> int:
         """
         Get RGB color for a point based on color mode
@@ -607,3 +592,20 @@ if __name__ == '__main__':
         """
         color_value = int(intensity * 255)
         return struct.unpack('I', struct.pack('BBBB', color_value, color_value, color_value, 255))[0]
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = PointCloudProcessor()
+    
+    try:
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        node.get_logger().info('Shutting down pointcloud processor...')
+    except Exception as e:
+        node.get_logger().error(f'Error in pointcloud processor: {e}')
+    finally:
+        node.destroy_node()
+        # Don't call rclpy.shutdown() - let launch system handle it
+
+if __name__ == '__main__':
+    main()

@@ -1,0 +1,26 @@
+{
+    "chair_1": {
+        "centroid": [
+            2.5,
+            1.5
+        ],
+        "radius": 0.4,
+        "class": "chair"
+    },
+    "table_1": {
+        "centroid": [
+            4.0,
+            3.0
+        ],
+        "radius": 0.8,
+        "class": "table"
+    },
+    "sofa_1": {
+        "centroid": [
+            1.0,
+            4.0
+        ],
+        "radius": 1.0,
+        "class": "sofa"
+    }
+}

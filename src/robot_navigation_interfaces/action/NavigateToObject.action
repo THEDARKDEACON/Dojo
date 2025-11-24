@@ -1,0 +1,9 @@
+# Goal
+string object_name
+---
+# Result
+bool success
+string message
+---
+# Feedback
+string current_status

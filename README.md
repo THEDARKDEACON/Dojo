@@ -19,7 +19,7 @@ Whether you are creating digital twins, inspecting industrial facilities, or dev
 
 ## 🏗️ System Architecture
 
-At the heart of Dojo is a modular, event-driven architecture designed for scalability and robustness.
+At the heart of Dojo is a modular, event-driven architecture designed for scalability and robustness. The system is orchestrated by a central launch file (`launch_dojo_rosbot_xl.py`) that manages the lifecycle of all subsystems.
 
 ![System Architecture](docs/images/system_architecture.png)
 
@@ -30,24 +30,34 @@ At the heart of Dojo is a modular, event-driven architecture designed for scalab
 *   **🧭 Navigation Stack**: Leverages the industry-standard **Nav2** stack for dynamic path planning, obstacle avoidance, and behavior trees.
 *   **🤖 Autonomy Engine**: Custom-built modules for frontier-based exploration (`AutonomousExplorer`) and semantic decision making (`SemanticNavigator`).
 *   **📸 3D Reconstruction**: A specialized pipeline for capturing high-quality datasets optimized for **Gaussian Splatting**, enabling the creation of photorealistic 3D scenes.
+*   **🛡️ Advanced Safety**: A behavior tree-based safety system that overrides commands when threats are detected (cliffs, dynamic obstacles).
 
 ---
 
 ## 🚀 Key Features
 
 ### 1. Autonomous Frontier Exploration
+
 Forget manual joystick control. Dojo's **Autonomous Explorer** intelligently identifies unknown areas (frontiers) and plans optimal paths to map the entire environment without human intervention.
+
+![Autonomous Exploration Concept](docs/images/autonomous_exploration.png)
+
 *   **Algorithm**: DBSCAN clustering for robust frontier detection.
 *   **Optimization**: Information gain-based target selection.
 *   **Recovery**: Smart recovery behaviors for stuck situations.
 
 ### 2. Semantic Navigation
+
 Move beyond "go to (x, y)". Dojo understands objects.
+
+![Semantic Navigation Concept](docs/images/semantic_navigation.png)
+
 *   **Command**: "Go to the nearest chair."
 *   **Logic**: The **Semantic Navigator** queries the semantic map, filters candidate approach points based on the costmap, and navigates to the optimal viewing angle.
 *   **Integration**: Seamlessly integrates with YOLO-based object detection systems.
 
 ### 3. Gaussian Splatting Optimization
+
 Create stunning 3D digital twins.
 *   **Survey Planner**: Executes "crab walk" patterns to maximize parallax and coverage.
 *   **Blur Reduction**: Automatically manages velocity and camera exposure to ensure crisp image capture.
@@ -55,38 +65,22 @@ Create stunning 3D digital twins.
 
 ---
 
-## 💡 Real-World Use Cases
+## 📂 Project Structure
 
-### 🏠 Real Estate & Digital Twins
-**Scenario**: A real estate agency needs high-fidelity 3D tours of properties.
-*   **Dojo Solution**: Deploy a Dojo-powered robot to autonomously scan the property. The **Survey Planner** ensures 100% coverage with optimal camera angles. The resulting data is processed into a Gaussian Splat, allowing potential buyers to explore the property in photorealistic 3D from their browser.
-
-### 🏭 Industrial Inspection
-**Scenario**: A warehouse manager needs to verify inventory and check for safety hazards.
-*   **Dojo Solution**: The robot performs nightly autonomous patrols. Using **Semantic Navigation**, it visits specific high-value assets ("Go to Rack A", "Inspect Generator"). If it encounters an unexpected obstacle, it dynamically replans.
-
-### 🏥 Healthcare Logistics
-**Scenario**: A hospital robot needs to deliver supplies to specific rooms.
-*   **Dojo Solution**: Instead of hardcoded coordinates, the robot uses semantic understanding. "Deliver to Room 101". The system looks up "Room 101" in its semantic map, plans a path, and navigates safely around patients and staff using Nav2's dynamic obstacle avoidance.
-
----
-
-## 📦 Modules Breakdown
-
-### `dojo_navigation`
-The brain of the movement.
-*   **`survey_planner`**: Generates coverage paths (lawnmower, spiral) for data collection. Implements the "crab walk" control logic.
-*   **`autonomous_explorer`**: The decision maker for mapping unknown environments.
-
-### `dojo_semantic`
-The layer of understanding.
-*   **`dynamic_navigator`**: Handles high-level semantic goals. Interfaces with the costmap to ensure approach points are reachable and safe.
-*   **`semantic_map_manager`**: (Planned) CRUD operations for the semantic database.
-
-### `robot_navigation` & `robot_gazebo`
-The foundation.
-*   **Launch Files**: Modular launch system for simulation and hardware.
-*   **Configs**: Tuned parameters for Nav2 and SLAM.
+```text
+Dojo/
+├── launch_dojo_rosbot_xl.py       # MAIN ENTRY POINT: Launches the entire system
+├── src/
+│   ├── rosbot_xl_gazebo/          # Simulation environment and robot spawn logic
+│   ├── rosbot_xl_description/     # URDF, Xacro, and meshes for the robot
+│   ├── rosbot_xl_controller/      # Control configurations (Diff Drive / Mecanum)
+│   ├── robot_navigation/          # Nav2 configs, Autonomous Explorer node
+│   ├── robot_semantic_slam/       # Semantic mapping, YOLO integration, Safety System
+│   ├── robot_gaussian_splat/      # Data collection for 3D reconstruction
+│   └── husarion_gz_worlds/        # Gazebo worlds (office, warehouse, etc.)
+├── scripts/                       # Helper scripts (install dependencies, tools)
+└── docs/                          # Documentation and images
+```
 
 ---
 
@@ -128,24 +122,27 @@ ros2 launch launch_dojo_rosbot_xl.py \
     rviz:=true
 ```
 
-### 🤖 Running on Hardware
-
-**Deploy to ROSbot XL**
+**Mecanum Drive Mode (Experimental)**
 ```bash
-ros2 launch launch_dojo_rosbot_xl_hardware.py \
-    slam:=true \
-    navigation:=true
+ros2 launch launch_dojo_rosbot_xl.py mecanum:=true navigation:=true
 ```
+*Note: Mecanum drive is stable but currently has a known limitation with Odometry publication in Gazebo Harmonic.*
 
 ---
 
-## 📊 Configuration & Tuning
+## 🔧 Troubleshooting
 
-Dojo is highly configurable. Key parameters can be found in `config/`:
+### Common Issues
 
-*   **`nav2_params.yaml`**: Adjust robot speed, inflation radius, and costmap layers.
-*   **`slam_config.yaml`**: Tune map resolution and update frequencies.
-*   **`autonomous_exploration.yaml`**: Set frontier detection thresholds and exploration boundaries.
+1.  **"NameError: name 'autonomous_explorer' is not defined"**
+    *   **Fix**: This has been resolved in the latest release. Ensure you have sourced the workspace (`source install/setup.bash`) after building.
+
+2.  **Robot not moving with Teleop**
+    *   **Cause**: Conflict between `ros_gz_bridge` and `gz_ros2_control` on the `/cmd_vel` topic.
+    *   **Fix**: The bridge for `/cmd_vel` is now disabled by default in `spawn.launch.py` to allow the controller to handle commands directly.
+
+3.  **Gazebo crashes on launch**
+    *   **Fix**: Ensure `gpu_lidar` is used and the world file has the `<render_engine>ogre2</render_engine>` tag in the sensors plugin.
 
 ---
 

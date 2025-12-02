@@ -19,11 +19,12 @@ def generate_launch_description():
     use_sim_time = LaunchConfiguration('use_sim_time', default='true')
     exploration_radius = LaunchConfiguration('exploration_radius', default='3.0')
     min_frontier_size = LaunchConfiguration('min_frontier_size', default='15')
-    robot_radius = LaunchConfiguration('robot_radius', default='0.22')
-    gaussian_splat_mode = LaunchConfiguration('gaussian_splat_mode', default='false')
+    exploration_interval = LaunchConfiguration('exploration_interval')
+    robot_radius = LaunchConfiguration('robot_radius')
+    gaussian_splat_mode = LaunchConfiguration('gaussian_splat_mode')
     
     # Autonomous Explorer Node
-    autonomous_explorer = Node(
+    autonomous_explorer_node = Node(
         package='robot_navigation',
         executable='autonomous_explorer',
         name='autonomous_explorer',
@@ -32,12 +33,15 @@ def generate_launch_description():
             {'use_sim_time': use_sim_time},
             {'exploration_radius': exploration_radius},
             {'min_frontier_size': min_frontier_size},
+            {'exploration_interval': exploration_interval},
             {'robot_radius': robot_radius},
             {'goal_timeout': 45.0},
             {'map_frame': 'map'},
             {'base_frame': 'base_link'},
             {'gaussian_splat_mode': gaussian_splat_mode}
-        ]
+        ],
+        arguments=['--ros-args', '--log-level', 'debug'],
+        respawn=True
     )
     
     return LaunchDescription([
@@ -54,8 +58,13 @@ def generate_launch_description():
         ),
         DeclareLaunchArgument(
             'min_frontier_size',
-            default_value='15',
+            default_value='5',
             description='Minimum number of points to form a frontier cluster'
+        ),
+        DeclareLaunchArgument(
+            'exploration_interval',
+            default_value='0.5',
+            description='Time interval between exploration loops (seconds)'
         ),
         DeclareLaunchArgument(
             'robot_radius',
@@ -69,5 +78,5 @@ def generate_launch_description():
         ),
         
         # Launch nodes
-        autonomous_explorer,
+        autonomous_explorer_node,
     ])

@@ -27,14 +27,17 @@ from launch.substitutions import (
     PythonExpression,
 )
 from launch_ros.actions import Node, SetParameter
+from launch_ros.descriptions import ParameterValue
 from launch_ros.substitutions import FindPackageShare
-
 
 def launch_setup(context, *args, **kwargs):
     namespace = LaunchConfiguration("namespace").perform(context)
+    
     controller_manager_name = "controller_manager"
     if namespace != "":
         controller_manager_name = namespace + "/" + controller_manager_name
+
+    use_sim_time_param = ParameterValue(LaunchConfiguration("use_sim"), value_type=bool)
 
     joint_state_broadcaster_spawner = Node(
         package="controller_manager",
@@ -48,6 +51,7 @@ def launch_setup(context, *args, **kwargs):
             "--namespace",
             namespace,
         ],
+        parameters=[{'use_sim_time': use_sim_time_param}],
     )
 
     robot_controller_spawner = Node(
@@ -66,6 +70,7 @@ def launch_setup(context, *args, **kwargs):
             "--namespace",
             namespace,
         ],
+        parameters=[{'use_sim_time': use_sim_time_param}],
     )
 
     delay_robot_controller_spawner_after_joint_state_broadcaster_spawner = RegisterEventHandler(
@@ -90,6 +95,7 @@ def launch_setup(context, *args, **kwargs):
             "--namespace",
             namespace,
         ],
+        parameters=[{'use_sim_time': use_sim_time_param}],
     )
 
     delay_imu_broadcaster_spawner_after_robot_controller_spawner = RegisterEventHandler(
@@ -186,9 +192,9 @@ def generate_launch_description():
     )'''
     controller_config_name = PythonExpression(
         [
-            "'mecanum_drive_controller.yaml' if ",
+            "'mecanum_drive_controller.yaml' if 'true' in '",
             mecanum,
-            " else 'diff_drive.yaml'",
+            "'.lower() else 'diff_drive.yaml'",
         ]
     )
 
@@ -238,7 +244,9 @@ def generate_launch_description():
             robot_description,
             controller_config_path,
         ],
+        arguments=['--ros-args', '--log-level', 'debug'],
         remappings=[
+            ("robot_description", "/robot_description"),
             ("imu_sensor_node/imu", "/_imu/data_raw"),
             ("~/motors_cmd", "/_motors_cmd"),
             ("~/motors_response", "/_motors_response"),
@@ -255,7 +263,7 @@ def generate_launch_description():
         package="robot_state_publisher",
         executable="robot_state_publisher",
         output="both",
-        parameters=[robot_description],
+        parameters=[robot_description, {'use_sim_time': use_sim}],
         remappings=[("/tf", "tf"), ("/tf_static", "tf_static")],
         namespace=namespace,
     )
@@ -270,7 +278,7 @@ def generate_launch_description():
             declare_use_sim_arg,
             declare_simulation_engine_arg,
             SetParameter(name="use_sim_time", value=use_sim),
-            control_node,
+            # control_node,
             robot_state_pub_node,
             OpaqueFunction(function=launch_setup),
         ]

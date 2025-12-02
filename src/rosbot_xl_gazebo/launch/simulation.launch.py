@@ -99,7 +99,7 @@ def launch_setup(context, *args, **kwargs):
             ),
             launch_arguments={
                 "mecanum": mecanum,
-                "use_sim": "True",
+                "use_sim_time": LaunchConfiguration("use_sim_time"),
                 "lidar_model": lidar_model,
                 "camera_model": camera_model,
                 "simulation_engine": "ignition-gazebo",
@@ -209,9 +209,14 @@ def generate_launch_description():
             declare_world_arg,
             declare_headless_arg,
             declare_robots_arg,
+            DeclareLaunchArgument(
+                "use_sim_time",
+                default_value="True",
+                description="Use simulation time",
+            ),
             # Sets use_sim_time for all nodes started below
             # (doesn't work for nodes started from ignition gazebo)
-            SetParameter(name="use_sim_time", value=True),
+            SetParameter(name="use_sim_time", value=LaunchConfiguration("use_sim_time")),
             OpaqueFunction(function=launch_setup),
         ]
     )

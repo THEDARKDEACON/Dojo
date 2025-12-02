@@ -51,6 +51,8 @@
         <topic>${ns}imu/data_raw</topic>
         <visualize>false</visualize>
         <enable_metrics>false</enable_metrics>
+        <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu">
+        </plugin>
         <frame_id>imu_link</frame_id>
         <ignition_frame_id>imu_link</ignition_frame_id>
         <imu>

@@ -67,7 +67,7 @@
       <hardware>
         <xacro:if value="${use_sim}">
           <xacro:if value="${simulation_engine == 'ignition-gazebo'}">
-            <plugin>ign_ros2_control/IgnitionSystem</plugin>
+            <plugin>gz_ros2_control/GazeboSimSystem</plugin>
           </xacro:if>
           <xacro:if value="${simulation_engine == 'webots'}">
             <plugin>webots_ros2_control::Ros2ControlSystem</plugin>
@@ -132,6 +132,10 @@
       <xacro:if value="${simulation_engine == 'ignition-gazebo'}">
         <xacro:gazebo.controller config_file="${controller_config_file}" namespace="${namespace}" />
         <xacro:gazebo.imu reference_frame="imu_link" namespace="${namespace}" />
+        
+        <!-- Gazebo Drive Plugins removed to avoid conflict with ros2_control -->
+        <!-- ros2_control handles drive and odometry via MecanumDriveController or DiffDriveController -->
+
       </xacro:if>
       <xacro:if value="${simulation_engine == 'webots'}">
         <xacro:webots.controller />

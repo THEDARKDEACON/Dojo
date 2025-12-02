@@ -96,8 +96,14 @@
             <friction>
               <ode>
                 <mu>1.0</mu>
-                <mu2>0.0</mu2>
-                <fdir1 ignition:expressed_in="base_link">${fdir}</fdir1>
+                <xacro:if value="${mecanum}">
+                  <mu2>0.0</mu2>
+                  <fdir1 ignition:expressed_in="base_link">${fdir}</fdir1>
+                </xacro:if>
+                <xacro:unless value="${mecanum}">
+                  <mu2>1.0</mu2>
+                  <fdir1 ignition:expressed_in="base_link">1 0 0</fdir1>
+                </xacro:unless>
               </ode>
             </friction>
           </surface>

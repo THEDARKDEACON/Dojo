@@ -8,13 +8,16 @@ Full feature set: ROSbot XL URDF + All Dojo Advanced Features
 import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.conditions import IfCondition
+from launch.conditions import IfCondition, UnlessCondition
 from launch.actions import (
     DeclareLaunchArgument,
     IncludeLaunchDescription,
     TimerAction,
     LogInfo,
+    ExecuteProcess,
+    GroupAction,
 )
+from launch_ros.actions import Node, SetParameter, SetRemap
 
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution, PythonExpression
@@ -37,75 +40,81 @@ def generate_launch_description():
     
     use_sim_time_arg = DeclareLaunchArgument(
         'use_sim_time',
-        default_value='true',
+        default_value='True',
         description='Use simulation time'
     )
     
     gui_arg = DeclareLaunchArgument(
         'gui',
-        default_value='true',
+        default_value='True',
         description='Start Gazebo GUI'
     )
     
     rviz_arg = DeclareLaunchArgument(
         'rviz',
-        default_value='true',
+        default_value='True',
         description='Launch RViz visualization'
+    )
+    
+    mecanum_arg = DeclareLaunchArgument(
+        'mecanum',
+        default_value='False',
+        description='Use Mecanum wheels (holonomic drive)'
     )
     
     # Core features
     slam_arg = DeclareLaunchArgument(
         'slam',
-        default_value='true',
+        default_value='True',
         description='Enable SLAM mapping'
     )
     
     navigation_arg = DeclareLaunchArgument(
         'navigation',
-        default_value='false',
+        default_value='True',
         description='Enable Nav2 navigation stack'
     )
     
     # Dojo advanced features
     semantic_slam_arg = DeclareLaunchArgument(
         'semantic_slam',
-        default_value='true',
+        default_value='True',
         description='Enable semantic SLAM with YOLO object detection'
     )
     
     pointcloud_viz_arg = DeclareLaunchArgument(
         'pointcloud_viz',
-        default_value='true',
+        default_value='True',
         description='Enable 3D point cloud visualization'
     )
     
     performance_dashboard_arg = DeclareLaunchArgument(
         'performance_dashboard',
-        default_value='true',
+        default_value='True',
         description='Enable real-time performance dashboard'
     )
     
     advanced_safety_arg = DeclareLaunchArgument(
         'advanced_safety',
-        default_value='true',
+        default_value='True',
         description='Enable advanced safety system with behavior trees'
     )
     
     semantic_interface_arg = DeclareLaunchArgument(
         'semantic_interface',
-        default_value='true',
+        default_value='True',
         description='Enable natural language command interface'
     )
     
     gaussian_splatting_arg = DeclareLaunchArgument(
         'gaussian_splatting',
-        default_value='true',
-        description='Enable Gaussian Splatting 3D reconstruction'
+        default_value='False',
+        description='Enable Gaussian Splatting data collection mode'
     )
     
     autonomous_exploration_arg = DeclareLaunchArgument(
         'autonomous_exploration',
-        default_value='true',
+        default_value='True',
         description='Enable autonomous exploration for mapping'
     )
 
@@ -117,6 +126,7 @@ def generate_launch_description():
     use_sim_time = LaunchConfiguration('use_sim_time')
     gui = LaunchConfiguration('gui')
     rviz = LaunchConfiguration('rviz')
+    mecanum = LaunchConfiguration('mecanum')
     slam = LaunchConfiguration('slam')
     navigation = LaunchConfiguration('navigation')
     semantic_slam = LaunchConfiguration('semantic_slam')
@@ -167,6 +177,22 @@ def generate_launch_description():
     )
     
     # ============================================================================
+    # CLOCK GENERATOR (Using Lidar Trigger)
+    # ============================================================================
+    
+    imu_to_clock = ExecuteProcess(
+        cmd=['python3', '/home/gareth-joel/Downloads/Dojo/scripts/imu_to_clock.py'],
+        output='screen',
+        condition=IfCondition(use_sim_time)
+    )
+
+    scan_republisher = ExecuteProcess(
+        cmd=['python3', '/home/gareth-joel/Downloads/Dojo/scripts/scan_republisher.py', '--ros-args', '-p', 'use_sim_time:=true'],
+        output='screen',
+        condition=IfCondition(use_sim_time)
+    )
+
+    # ============================================================================
     # ROSBOT XL SIMULATION
     # ============================================================================
     
@@ -184,8 +210,10 @@ def generate_launch_description():
         launch_arguments={
             'world': world_file,
             'headless': PythonExpression(["'True' if not '", gui, "' else 'False'"]),
+            'mecanum': mecanum,
             'lidar_model': 'slamtec_rplidar',  # For SLAM
             'camera_model': 'intel_realsense_d435',  # For vision
+            'use_sim_time': use_sim_time,
         }.items(),
     )
     
@@ -195,17 +223,23 @@ def generate_launch_description():
     
     slam_config = PathJoinSubstitution([pkg_robot_gazebo, 'config', 'slam_config.yaml'])
     
-    slam_toolbox = Node(
-        package='slam_toolbox',
-        executable='async_slam_toolbox_node',
-        name='slam_toolbox',
-        output='screen',
-        parameters=[
-            slam_config,
-            {'use_sim_time': use_sim_time}
-        ],
-        condition=IfCondition(slam)
-    )
+    slam_toolbox = GroupAction([
+        # SetRemap(src='/scan', dst='/scan_relayed'),
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource([
+                PathJoinSubstitution([
+                    FindPackageShare('slam_toolbox'),
+                    'launch',
+                    'online_async_launch.py'
+                ])
+            ]),
+            launch_arguments={
+                'use_sim_time': use_sim_time,
+                'slam_params_file': slam_config,
+            }.items(),
+            condition=IfCondition(slam)
+        )
+    ])
     
     # ============================================================================
     # DOJO FEATURES (via cutting_edge_features.launch.py)
@@ -248,7 +282,7 @@ def generate_launch_description():
     # AUTONOMOUS EXPLORATION (FIXED!)
     # ============================================================================
     
-    autonomous_explorer = IncludeLaunchDescription(
+    autonomous_exploration_node = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([
             PathJoinSubstitution([
                 pkg_robot_navigation,
@@ -293,6 +327,7 @@ def generate_launch_description():
         use_sim_time_arg,
         gui_arg,
         rviz_arg,
+        mecanum_arg,
         slam_arg,
         navigation_arg,
         semantic_slam_arg,
@@ -308,6 +343,11 @@ def generate_launch_description():
         
         # Startup banner
         startup_banner,
+        
+        # Fake Clock / IMU Clock Bridge
+        # fake_clock,
+        # imu_to_clock,
+        # scan_republisher,
         
         # ROSbot XL Simulation (URDF, Gazebo, sensors, controllers)
         rosbot_xl_simulation,
@@ -326,14 +366,14 @@ def generate_launch_description():
         
         # Navigation Stack (if enabled - waits for SLAM map)
         TimerAction(
-            period=20.0,  # Increased: wait longer for SLAM to publish /map
+            period=30.0,  # Increased: wait longer for SLAM to publish /map
             actions=[nav2_stack]
         ),
         
         # Autonomous Exploration (if enabled - waits for Nav2)
         TimerAction(
-            period=30.0,  # Increased: wait for Nav2 to fully initialize
-            actions=[autonomous_explorer]
+            period=40.0,  # Increased: wait for Nav2 to fully initialize
+            actions=[autonomous_exploration_node]
         ),
         
         # RViz Visualization

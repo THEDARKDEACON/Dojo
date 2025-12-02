@@ -12,6 +12,8 @@ from rclpy.action import ActionClient
 from rclpy.executors import MultiThreadedExecutor
 from rclpy.callback_groups import ReentrantCallbackGroup
 
+from rclpy.qos import QoSProfile, ReliabilityPolicy, HistoryPolicy, DurabilityPolicy
+
 import numpy as np
 import cv2
 from scipy import ndimage
@@ -35,12 +37,13 @@ class AutonomousExplorer(Node):
         
         # Parameters
         self.declare_parameter('exploration_radius', 2.0)
-        self.declare_parameter('min_frontier_size', 10)
+        self.declare_parameter('min_frontier_size', 5)
         self.declare_parameter('robot_radius', 0.22)
         self.declare_parameter('goal_timeout', 30.0)
         self.declare_parameter('map_frame', 'map')
         self.declare_parameter('base_frame', 'base_link')
         self.declare_parameter('gaussian_splat_mode', False)
+        self.declare_parameter('exploration_interval', 0.5)  # Check every 0.5 seconds
         
         self.exploration_radius = self.get_parameter('exploration_radius').value
         self.min_frontier_size = self.get_parameter('min_frontier_size').value
@@ -49,6 +52,7 @@ class AutonomousExplorer(Node):
         self.map_frame = self.get_parameter('map_frame').value
         self.base_frame = self.get_parameter('base_frame').value
         self.gaussian_splat_mode = self.get_parameter('gaussian_splat_mode').value
+        self.exploration_interval = self.get_parameter('exploration_interval').value
         
         # State variables
         self.map_data = None
@@ -67,12 +71,19 @@ class AutonomousExplorer(Node):
         self.tf_buffer = tf2_ros.Buffer()
         self.tf_listener = tf2_ros.TransformListener(self.tf_buffer, self)    
     
+        # QoS Profile for map subscription (Transient Local to get last map)
+        map_qos = QoSProfile(
+            depth=1,
+            durability=DurabilityPolicy.TRANSIENT_LOCAL,
+            reliability=ReliabilityPolicy.RELIABLE
+        )
+
         # Subscribers
         self.map_subscriber = self.create_subscription(
             OccupancyGrid,
             '/map',
             self.map_callback,
-            10,
+            map_qos,
             callback_group=self.callback_group
         )
         
@@ -149,23 +160,27 @@ class AutonomousExplorer(Node):
         
         # Reshape data to 2D array
         grid = np.array(occupancy_grid.data).reshape((height, width))
+        self.get_logger().debug(f"Map Data Values: {np.unique(grid)}")
         
         # Create binary maps
         free_space = (grid == 0).astype(np.uint8)  # Free space
-        unknown_space = (grid == -1).astype(np.uint8)  # Unknown space
+        # Handle unknown space (can be -1 or 255 depending on interpretation)
+        unknown_space = np.logical_or(grid == -1, grid == 255).astype(np.uint8)
         occupied_space = (grid == 100).astype(np.uint8)  # Obstacles
         
         # Apply morphological operations to clean up the map
         kernel = np.ones((3, 3), np.uint8)
         
-        # Clean free space (remove noise)
-        free_space = cv2.morphologyEx(free_space, cv2.MORPH_OPEN, kernel)
+        # Clean free space (remove noise) - ONLY use CLOSE to fill holes, avoid OPEN which erodes boundaries
+        # free_space = cv2.morphologyEx(free_space, cv2.MORPH_OPEN, kernel) 
         free_space = cv2.morphologyEx(free_space, cv2.MORPH_CLOSE, kernel)
+        
+        self.get_logger().debug(f"Grid Stats: Free={np.sum(free_space)}, Unknown={np.sum(unknown_space)}, Occupied={np.sum(occupied_space)}")
         
         # Find frontiers using multiple methods for robustness
         
-        # Method 1: Dilation-based frontier detection
-        free_dilated = cv2.dilate(free_space, kernel, iterations=1)
+        # Method 1: Dilation-based frontier detection - Increase iterations to ensure overlap
+        free_dilated = cv2.dilate(free_space, kernel, iterations=2)
         frontiers_method1 = np.logical_and(free_dilated, unknown_space)
         
         # Method 2: Edge detection on free space boundaries
@@ -183,6 +198,8 @@ class AutonomousExplorer(Node):
         # Apply additional filtering
         frontiers = cv2.morphologyEx(frontiers.astype(np.uint8), cv2.MORPH_OPEN, kernel)
         
+        self.get_logger().debug(f"Frontier Candidates: Method1={np.sum(frontiers_method1)}, Method2={np.sum(frontiers_method2)}, Combined={np.sum(frontiers)}")
+        
         # Find frontier coordinates
         frontier_coords = np.where(frontiers)
         
@@ -195,9 +212,9 @@ class AutonomousExplorer(Node):
             grid_x = frontier_coords[1][i]
             grid_y = frontier_coords[0][i]
             
-            # Convert to world coordinates
+            # Convert to world coordinates (Standard ROS: origin is bottom-left)
             world_x = origin.position.x + grid_x * resolution
-            world_y = origin.position.y + (height - grid_y - 1) * resolution
+            world_y = origin.position.y + grid_y * resolution  # Fixed Y-flip bug
             
             frontier_points.append((world_x, world_y))
         
@@ -274,7 +291,7 @@ class AutonomousExplorer(Node):
         height = self.map_data.info.height
         
         grid_x = int((frontier_x - origin.position.x) / resolution)
-        grid_y = int((height - (frontier_y - origin.position.y) / resolution - 1))
+        grid_y = int((frontier_y - origin.position.y) / resolution)  # Fixed Y-flip bug
         
         # Check bounds
         if grid_x < 0 or grid_x >= width or grid_y < 0 or grid_y >= height:
@@ -464,6 +481,11 @@ class AutonomousExplorer(Node):
         if frontier_count == 0:
             self.get_logger().info("✅ No frontiers found - exploration complete!")
             return True
+        
+        # If we have an active goal, we are not done (unless we are stuck, which is handled by goal timeout)
+        if self.current_goal is not None:
+            self.no_progress_count = 0
+            return False
         
         # Check if we're making progress
         if frontier_count == self.last_frontier_count:

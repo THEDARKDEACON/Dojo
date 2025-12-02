@@ -21,6 +21,8 @@ from launch.actions import (
 from launch.conditions import LaunchConfigurationNotEquals
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import (
+    Command,
+    FindExecutable,
     LaunchConfiguration,
     PathJoinSubstitution,
     PythonExpression,
@@ -161,6 +163,26 @@ def launch_gz_bridge(context: LaunchContext, *args, **kwargs):
             )
         )
 
+    actions.append(
+        Node(
+            package="ros_gz_bridge",
+            executable="parameter_bridge",
+            name="ros_gz_control_bridge",
+            arguments=[
+                # "/cmd_vel@geometry_msgs/msg/Twist@gz.msgs.Twist",
+                # "/joint_states@sensor_msgs/msg/JointState[gz.msgs.Model", # Invalid bridge
+                "/odom@nav_msgs/msg/Odometry[gz.msgs.Odometry",
+                "/tf@tf2_msgs/msg/TFMessage[gz.msgs.Pose_V",
+            ],
+            remappings=[
+                ("/tf", "tf"),
+                ("/tf_static", "tf_static"),
+            ],
+            output="screen",
+            namespace=namespace,
+        )
+    )
+
     return actions
 
 
@@ -227,6 +249,50 @@ def generate_launch_description():
         ["'rosbot_xl'", " if '", namespace, "' == '' ", "else ", "'", namespace, "'"]
     )
 
+    controller_config_name = PythonExpression(
+        [
+            "'mecanum_drive_controller.yaml' if 'true' in '",
+            mecanum,
+            "'.lower() else 'diff_drive.yaml'",
+        ]
+    )
+
+    controller_config_path = PathJoinSubstitution(
+        [
+            FindPackageShare("rosbot_xl_controller"),
+            "config",
+            controller_config_name,
+        ]
+    )
+
+    robot_description_content = Command(
+        [
+            PathJoinSubstitution([FindExecutable(name="xacro")]),
+            " ",
+            PathJoinSubstitution(
+                [
+                    FindPackageShare("rosbot_xl_description"),
+                    "urdf",
+                    "rosbot_xl.urdf.xacro",
+                ]
+            ),
+            " controller_config_file:=",
+            controller_config_path,
+            " mecanum:=",
+            mecanum,
+            " lidar_model:=",
+            lidar_model,
+            " camera_model:=",
+            camera_model,
+            " include_camera_mount:=",
+            include_camera_mount,
+            " use_sim:=True",
+            " simulation_engine:=ignition-gazebo",
+            " namespace:=",
+            namespace,
+        ]
+    )
+
     gz_spawn_entity = Node(
         package="ros_gz_sim",
         executable="create",
@@ -235,8 +301,8 @@ def generate_launch_description():
             robot_name,
             "-allow_renaming",
             "true",
-            "-topic",
-            "robot_description",
+            "-string",
+            robot_description_content,
             "-x",
             LaunchConfiguration("x", default="0.00"),
             "-y",
@@ -258,7 +324,7 @@ def generate_launch_description():
         package="ros_gz_bridge",
         executable="parameter_bridge",
         name="ros_gz_bridge",
-        arguments=["/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock]"],
+        arguments=["/clock@rosgraph_msgs/msg/Clock[ignition.msgs.Clock"],
         remappings=[
             ("/tf", "tf"),
             ("/tf_static", "tf_static"),
@@ -295,9 +361,14 @@ def generate_launch_description():
             declare_camera_model_arg,
             declare_lidar_model_arg,
             declare_include_camera_mount_arg,
+            DeclareLaunchArgument(
+                "use_sim_time",
+                default_value="True",
+                description="Use simulation time",
+            ),
             # Sets use_sim_time for all nodes started below
             # (doesn't work for nodes started from ignition gazebo)
-            SetParameter(name="use_sim_time", value=True),
+            SetParameter(name="use_sim_time", value=LaunchConfiguration("use_sim_time")),
             ign_clock_bridge,
             gz_spawn_entity,
             bringup_launch,

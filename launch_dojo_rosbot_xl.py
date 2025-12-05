@@ -192,6 +192,12 @@ def generate_launch_description():
         condition=IfCondition(use_sim_time)
     )
 
+    cmd_vel_relay = ExecuteProcess(
+        cmd=['python3', '/home/gareth-joel/Downloads/Dojo/scripts/cmd_vel_relay.py'],
+        output='screen',
+        condition=IfCondition(use_sim_time)
+    )
+
     # ============================================================================
     # ROSBOT XL SIMULATION
     # ============================================================================
@@ -348,6 +354,7 @@ def generate_launch_description():
         # fake_clock,
         # imu_to_clock,
         # scan_republisher,
+        cmd_vel_relay,
         
         # ROSbot XL Simulation (URDF, Gazebo, sensors, controllers)
         rosbot_xl_simulation,

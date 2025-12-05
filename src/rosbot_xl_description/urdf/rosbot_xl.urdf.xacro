@@ -32,7 +32,7 @@
 
   <xacro:property name="lidar_model" value="$(arg lidar_model)" />
   <xacro:property name="lidar_parent_link" value="cover_link" />
-  <xacro:property name="lidar_xyz" value="0.02 0.0 0.2" />
+  <xacro:property name="lidar_xyz" value="0.02 0.0 0.0" />
   <xacro:property name="lidar_rpy" value="0.0 0.0 0.0" />
 
   <xacro:if value="${lidar_model == 'slamtec_rplidar_s1'}">

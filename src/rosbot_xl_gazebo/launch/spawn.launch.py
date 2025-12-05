@@ -173,10 +173,12 @@ def launch_gz_bridge(context: LaunchContext, *args, **kwargs):
                 # "/joint_states@sensor_msgs/msg/JointState[gz.msgs.Model", # Invalid bridge
                 "/odom@nav_msgs/msg/Odometry[gz.msgs.Odometry",
                 "/tf@tf2_msgs/msg/TFMessage[gz.msgs.Pose_V",
+                "/imu/data_raw@sensor_msgs/msg/Imu[gz.msgs.IMU",
             ],
             remappings=[
                 ("/tf", "tf"),
                 ("/tf_static", "tf_static"),
+                ("/imu/data_raw", "imu_broadcaster/imu"),
             ],
             output="screen",
             namespace=namespace,

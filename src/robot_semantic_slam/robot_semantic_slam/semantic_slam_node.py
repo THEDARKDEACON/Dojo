@@ -12,11 +12,13 @@ from geometry_msgs.msg import PoseStamped, Twist
 from vision_msgs.msg import Detection2DArray, Detection2D
 from nav_msgs.msg import OccupancyGrid, Path
 from std_msgs.msg import String, Float32
+from visualization_msgs.msg import Marker, MarkerArray
 from nav2_msgs.action import NavigateToPose
 from action_msgs.msg import GoalStatus
 import cv2
 from cv_bridge import CvBridge
 import numpy as np
+import math
 import json
 import os
 import pickle
@@ -95,6 +97,7 @@ class SemanticSLAMNode(Node):
         self.navigation_goal_pub = self.create_publisher(PoseStamped, '/navigate_to_object', 10)
         self.navigation_status_pub = self.create_publisher(String, '/navigation_status', 10)
         self.navigation_progress_pub = self.create_publisher(Float32, '/navigation_progress', 10)
+        self.marker_pub = self.create_publisher(MarkerArray, '/semantic_markers', 10)
         
         # Nav2 Action Client for goal-based navigation
         self.nav2_client = ActionClient(self, NavigateToPose, 'navigate_to_pose')
@@ -105,7 +108,7 @@ class SemanticSLAMNode(Node):
         self.multi_step_goals = []  # Queue for multi-step navigation
         
         # Subscribers
-        self.image_sub = self.create_subscription(Image, '/camera/image_raw', self.image_callback, 10)
+        self.image_sub = self.create_subscription(Image, '/camera/color/image_raw', self.image_callback, 10)
         self.scan_sub = self.create_subscription(LaserScan, '/scan', self.scan_callback, 10)
         self.map_sub = self.create_subscription(OccupancyGrid, '/map', self.map_callback, 10)
         self.pose_sub = self.create_subscription(PoseStamped, '/robot_pose', self.pose_callback, 10)
@@ -771,6 +774,61 @@ class SemanticSLAMNode(Node):
             msg = String()
             msg.data = json.dumps(semantic_data, default=str)
             self.semantic_map_pub.publish(msg)
+            
+            # Publish Markers for RViz
+            self.publish_markers()
+
+    def publish_markers(self):
+        """Publish visualization markers for RViz"""
+        marker_array = MarkerArray()
+        
+        for i, (obj_id, obj_data) in enumerate(self.semantic_map.items()):
+            x = obj_data.get('x')
+            y = obj_data.get('y')
+            
+            if x is None or y is None or math.isnan(x) or math.isnan(y):
+                continue
+                
+            # Text Marker
+            text_marker = Marker()
+            text_marker.header.frame_id = "map"
+            text_marker.header.stamp = self.get_clock().now().to_msg()
+            text_marker.ns = "semantic_labels"
+            text_marker.id = i
+            text_marker.type = Marker.TEXT_VIEW_FACING
+            text_marker.action = Marker.ADD
+            text_marker.pose.position.x = obj_data['x']
+            text_marker.pose.position.y = obj_data['y']
+            text_marker.pose.position.z = 0.5
+            text_marker.scale.z = 0.2
+            text_marker.color.r = 1.0
+            text_marker.color.g = 1.0
+            text_marker.color.b = 1.0
+            text_marker.color.a = 1.0
+            text_marker.text = f"{obj_data['class']} ({obj_data['confidence']:.2f})"
+            marker_array.markers.append(text_marker)
+            
+            # Sphere Marker
+            sphere_marker = Marker()
+            sphere_marker.header.frame_id = "map"
+            sphere_marker.header.stamp = self.get_clock().now().to_msg()
+            sphere_marker.ns = "semantic_objects"
+            sphere_marker.id = i + 1000
+            sphere_marker.type = Marker.SPHERE
+            sphere_marker.action = Marker.ADD
+            sphere_marker.pose.position.x = obj_data['x']
+            sphere_marker.pose.position.y = obj_data['y']
+            sphere_marker.pose.position.z = 0.2
+            sphere_marker.scale.x = 0.3
+            sphere_marker.scale.y = 0.3
+            sphere_marker.scale.z = 0.3
+            sphere_marker.color.r = 0.0
+            sphere_marker.color.g = 1.0
+            sphere_marker.color.b = 0.0
+            sphere_marker.color.a = 0.8
+            marker_array.markers.append(sphere_marker)
+            
+        self.marker_pub.publish(marker_array)
 
 def main(args=None):
     rclpy.init(args=args)

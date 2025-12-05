@@ -42,7 +42,8 @@ def generate_launch_description():
         executable='controller_server',
         output='screen',
         parameters=[params_file],
-        remappings=[('cmd_vel', '/rosbot_xl_base_controller/cmd_vel')]  # ROSbot XL topic
+        remappings=[('cmd_vel', 'cmd_vel_nav')]  # Remap to mux input
+        # remappings=[('cmd_vel', '/rosbot_xl_base_controller/cmd_vel')]  # Removed to use relay
     )
     
     # Planner server

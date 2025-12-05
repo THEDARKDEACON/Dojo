@@ -16,6 +16,7 @@ from launch.actions import (
     LogInfo,
     ExecuteProcess,
     GroupAction,
+    OpaqueFunction,
 )
 from launch_ros.actions import Node, SetParameter, SetRemap
 
@@ -23,6 +24,47 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution, PythonExpression
 from launch_ros.actions import Node, SetParameter
 from launch_ros.substitutions import FindPackageShare
+
+def launch_setup(context, *args, **kwargs):
+    """
+    Dynamic launch setup to handle world file paths
+    """
+    # Get configurations
+    world = context.perform_substitution(LaunchConfiguration('world'))
+    gui = context.perform_substitution(LaunchConfiguration('gui'))
+    mecanum = context.perform_substitution(LaunchConfiguration('mecanum'))
+    use_sim_time = context.perform_substitution(LaunchConfiguration('use_sim_time'))
+    
+    # Resolve World Path
+    # If it contains a slash or extension, treat as path (absolute or relative)
+    if '/' in world or world.endswith('.sdf') or world.endswith('.world'):
+        world_file = world
+        # If relative, assume relative to CWD (where user launched it)
+        if not os.path.isabs(world_file):
+            world_file = os.path.abspath(world_file)
+    else:
+        # Default behavior: look in husarion_gz_worlds
+        pkg_husarion_gz_worlds = get_package_share_directory('husarion_gz_worlds')
+        world_file = os.path.join(pkg_husarion_gz_worlds, 'worlds', world + '.sdf')
+        
+    pkg_rosbot_xl_gazebo = get_package_share_directory('rosbot_xl_gazebo')
+    
+    rosbot_xl_simulation = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([
+            os.path.join(pkg_rosbot_xl_gazebo, 'launch', 'simulation.launch.py')
+        ]),
+        launch_arguments={
+            'world': world_file,
+            'headless': 'True' if gui == 'False' else 'False',
+            'mecanum': mecanum,
+            'lidar_model': 'slamtec_rplidar',
+            'camera_model': 'intel_realsense_d435',
+            'use_sim_time': use_sim_time,
+        }.items(),
+    )
+    
+    return [rosbot_xl_simulation]
+
 
 def generate_launch_description():
     """Launch complete Dojo robot with ROSbot XL integration"""
@@ -199,29 +241,11 @@ def generate_launch_description():
     )
 
     # ============================================================================
-    # ROSBOT XL SIMULATION
+    # ROSBOT XL SIMULATION (Handled by OpaqueFunction)
     # ============================================================================
     
-    # Build world path
-    world_file = PathJoinSubstitution([
-        pkg_husarion_gz_worlds,
-        'worlds',
-        [world, '.sdf']
-    ])
-    
-    rosbot_xl_simulation = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([
-            PathJoinSubstitution([pkg_rosbot_xl_gazebo, 'launch', 'simulation.launch.py'])
-        ]),
-        launch_arguments={
-            'world': world_file,
-            'headless': PythonExpression(["'True' if not '", gui, "' else 'False'"]),
-            'mecanum': mecanum,
-            'lidar_model': 'slamtec_rplidar',  # For SLAM
-            'camera_model': 'intel_realsense_d435',  # For vision
-            'use_sim_time': use_sim_time,
-        }.items(),
-    )
+    # See launch_setup() above for simulation launch logic
+
     
     # ============================================================================
     # SLAM
@@ -327,6 +351,17 @@ def generate_launch_description():
     # LAUNCH DESCRIPTION
     # ============================================================================
     
+    # Twist Mux
+    twist_mux = Node(
+        package='twist_mux',
+        executable='twist_mux',
+        output='screen',
+        remappings=[('cmd_vel_out', 'cmd_vel')],
+        parameters=[PathJoinSubstitution([
+            FindPackageShare('robot_navigation'), 'config', 'twist_mux.yaml'
+        ])]
+    )
+
     return LaunchDescription([
         # Arguments
         world_arg,
@@ -354,10 +389,12 @@ def generate_launch_description():
         # fake_clock,
         # imu_to_clock,
         # scan_republisher,
+        # scan_republisher,
         cmd_vel_relay,
+        twist_mux,
         
         # ROSbot XL Simulation (URDF, Gazebo, sensors, controllers)
-        rosbot_xl_simulation,
+        OpaqueFunction(function=launch_setup),
         
         # SLAM (delayed for Gazebo to start)
         TimerAction(

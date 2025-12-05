@@ -102,7 +102,7 @@ class AutonomousExplorer(Node):
 
         self.cmd_vel_publisher = self.create_publisher(
             Twist,
-            '/cmd_vel',
+            '/cmd_vel_nav',
             10
         )
         
@@ -607,7 +607,7 @@ class AutonomousExplorer(Node):
                 goal_y = self.current_goal.pose.position.y
                 distance_to_goal = np.sqrt((robot_x - goal_x)**2 + (robot_y - goal_y)**2)
                 
-                if distance_to_goal < 1.0:  # Close enough to goal
+                if distance_to_goal < 0.5:  # Close enough to goal
                     self.add_visited_frontier(goal_x, goal_y)
                     self.current_goal = None
                     self.goal_start_time = None

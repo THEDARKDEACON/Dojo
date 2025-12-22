@@ -68,6 +68,7 @@ class AutonomousExplorer(Node):
         self.initial_pose_received = False
         self.frontiers = []  # Track current frontiers
         self.last_status = "Initializing..."
+        self.frontier_retries = {}  # Track retries for failed frontiers: (x_key, y_key) -> count
         
         # Callback group for concurrent operations
         self.callback_group = ReentrantCallbackGroup()
@@ -349,8 +350,8 @@ class AutonomousExplorer(Node):
         
         grid = np.array(self.map_data.data).reshape((height, width))
         # Increase safety margin to match Nav2 inflation radius (0.45m)
-        # robot_radius (0.22) * 1.5 ~= 0.33m (Reduced to allow exploring corners)
-        safety_radius = int(self.robot_radius * 1.5 / resolution)
+        # robot_radius (0.22) * 1.2 ~= 0.26m (Significantly reduced for "Braver" exploration)
+        safety_radius = int(self.robot_radius * 1.2 / resolution)
         
         # Check for obstacles in safety radius
         for dy in range(-safety_radius, safety_radius + 1):
@@ -514,14 +515,28 @@ class AutonomousExplorer(Node):
         else:
             self.get_logger().warn(f'❌ Navigation failed with status: {status}')
             if self.current_goal:
-                # Add to failed frontiers so we don't retry immediately
-                self.failed_frontiers.append((
-                    self.current_goal.pose.position.x,
-                    self.current_goal.pose.position.y
-                ))
-                # Keep only recent failed frontiers
-                if len(self.failed_frontiers) > 20:
-                    self.failed_frontiers.pop(0)
+                # Round coordinates to group nearby failures (10cm precision)
+                gx = round(self.current_goal.pose.position.x, 1)
+                gy = round(self.current_goal.pose.position.y, 1)
+                key = (gx, gy)
+                
+                # Increment retry count
+                retries = self.frontier_retries.get(key, 0) + 1
+                self.frontier_retries[key] = retries
+                
+                if retries >= 3:
+                    self.get_logger().warn(f'💀 Frontier at ({gx}, {gy}) failed 3 times. Blacklisting.')
+                    # Add to failed frontiers so we don't retry immediately
+                    self.failed_frontiers.append((
+                        self.current_goal.pose.position.x,
+                        self.current_goal.pose.position.y
+                    ))
+                    # Keep only recent failed frontiers
+                    if len(self.failed_frontiers) > 20:
+                        self.failed_frontiers.pop(0)
+                else:
+                    self.get_logger().info(f'🔄 Frontier failed (Attempt {retries}/3) - Will retry.')
+                    # Do NOT add to failed_frontiers yet
         
         # Clear current goal to allow selecting a new one
         self.current_goal = None
@@ -698,18 +713,18 @@ class AutonomousExplorer(Node):
         if len(self.visited_frontiers) > 20:
             self.visited_frontiers.pop(0)
     
-    def is_frontier_recently_visited(self, fx, fy, threshold=2.0):
+    def is_frontier_recently_visited(self, fx, fy, visited_threshold=2.0, failed_threshold=0.75):
         """Check if a frontier was recently visited or failed"""
-        # Check visited
+        # Check visited (Keep large radius to avoid re-exploring known areas)
         for vx, vy in self.visited_frontiers:
             distance = np.sqrt((fx - vx)**2 + (fy - vy)**2)
-            if distance < threshold:
+            if distance < visited_threshold:
                 return True
         
-        # Check failed
+        # Check failed (Use smaller radius to allow retrying nearby points)
         for fax, fay in self.failed_frontiers:
             distance = np.sqrt((fx - fax)**2 + (fy - fay)**2)
-            if distance < threshold:
+            if distance < failed_threshold:
                 return True
                 
         return False

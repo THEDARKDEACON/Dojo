@@ -1,6 +1,6 @@
-# 🤖 Dojo Robot - Autonomous Navigation & Mapping System
+# 🥋 Dojo Robot: Advanced Autonomous Navigation & Semantic Understanding
 
-**The Ultimate Platform for Autonomous Exploration, Semantic Understanding, and Photorealistic 3D Reconstruction**
+**The Ultimate Platform for Autonomous Exploration, Semantic Mapping, and Photorealistic 3D Reconstruction.**
 
 [![ROS 2 Jazzy](https://img.shields.io/badge/ROS_2-Jazzy-blue?style=for-the-badge&logo=ros)](https://docs.ros.org/en/jazzy/)
 [![Gazebo Harmonic](https://img.shields.io/badge/Gazebo-Harmonic-orange?style=for-the-badge&logo=gazebo)](https://gazebosim.org/)
@@ -9,78 +9,103 @@
 
 ---
 
-## 🌟 Vision
-
-**Dojo Robot** is not just a navigation stack; it's a comprehensive research and development platform designed to bridge the gap between standard autonomous navigation and next-generation spatial intelligence. Built on the robust **Husarion ROSbot XL** and powered by **ROS 2 Jazzy**, Dojo enables robots to not only map their environment but to *understand* it and capture it in photorealistic detail.
-
-Whether you are creating digital twins, inspecting industrial facilities, or developing advanced semantic navigation behaviors, Dojo provides the modular, high-performance foundation you need.
+## 📖 Table of Contents
+1.  [System Architecture](#-system-architecture)
+2.  [Core Algorithms](#-core-algorithms)
+    *   [Autonomous Frontier Explorer](#1-autonomous-frontier-explorer)
+    *   [Semantic Semantic SLAM](#2-semantic-slam--obstacle-avoidance)
+3.  [Engineering Challenges & Solutions](#-engineering-challenges--solutions)
+4.  [Installation & Usage](#-getting-started)
+5.  [Troubleshooting](#-troubleshooting)
 
 ---
 
 ## 🏗️ System Architecture
 
-At the heart of Dojo is a modular, event-driven architecture designed for scalability and robustness. The system is orchestrated by a central launch file (`launch_dojo_rosbot_xl.py`) that manages the lifecycle of all subsystems.
+Dojo is built on a modular, event-driven architecture powered by ROS 2 Jazzy. The system is divided into three primary layers: **Perception**, **Navigation**, and **Autonomy**.
 
-![System Architecture](docs/images/system_architecture.png)
+```mermaid
+graph TD
+    subgraph Perception
+        Lidar[RPLidar A2] -->|/scan| SLAM[SLAM Toolbox]
+        Camera[RGB-D Camera] -->|/camera/image_raw| YOLO[YOLOv8 Node]
+        Camera -->|/camera/depth/points| Depth[Depth Cloud]
+        IMU[IMU] -->|/imu/data| EKF[Robot Localization]
+    end
 
-### Core Components
+    subgraph Navigation
+        SLAM -->|/map| Nav2[Nav2 Stack]
+        EKF -->|/odometry/filtered| Nav2
+        Depth -->|Voxel Layer| Costmap[Global/Local Costmap]
+        SemanticCloud[Semantic Obstacles] -->|Obs Layer| Costmap
+    end
 
-*   **🧠 Perception Layer**: Fuses data from LiDAR, RGB-D cameras, and IMUs to create a coherent understanding of the world.
-*   **🗺️ Mapping & Localization**: Utilizes `slam_toolbox` for precise 2D occupancy mapping and robust localization.
-*   **🧭 Navigation Stack**: Leverages the industry-standard **Nav2** stack for dynamic path planning, obstacle avoidance, and behavior trees.
-*   **🤖 Autonomy Engine**: Custom-built modules for frontier-based exploration (`AutonomousExplorer`) and semantic decision making (`SemanticNavigator`).
-*   **📸 3D Reconstruction**: A specialized pipeline for capturing high-quality datasets optimized for **Gaussian Splatting**, enabling the creation of photorealistic 3D scenes.
-*   **🛡️ Advanced Safety**: A behavior tree-based safety system that overrides commands when threats are detected (cliffs, dynamic obstacles).
+    subgraph Autonomy
+        Nav2 -->|Action Server| Explorer[Autonomous Explorer]
+        YOLO -->|Detections| SemanticNode[Semantic SLAM Node]
+        SemanticNode -->|/semantic_obstacles| SemanticCloud
+        Explorer -->|/cmd_vel| Mixer[Twist Mux]
+    end
 
----
-
-## 🚀 Key Features
-
-### 1. Autonomous Frontier Exploration
-
-Forget manual joystick control. Dojo's **Autonomous Explorer** intelligently identifies unknown areas (frontiers) and plans optimal paths to map the entire environment without human intervention.
-
-![Autonomous Exploration Concept](docs/images/autonomous_exploration.png)
-
-*   **Algorithm**: DBSCAN clustering for robust frontier detection.
-*   **Optimization**: Information gain-based target selection.
-*   **Recovery**: Smart recovery behaviors for stuck situations.
-
-### 2. Semantic Navigation
-
-Move beyond "go to (x, y)". Dojo understands objects.
-
-![Semantic Navigation Concept](docs/images/semantic_navigation.png)
-
-*   **Command**: "Go to the nearest chair."
-*   **Logic**: The **Semantic Navigator** queries the semantic map, filters candidate approach points based on the costmap, and navigates to the optimal viewing angle.
-*   **Integration**: Seamlessly integrates with YOLO-based object detection systems.
-
-### 3. Gaussian Splatting Optimization
-
-Create stunning 3D digital twins.
-*   **Survey Planner**: Executes "crab walk" patterns to maximize parallax and coverage.
-*   **Blur Reduction**: Automatically manages velocity and camera exposure to ensure crisp image capture.
-*   **Data Pipeline**: Automated workflows for capturing, processing, and training Gaussian Splat models.
-
----
-
-## 📂 Project Structure
-
-```text
-Dojo/
-├── launch_dojo_rosbot_xl.py       # MAIN ENTRY POINT: Launches the entire system
-├── src/
-│   ├── rosbot_xl_gazebo/          # Simulation environment and robot spawn logic
-│   ├── rosbot_xl_description/     # URDF, Xacro, and meshes for the robot
-│   ├── rosbot_xl_controller/      # Control configurations (Diff Drive / Mecanum)
-│   ├── robot_navigation/          # Nav2 configs, Autonomous Explorer node
-│   ├── robot_semantic_slam/       # Semantic mapping, YOLO integration, Safety System
-│   ├── robot_gaussian_splat/      # Data collection for 3D reconstruction
-│   └── husarion_gz_worlds/        # Gazebo worlds (office, warehouse, etc.)
-├── scripts/                       # Helper scripts (install dependencies, tools)
-└── docs/                          # Documentation and images
+    Mixer -->|/cmd_vel_out| Controllers[diff_drive_controller]
 ```
+
+### Key Subsystems
+1.  **Perception Layer**: Fuses 2D Laser Scans (for mapping) with 3D Depth Pointclouds (for obstacle avoidance) and Semantic Detections (YOLO).
+2.  **Navigation Stack**: A highly tuned **Nav2** implementation using DWB Local Planner and Smac Hybrid Global Planner.
+3.  **Autonomy Engine**: Custom Python-based logic for deciding *where* to go (Exploration) and *what* to investigate (Semantic Navigation).
+
+---
+
+## 🧠 Core Algorithms
+
+### 1. Autonomous Frontier Explorer
+The `AutonomousExplorer` node (`src/robot_navigation/robot_navigation/autonomous_explorer.py`) allows the robot to map unknown environments without human intervention.
+
+#### **How it Works:**
+1.  **Frontier Detection**:
+    *   The robot analyzes the Occupancy Grid (`/map`).
+    *   It identifies "edges" between Known Free Space and Unknown Space using Computer Vision techniques (Canny Edge Detection + Morphological Dilation).
+2.  **Clustering (DBSCAN)**:
+    *   Raw frontier points are clustered using **DBSCAN** (Density-Based Spatial Clustering of Applications with Noise).
+    *   This groups scattered pixels into distinct "Frontier Targets" (e.g., a doorway, a hallway end).
+3.  **Target Selection (The "Brave" Score)**:
+    *   Each cluster is scored based on:
+        *   **Distance**: Closer is better (Efficiency).
+        *   **Information Gain**: How much unknown space encompasses it?
+        *   **Safety**: Is it reachable without collision?
+    *   *Equation*: `Score = (InfoGain * 0.5) - (Distance * 2.0)`
+
+#### **The "Braver" Logic (Implemented v2.0):**
+Early versions of the robot were "timid," giving up on frontiers if path planning failed once. We solved this with a state-based retry mechanism:
+*   **3-Strike Rule**: The robot retries a failed frontier **3 times** before blacklisting it.
+*   **Surgical Blacklisting**: If a point is unreachable, we only blacklist a small radius (**0.75m**) around it, allowing the robot to try immediate neighbors.
+*   **Relaxed Safety**: The internal safety check buffer was reduced to **1.2x Robot Radius** (down from 1.5x), allowing the robot to attempt squeezing through tight gaps.
+
+### 2. Semantic SLAM & Obstacle Avoidance
+The `SemanticSLAMNode` (`src/robot_semantic_slam/robot_semantic_slam/semantic_slam_node.py`) bridges the gap between seeing an object and navigating around it.
+
+#### **Semantic Mapping Pipeline:**
+1.  **Detection**: YOLOv8 runs on the RGB stream to detect objects (Chairs, Tables, People).
+2.  **3D Projection**: Using the robot's localized pose (`/tf`) and the camera's depth, we project the 2D bounding box into 3D world coordinates.
+3.  **Visualization**: Objects are visualized in RViz with floating Text Tags reading from `/semantic_labels`.
+
+#### **Dynamic Obstacle Injection (The "Ghost" Objects):**
+Lidar often misses table legs or open chair frames. To fix this, we implemented **Semantic Costmap Injection**:
+*   When a "Chair" is detected at `(x, y)`, the node publishes a synthetic **PointCloud2** cylinder at that location to the topic `/semantic_obstacles`.
+*   **Nav2 Integration**: The Global and Local Costmaps subscribe to this topic.
+*   **Result**: The navigation stack treats the "Concept of a Chair" as a physical concrete wall, forcing the planner to route around it even if the Lidar sees empty space.
+
+---
+
+## 🛠️ Engineering Challenges & Solutions
+
+| Challenge | Symptom | Implemented Solution |
+| :--- | :--- | :--- |
+| **The "Indecisive Robot"** | Robot would stop, turn left, turn right, and hesitate in hallways. | **Gradient Smoothing**: We reduced the `cost_scaling_factor` in Nav2 from `10.0` (Sharp) to **`5.0` (Smooth)**. This creates a gentle "potential field" around obstacles, allowing the local planner to make smooth adjustments rather than binary stop/go decisions. |
+| **Tight Spaces** | Robot refused to enter narrow office doors (70cm width). | **Aggressive Tuning**: We reduced the configured `robot_radius` to **0.19m** (physically 0.20m) and lowered `inflation_radius` to **0.25m**. This "lies" slightly to the planner, permitting it to attempt maneuvers with only centimeters of clearance. |
+| **Invisible Obstacles** | Robot rammed into office chairs with thin legs. | **Depth Camera Fusion**: We integrated `/camera/depth/color/points` into the Nav2 Voxel Layer. This allows the robot to perceive 3D structures (overhangs, thin legs) that the 2D Lidar slice misses. |
+| **Simulation Time Drift** | TF errors and "Transform too old" warnings. | **IMU Bridge**: We wrote a custom bridge `imu_to_clock.py` (later replaced by native `gz_bridge` config) to ensure the simulation clock (`/clock`) synchronization with the IMU sensor rate, stabilizing the EKF. |
 
 ---
 
@@ -90,78 +115,39 @@ Dojo/
 *   **OS**: Ubuntu 24.04 (Noble Numbat)
 *   **ROS 2**: Jazzy Jalisco
 *   **Simulation**: Gazebo Harmonic
-*   **Hardware**: Husarion ROSbot XL (optional, but recommended)
 
 ### Installation
-
 ```bash
-# 1. Clone the repository
 git clone https://github.com/your-org/Dojo.git
 cd Dojo
-
-# 2. Install dependencies
 ./scripts/install_dependencies.sh
-
-# 3. Build the workspace
 colcon build --symlink-install
-
-# 4. Source the environment
 source install/setup.bash
 ```
 
-### 🎮 Running the Simulation
+### 🎮 Running the System
 
-**Full System Demo (SLAM + Nav2 + Exploration)**
+**1. The "All-in-One" Launch:**
+This command launches Gazebo, Spawn the Robot, Starts Nav2, SLAM, and the Autonomous Explorer.
 ```bash
 ros2 launch launch_dojo_rosbot_xl.py \
-    world:=office \
+    world:=src/robot_gazebo/worlds/office_fixed.sdf \
     slam:=true \
     navigation:=true \
-    autonomous_exploration:=true \
-    gui:=true \
-    rviz:=true
+    autonomous_exploration:=true
 ```
 
-**Mecanum Drive Mode (Experimental)**
-```bash
-ros2 launch launch_dojo_rosbot_xl.py mecanum:=true navigation:=true
-```
-*Note: Mecanum drive is stable but currently has a known limitation with Odometry publication in Gazebo Harmonic.*
+**2. Monitoring:**
+*   **RViz**: Automatic visualization of Map, Frontiers (`/exploration_frontiers`), and Semantic Objects (`/semantic_markers`).
+*   **Terminal**: Colorful logs regarding "Frontier Selection" and "Semantic Detections".
 
 ---
 
 ## 🔧 Troubleshooting
 
-### Common Issues
-
-1.  **"NameError: name 'autonomous_explorer' is not defined"**
-    *   **Fix**: This has been resolved in the latest release. Ensure you have sourced the workspace (`source install/setup.bash`) after building.
-
-2.  **Robot not moving with Teleop**
-    *   **Cause**: Conflict between `ros_gz_bridge` and `gz_ros2_control` on the `/cmd_vel` topic.
-    *   **Fix**: The bridge for `/cmd_vel` is now disabled by default in `spawn.launch.py` to allow the controller to handle commands directly.
-
-3.  **Gazebo crashes on launch**
-    *   **Fix**: Ensure `gpu_lidar` is used and the world file has the `<render_engine>ogre2</render_engine>` tag in the sensors plugin.
-
----
-
-## 🤝 Contributing
-
-We welcome contributions! Whether it's fixing a bug, adding a new feature, or improving documentation, your help is appreciated.
-
-1.  Fork the Project
-2.  Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3.  Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4.  Push to the Branch (`git push origin feature/AmazingFeature`)
-5.  Open a Pull Request
-
----
-
-## 📄 License
-
-Distributed under the MIT License. See `LICENSE` for more information.
-
----
-
-**Dojo Robot** — *Redefining Autonomous Navigation.*
+*   **Robot spins in circles?**
+    *   This is the "Gaussian Splat" capture mode. Verify `gaussian_splat_mode` parameter is set to `False` in `autonomous_explorer.py` if not desired.
+*   **"Frontier blacklisted" constantly?**
+    *   The robot might be trapped. Check the "Braver" logic settings. You can reset the blacklist by manually clearing the `failed_frontiers` list in code or restarting the node.
+*   **Map "tearing" or shifting?**
+    *   This indicates Lidar slippage or Odometry drift. Ensure the simulation is running at real-time speeds (Real Time Factor > 0.8). If simulation is lagging, switch to "Headless Mode" by adding `gui:=False` to the launch command.

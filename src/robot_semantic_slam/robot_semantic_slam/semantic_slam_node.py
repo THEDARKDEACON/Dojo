@@ -7,7 +7,7 @@ Integrates YOLO object detection with SLAM for intelligent spatial understanding
 import rclpy
 from rclpy.node import Node
 from rclpy.action import ActionClient
-from sensor_msgs.msg import Image, LaserScan, PointCloud2
+from sensor_msgs.msg import Image, LaserScan, PointCloud2, PointField
 from geometry_msgs.msg import PoseStamped, Twist
 from vision_msgs.msg import Detection2DArray, Detection2D
 from nav_msgs.msg import OccupancyGrid, Path
@@ -28,6 +28,7 @@ from scipy.spatial import KDTree
 import tf2_ros
 import tf2_geometry_msgs
 import sys
+import struct
 try:
     from ultralytics import YOLO
     YOLO_AVAILABLE = True
@@ -135,6 +136,88 @@ class SemanticSLAMNode(Node):
         self.get_logger().info(f"⏱️  Object timeout: {self.object_timeout}s ({self.object_timeout/60:.1f} minutes)")
         self.get_logger().info(f"📉 Confidence decay: {self.confidence_decay_rate} per minute")
         self.get_logger().info(f"🗑️  Min confidence threshold: {self.min_confidence}")
+
+        # Semantic Obstacle Publisher (PointCloud2)
+        self.obstacle_pub = self.create_publisher(PointCloud2, '/semantic_obstacles', 10)
+        
+        # New Publisher strictly for Text Labels
+        self.label_pub = self.create_publisher(MarkerArray, '/semantic_labels', 10)
+        
+        # Object Physical Dimensions (Radius in meters)
+        self.object_dimensions = {
+            'chair': 0.35,
+            'person': 0.30,
+            'table': 0.60,
+            'desk': 0.60,
+            'potted plant': 0.30,
+            'couch': 0.80,
+            'sofa': 0.80,
+            'bed': 1.00,
+            'tv': 0.20,
+            'monitor': 0.20
+        }
+        self.default_object_radius = 0.30
+        
+    def publish_semantic_obstacles(self):
+        """Generate and publish a PointCloud2 representing semantic barriers"""
+        if not self.semantic_map:
+            return
+
+        points = []
+        current_time = self.get_clock().now()
+        
+        # Generate points for each active object
+        for obj_id, obj_data in self.semantic_map.items():
+            # Get physical radius
+            radius = self.object_dimensions.get(obj_data['class'], self.default_object_radius)
+            x_center = obj_data['x']
+            y_center = obj_data['y']
+            
+            # Generate a dense cylinder of points
+            # Vertical layers
+            for z in np.linspace(0.1, 1.5, 10): # 0.1m to 1.5m height
+                # Angular steps for circle
+                for angle in np.linspace(0, 2*np.pi, 16):
+                    # Fill structure (hollow cylinder is enough for costmap)
+                    px = x_center + radius * np.cos(angle)
+                    py = y_center + radius * np.sin(angle)
+                    points.append([px, py, z])
+                    
+                    # Add internal cross to ensure marking if radius is large
+                    if radius > 0.4:
+                         points.append([x_center, y_center, z])
+        
+        if not points:
+            return
+
+        # Create PointCloud2 message
+        msg = PointCloud2()
+        msg.header.stamp = current_time.to_msg()
+        msg.header.frame_id = "map"
+        
+        msg.height = 1
+        msg.width = len(points)
+        
+        # Define fields (x, y, z)
+        msg.fields = [
+            PointField(name='x', offset=0, datatype=PointField.FLOAT32, count=1),
+            PointField(name='y', offset=4, datatype=PointField.FLOAT32, count=1),
+            PointField(name='z', offset=8, datatype=PointField.FLOAT32, count=1)
+        ]
+        
+        msg.is_bigendian = False
+        msg.point_step = 12 # 3 * 4 bytes
+        msg.row_step = msg.point_step * len(points)
+        msg.is_dense = True
+        
+        # Pack data
+        buffer = []
+        for p in points:
+            buffer.append(struct.pack('fff', p[0], p[1], p[2]))
+        
+        msg.data = b''.join(buffer)
+        
+        self.obstacle_pub.publish(msg)
     
     def image_callback(self, msg: Image):
         """Process camera images with YOLO detection (optimized with frame skipping)"""
@@ -149,7 +232,7 @@ class SemanticSLAMNode(Node):
             # Run YOLO detection with optimizations
             if self.yolo_model is None:
                 return  # Skip detection if YOLO not available
-            results = self.yolo_model(cv_image, verbose=False, device='cpu')  # Explicit device selection
+            results = self.yolo_model(cv_image, verbose=False)  # Explicit device selection
             
             # Process detections
             annotated_image = cv_image.copy()
@@ -775,12 +858,16 @@ class SemanticSLAMNode(Node):
             msg.data = json.dumps(semantic_data, default=str)
             self.semantic_map_pub.publish(msg)
             
-            # Publish Markers for RViz
+            # Publish semantic map visualization
             self.publish_markers()
+            
+            # Publish physical obstacles for costmap
+            self.publish_semantic_obstacles()
 
     def publish_markers(self):
         """Publish visualization markers for RViz"""
         marker_array = MarkerArray()
+        label_array = MarkerArray()
         
         for i, (obj_id, obj_data) in enumerate(self.semantic_map.items()):
             x = obj_data.get('x')
@@ -789,7 +876,7 @@ class SemanticSLAMNode(Node):
             if x is None or y is None or math.isnan(x) or math.isnan(y):
                 continue
                 
-            # Text Marker
+            # Text Marker (Add to Label Array)
             text_marker = Marker()
             text_marker.header.frame_id = "map"
             text_marker.header.stamp = self.get_clock().now().to_msg()
@@ -799,16 +886,16 @@ class SemanticSLAMNode(Node):
             text_marker.action = Marker.ADD
             text_marker.pose.position.x = obj_data['x']
             text_marker.pose.position.y = obj_data['y']
-            text_marker.pose.position.z = 0.5
-            text_marker.scale.z = 0.2
+            text_marker.pose.position.z = 1.0  # Nice height above object
+            text_marker.scale.z = 0.4  # Readable size
             text_marker.color.r = 1.0
             text_marker.color.g = 1.0
             text_marker.color.b = 1.0
             text_marker.color.a = 1.0
             text_marker.text = f"{obj_data['class']} ({obj_data['confidence']:.2f})"
-            marker_array.markers.append(text_marker)
+            label_array.markers.append(text_marker)
             
-            # Sphere Marker
+            # Sphere Marker (Add to Main Marker Array)
             sphere_marker = Marker()
             sphere_marker.header.frame_id = "map"
             sphere_marker.header.stamp = self.get_clock().now().to_msg()
@@ -829,6 +916,7 @@ class SemanticSLAMNode(Node):
             marker_array.markers.append(sphere_marker)
             
         self.marker_pub.publish(marker_array)
+        self.label_pub.publish(label_array)
 
 def main(args=None):
     rclpy.init(args=args)

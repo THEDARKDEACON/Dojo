@@ -6,6 +6,7 @@ from sensor_msgs.msg import LaserScan
 class ScanRepublisher(Node):
     def __init__(self):
         super().__init__('scan_republisher')
+        self.declare_parameter('use_sim_time', False)
         self.pub = self.create_publisher(LaserScan, '/scan_relayed', 10)
         self.sub = self.create_subscription(LaserScan, '/scan', self.scan_callback, 10)
 

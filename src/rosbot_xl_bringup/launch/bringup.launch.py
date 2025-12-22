@@ -182,7 +182,7 @@ def generate_launch_description():
             SetParameter(name="use_sim_time", value=use_sim),
             microros_launch,
             controller_launch,
-            #robot_localization_node,
+            robot_localization_node,
             #laser_filter_node,
         ]
     )

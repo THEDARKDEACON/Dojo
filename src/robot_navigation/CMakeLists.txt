@@ -82,9 +82,8 @@ endif()
 # Install Python scripts
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/scripts")
   install(
-    PROGRAMS scripts/
+    PROGRAMS scripts/system_dashboard.py
     DESTINATION lib/${PROJECT_NAME}
-    USE_SOURCE_PERMISSIONS
   )
 endif()
 
@@ -117,16 +116,6 @@ if(BUILD_TESTING)
   
   # C++ tests can be added here
   # ament_add_gtest(...)
-endif()
-
-# Install Python entry points
-if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/robot_navigation/scripts")
-  install(
-    PROGRAMS
-      ${CMAKE_CURRENT_SOURCE_DIR}/robot_navigation/scripts/*
-    DESTINATION lib/${PROJECT_NAME}
-    USE_SOURCE_PERMISSIONS
-  )
 endif()
 
 # Export include directories

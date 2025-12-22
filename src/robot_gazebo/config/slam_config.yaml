@@ -22,38 +22,38 @@ slam_toolbox:
     debug_logging: false
     throttle_scans: 1
     transform_publish_period: 0.02  # 50 Hz
-    map_update_interval: 2.0  # More frequent updates
+    map_update_interval: 1.0  # More frequent updates
     resolution: 0.05
     max_laser_range: 12.0  # Match your LiDAR range
     minimum_time_interval: 0.2  # Reduced from 0.5 for more responsive updates
-    transform_timeout: 0.1  # Reduced timeout for faster recovery
-    tf_buffer_duration: 10.0  # Reduced buffer duration
+    transform_timeout: 0.5  # Increased timeout for robustness
+    tf_buffer_duration: 30.0  # Increased buffer duration
     stack_size_to_use: 40000000  # 40MB
     enable_interactive_mode: true
     
     # General Parameters
     use_scan_matching: true
     use_scan_barycenter: true
-    minimum_travel_distance: 0.1  # Reduced for more frequent updates
-    minimum_travel_heading: 0.2   # Reduced for more frequent updates
+    minimum_travel_distance: 0.1  # Reverted to 0.1 (User preferred this)
+    minimum_travel_heading: 0.1   # Reverted to 0.1
     scan_buffer_size: 30  # Increased buffer size
     scan_buffer_maximum_scan_distance: 10.0
-    link_match_minimum_response_fine: 0.08  # Reduced for better matching
-    link_scan_maximum_distance: 2.0  # Increased search distance
-    loop_search_maximum_distance: 5.0  # Increased loop closure search
+    link_match_minimum_response_fine: 0.1
+    link_scan_maximum_distance: 1.5
+    loop_search_maximum_distance: 3.0
     do_loop_closing: true 
-    loop_match_minimum_chain_size: 5  # Reduced for faster loop closure         
-    loop_match_maximum_variance_coarse: 3.5  # Increased variance threshold  
-    loop_match_minimum_response_coarse: 0.25  # Reduced threshold    
-    loop_match_minimum_response_fine: 0.35  # Reduced threshold
+    loop_match_minimum_chain_size: 8   # Reduced from 10 to 8 (compromise)
+    loop_match_maximum_variance_coarse: 3.0
+    loop_match_minimum_response_coarse: 0.30  # Reduced from 0.35 to 0.30
+    loop_match_minimum_response_fine: 0.40    # Reduced from 0.45 to 0.40
     
     # Correlation Parameters - Correlation Parameters
-    correlation_search_space_dimension: 0.5
+    correlation_search_space_dimension: 2.0
     correlation_search_space_resolution: 0.01
     correlation_search_space_smear_deviation: 0.1 
     
     # Loop Closure Parameters
-    loop_search_space_dimension: 8.0
+    loop_search_space_dimension: 10.0
     loop_search_space_resolution: 0.05
     loop_search_space_smear_deviation: 0.03
     

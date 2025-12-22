@@ -17,7 +17,7 @@ from launch_ros.substitutions import FindPackageShare
 def generate_launch_description():
     # Launch arguments
     use_sim_time = LaunchConfiguration('use_sim_time', default='true')
-    exploration_radius = LaunchConfiguration('exploration_radius', default='3.0')
+    exploration_radius = LaunchConfiguration('exploration_radius', default='10.0')
     min_frontier_size = LaunchConfiguration('min_frontier_size', default='15')
     exploration_interval = LaunchConfiguration('exploration_interval')
     robot_radius = LaunchConfiguration('robot_radius')
@@ -53,7 +53,7 @@ def generate_launch_description():
         ),
         DeclareLaunchArgument(
             'exploration_radius',
-            default_value='3.0',
+            default_value='10.0',
             description='Maximum distance to explore frontiers'
         ),
         DeclareLaunchArgument(

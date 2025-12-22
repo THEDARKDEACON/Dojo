@@ -17,6 +17,7 @@ from launch.actions import (
     ExecuteProcess,
     GroupAction,
     OpaqueFunction,
+    AppendEnvironmentVariable,
 )
 from launch_ros.actions import Node, SetParameter, SetRemap
 
@@ -189,6 +190,7 @@ def generate_launch_description():
     pkg_robot_semantic_slam = FindPackageShare('robot_semantic_slam')
     pkg_robot_navigation = FindPackageShare('robot_navigation')
     pkg_robot_gazebo = FindPackageShare('robot_gazebo')
+    pkg_aws_warehouse = FindPackageShare('aws_robomaker_small_warehouse_world')
     
     # ============================================================================
     # STARTUP BANNER
@@ -362,7 +364,25 @@ def generate_launch_description():
         ])]
     )
 
+    # ============================================================================
+    # ENVIRONMENT VARIABLES
+    # ============================================================================
+    
+    set_gz_resource_path = AppendEnvironmentVariable(
+        name='GZ_SIM_RESOURCE_PATH',
+        value=PathJoinSubstitution([pkg_husarion_gz_worlds, 'models'])
+    )
+
+    set_aws_resource_path = AppendEnvironmentVariable(
+        name='GZ_SIM_RESOURCE_PATH',
+        value=PathJoinSubstitution([pkg_aws_warehouse, 'models'])
+    )
+
     return LaunchDescription([
+        # Environment
+        set_gz_resource_path,
+        set_aws_resource_path,
+        
         # Arguments
         world_arg,
         use_sim_time_arg,

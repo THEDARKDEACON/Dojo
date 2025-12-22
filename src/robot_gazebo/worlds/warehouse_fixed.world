@@ -1,0 +1,203 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <world name="default">
+
+    <physics name="1ms" type="ignored">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+
+    <plugin filename="gz-sim-contact-system" name="gz::sim::systems::Contact" />
+    <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu" />
+    <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics" />
+    <plugin filename="gz-sim-scene-broadcaster-system"
+      name="gz::sim::systems::SceneBroadcaster" />
+    <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+    <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands" />
+
+    <scene>
+      <grid>false</grid>
+    </scene>
+
+    <!-- INLINE GROUND PLANE -->
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <plane>
+              <normal>0 0 0</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+        </collision>
+      </link>
+      <link name="map">
+        <collision name="collision">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <material>
+            <ambient>0.8 0.8 0.8 1</ambient>
+            <diffuse>0.8 0.8 0.8 1</diffuse>
+            <specular>0.8 0.8 0.8 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- INLINE SUN -->
+    <light name='sun' type='directional'>
+      <cast_shadows>1</cast_shadows>
+      <pose>0 0 10 0 -0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.5 0.1 -0.9</direction>
+    </light>
+
+    <!-- SHELVES (Replaced with aws_robomaker_warehouse_ShelfE_01) -->
+    <include>
+      <name>shelves 1</name>
+      <uri>model://aws_robomaker_warehouse_ShelfE_01</uri>
+      <pose>1 3.4 0   0 0 0</pose>
+    </include>
+    <include>
+      <name>shelves 2</name>
+      <uri>model://aws_robomaker_warehouse_ShelfE_01</uri>
+      <pose>-4.13394 3.4 0 0 -0 0</pose>
+    </include>
+
+    <include>
+      <name>shelves 3</name>
+      <uri>model://aws_robomaker_warehouse_ShelfE_01</uri>
+      <pose>1 4.7 0   0 0 0</pose>
+    </include>
+    <include>
+      <name>shelves 4</name>
+      <uri>model://aws_robomaker_warehouse_ShelfE_01</uri>
+      <pose>-4.13394 4.7 0 0 -0 0</pose>
+    </include>
+
+    <include>
+      <name>shelves 5</name>
+      <uri>model://aws_robomaker_warehouse_ShelfE_01</uri>
+      <pose>1 -1.5 0   0 0 0</pose>
+    </include>
+    <include>
+      <name>shelves 6</name>
+      <uri>model://aws_robomaker_warehouse_ShelfE_01</uri>
+      <pose>-4.13394 -1.5 0 0 -0 0</pose>
+    </include>
+
+    <include>
+      <name>shelves 7</name>
+      <uri>model://aws_robomaker_warehouse_ShelfE_01</uri>
+      <pose>1 -2.8 0   0 0 0</pose>
+    </include>
+    <include>
+      <name>shelves 8</name>
+      <uri>model://aws_robomaker_warehouse_ShelfE_01</uri>
+      <pose>-4.13394 -2.8 0 0 -0 0</pose>
+    </include>
+
+    <include>
+      <name>shelves 9</name>
+      <uri>model://aws_robomaker_warehouse_ShelfE_01</uri>
+      <pose>1 -7.8 0   0 0 0</pose>
+    </include>
+    <include>
+      <name>shelves 10</name>
+      <uri>model://aws_robomaker_warehouse_ShelfE_01</uri>
+      <pose>-4.13394 -7.8 0 0 -0 0</pose>
+    </include>
+
+    <include>
+      <name>shelves 11</name>
+      <uri>model://aws_robomaker_warehouse_ShelfE_01</uri>
+      <pose>1 -9.1 0   0 0 0</pose>
+    </include>
+    <include>
+      <name>shelves 12</name>
+      <uri>model://aws_robomaker_warehouse_ShelfE_01</uri>
+      <pose>-4.13394 -9.1 0 0 -0 0</pose>
+    </include>
+
+    <!-- BOXES / CLUTTER (Replaced big_box3/4 with aws_robomaker_warehouse_ClutteringC_01) -->
+    <!-- Removed separate europallet supports as clutter usually includes base -->
+
+    <include>
+      <name>pallet 1 clutter</name>
+      <uri>model://aws_robomaker_warehouse_ClutteringC_01</uri>
+      <pose>1.48626 3.390705 0 0 0 -1.57</pose>
+    </include>
+
+    <include>
+      <name>pallet 4 clutter</name>
+      <uri>model://aws_robomaker_warehouse_ClutteringC_01</uri>
+      <pose>-2.37439 3.440964 0 0 0 -1.59</pose>
+    </include>
+
+    <include>
+      <name>pallet 7 clutter</name>
+      <uri>model://aws_robomaker_warehouse_ClutteringC_01</uri>
+      <pose>2.61297 3.464591 0 0 0 -1.6</pose>
+    </include>
+
+    <include>
+      <name>pallet 10 clutter</name>
+      <uri>model://aws_robomaker_warehouse_ClutteringC_01</uri>
+      <pose>-3.45548 3.349857 0 0 0 -1.57</pose>
+    </include>
+
+    <include>
+      <name>pallet 11 clutter</name>
+      <uri>model://aws_robomaker_warehouse_ClutteringC_01</uri>
+      <pose>-4.67439 3.440964 0 0 0 -1.6</pose>
+    </include>
+
+    <include>
+      <name>pallet 12 clutter</name>
+      <uri>model://aws_robomaker_warehouse_ClutteringC_01</uri>
+      <pose>-5.95548 3.349857 0 0 0 -1.57</pose>
+    </include>
+
+    <!-- ACCESSORIES -->
+    <include>
+      <name>trash_can</name>
+      <uri>model://aws_robomaker_warehouse_TrashCanC_01</uri>
+      <pose>3.8239 3.403029 0 0 -0 0</pose>
+    </include>
+
+    <include>
+      <name>wall_1</name>
+      <uri>model://aws_robomaker_warehouse_WallB_01</uri>
+      <pose>-8.34545 0 0 0 0 -1.57</pose>
+    </include>
+
+    <include>
+      <name>wall_2</name>
+      <uri>model://aws_robomaker_warehouse_WallB_01</uri>
+      <pose>-3.5 9 0 0 0 0</pose>
+    </include>
+
+  </world>
+</sdf>

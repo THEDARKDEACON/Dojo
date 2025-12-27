@@ -51,7 +51,11 @@ class AutonomousExplorer(Node):
         self.goal_timeout = self.get_parameter('goal_timeout').value
         self.map_frame = self.get_parameter('map_frame').value
         self.base_frame = self.get_parameter('base_frame').value
-        self.gaussian_splat_mode = self.get_parameter('gaussian_splat_mode').value
+        
+        # Robust boolean parsing (handle "False" string vs False boolean)
+        gs_param = self.get_parameter('gaussian_splat_mode').value
+        self.gaussian_splat_mode = str(gs_param).lower() == 'true'
+        
         self.exploration_interval = self.get_parameter('exploration_interval').value
         
         # State variables
@@ -136,6 +140,7 @@ class AutonomousExplorer(Node):
         
         self.get_logger().info("🤖 Autonomous Explorer initialized - Starting frontier-based exploration!")
         self.get_logger().info(f"📊 Configuration: radius={self.exploration_radius}m, min_frontier_size={self.min_frontier_size}")
+        self.get_logger().info(f"📸 Gaussian Splat Mode: {self.gaussian_splat_mode} (Type: {type(self.gaussian_splat_mode)})")
         self.get_logger().info("⏳ Waiting for map data and navigation system to be ready...")
     
     def map_callback(self, msg):
@@ -351,7 +356,7 @@ class AutonomousExplorer(Node):
         grid = np.array(self.map_data.data).reshape((height, width))
         # Increase safety margin to match Nav2 inflation radius (0.45m)
         # robot_radius (0.22) * 1.2 ~= 0.26m (Significantly reduced for "Braver" exploration)
-        safety_radius = int(self.robot_radius * 1.2 / resolution)
+        safety_radius = int(self.robot_radius * 1.05 / resolution)
         
         # Check for obstacles in safety radius
         for dy in range(-safety_radius, safety_radius + 1):
@@ -414,6 +419,17 @@ class AutonomousExplorer(Node):
             
             # Combined score
             score = distance_score + info_score
+
+            # CONSISTENCY BIAS (Hysteresis):
+            # If we have an active goal, give a massive bonus to frontiers near it.
+            # This prevents the "Jumping" behavior where the robot switches targets mid-path.
+            if self.current_goal:
+                curr_x = self.current_goal.pose.position.x
+                curr_y = self.current_goal.pose.position.y
+                dist_to_current = np.sqrt((fx - curr_x)**2 + (fy - curr_y)**2)
+                
+                if dist_to_current < 2.0: # If within 2m of current goal
+                     score += 5.0 # Large bonus to "stick" to the plan
             
             self.get_logger().debug(
                 f"Frontier {i}: dist={distance:.2f}, info_gain={info_gain:.3f}, score={score:.3f}"

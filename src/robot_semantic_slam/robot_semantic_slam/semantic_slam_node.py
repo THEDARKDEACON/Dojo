@@ -18,10 +18,13 @@ from action_msgs.msg import GoalStatus
 import cv2
 from cv_bridge import CvBridge
 import numpy as np
+import os
 import math
 import json
-import os
 import pickle
+import sys
+import struct
+import onnxruntime as ort
 from datetime import datetime, timedelta
 from typing import Dict, List, Tuple, Optional
 from scipy.spatial import KDTree
@@ -48,8 +51,27 @@ class SemanticSLAMNode(Node):
         # Initialize YOLO model with optimization
         if YOLO_AVAILABLE:
             try:
-                self.yolo_model = YOLO('yolov8n.pt')  # Lightweight model for real-time
-                self.yolo_model.fuse()  # Fuse model layers for faster inference
+                # Check for SEGMENTATION ONNX model (GPU Optimization Phase 2)
+                if os.path.exists("yolov8n-seg.onnx"):
+                    self.get_logger().info("🚀 Loading YOLOv8-Seg from ONNX model (Segmentation Mode)...")
+                    # Explicitly request GPU if available, though ONNX usually auto-selects
+                    self.yolo_model = YOLO("yolov8n-seg.onnx", task="segment")
+                    
+                    # DEBUG: Check Providers
+                    providers = ort.get_available_providers()
+                    self.get_logger().info(f"🔎 ONNX Runtime Providers: {providers}")
+                    if 'CUDAExecutionProvider' not in providers:
+                        self.get_logger().error("❌ CUDA NOT FOUND in ONNX Providers! Running on CPU (SLOW). Check 'onnxruntime-gpu' install.")
+                    else:
+                        self.get_logger().info("✅ CUDA Execution Provider Available.")
+                        
+                elif os.path.exists("yolov8n.onnx"):
+                    self.get_logger().info("🚀 Loading YOLOv8 from ONNX model (Detection Mode)...")
+                    self.yolo_model = YOLO("yolov8n.onnx", task="detect")
+                else:
+                    self.get_logger().info("⚠️ ONNX model not found. Loading standard YOLOv8n (PyTorch)...")
+                    self.yolo_model = YOLO('yolov8n-seg.pt') # Prefer seg if running PyTorch too
+                    self.yolo_model.fuse()
             except Exception as e:
                 self.get_logger().warn(f"Failed to load YOLO model: {e}. YOLO detection disabled.")
                 self.yolo_model = None
@@ -94,7 +116,12 @@ class SemanticSLAMNode(Node):
         
         # Publishers
         self.semantic_map_pub = self.create_publisher(String, '/semantic_map', 10)
-        self.annotated_image_pub = self.create_publisher(Image, '/semantic_image', 10)
+        self.annotated_image_pub = self.create_publisher(Image, '/semantic/yolo_image', 10)
+        
+        # System Status Publisher (for Dashboard)
+        self.status_pub = self.create_publisher(String, '/dojo/system_status', 10)
+        self.create_timer(1.0, self.publish_system_status)
+        
         self.navigation_goal_pub = self.create_publisher(PoseStamped, '/navigate_to_object', 10)
         self.navigation_status_pub = self.create_publisher(String, '/navigation_status', 10)
         self.navigation_progress_pub = self.create_publisher(Float32, '/navigation_progress', 10)
@@ -173,19 +200,25 @@ class SemanticSLAMNode(Node):
             x_center = obj_data['x']
             y_center = obj_data['y']
             
-            # Generate a dense cylinder of points
-            # Vertical layers
-            for z in np.linspace(0.1, 1.5, 10): # 0.1m to 1.5m height
-                # Angular steps for circle
-                for angle in np.linspace(0, 2*np.pi, 16):
-                    # Fill structure (hollow cylinder is enough for costmap)
+            # Generate a dense solid cylinder of points
+            # Vertical layers (reduced count for efficiency as 2D costmap handles projection)
+            for z in np.linspace(0.1, 1.2, 5): 
+                # 1. Outer Ring (High density)
+                for angle in np.linspace(0, 2*np.pi, 36): # Every 10 degrees
                     px = x_center + radius * np.cos(angle)
                     py = y_center + radius * np.sin(angle)
                     points.append([px, py, z])
-                    
-                    # Add internal cross to ensure marking if radius is large
-                    if radius > 0.4:
-                         points.append([x_center, y_center, z])
+                
+                # 2. Inner Ring (Fill the gap)
+                if radius > 0.1:
+                    inner_radius = radius * 0.6
+                    for angle in np.linspace(0, 2*np.pi, 18): # Every 20 degrees
+                        px = x_center + inner_radius * np.cos(angle)
+                        py = y_center + inner_radius * np.sin(angle)
+                        points.append([px, py, z])
+                
+                # 3. Center Core (Bullseye)
+                points.append([x_center, y_center, z])
         
         if not points:
             return
@@ -236,21 +269,42 @@ class SemanticSLAMNode(Node):
             
             # Process detections
             annotated_image = cv_image.copy()
+            
+            # Log device usage once to confirm GPU status
+            if self.frame_counter % 100 == 0:
+                 device = getattr(self.yolo_model.predictor, 'device', 'unknown')
+                 self.get_logger().info(f"📊 YOLO Device: {device} | Frame: {self.frame_counter}")
+
             for result in results:
+                # DRAW MASKS (Segmentation Mode)
+                if result.masks is not None:
+                     # iterate over masks
+                     for i, mask_segments in enumerate(result.masks.xy):
+                         if len(mask_segments) > 0:
+                             points = np.int32([mask_segments])
+                             # Draw cyan polygon filling for visibility
+                             overlay = annotated_image.copy()
+                             cv2.fillPoly(overlay, points, (255, 255, 0)) # Cyan
+                             cv2.addWeighted(overlay, 0.4, annotated_image, 0.6, 0, annotated_image)
+                             # Draw outline
+                             cv2.polylines(annotated_image, points, True, (255, 0, 0), 2) # Blue outline
+
                 boxes = result.boxes
                 if boxes is not None:
-                    for box in boxes:
-                        # Extract detection info
+                    # Iterate over boxes and masks properly aligned by index
+                    for i, box in enumerate(boxes):
                         x1, y1, x2, y2 = box.xyxy[0].cpu().numpy()
                         confidence = box.conf[0].cpu().numpy()
                         class_id = int(box.cls[0].cpu().numpy())
                         class_name = self.yolo_model.names[class_id]
-                        
-                        if confidence > 0.5:  # Confidence threshold
-                            # Add to semantic map
-                            self.add_object_to_map(class_name, (x1, y1, x2, y2), confidence, msg.header.stamp)
+
+                        if confidence > 0.5:
+                            current_mask = None
+                            if result.masks is not None and len(result.masks.xy) > i:
+                                current_mask = result.masks.xy[i]
+                                
+                            self.add_object_to_map(class_name, (x1, y1, x2, y2), confidence, msg.header.stamp, mask=current_mask)
                             
-                            # Annotate image
                             cv2.rectangle(annotated_image, (int(x1), int(y1)), (int(x2), int(y2)), (0, 255, 0), 2)
                             cv2.putText(annotated_image, f"{class_name}: {confidence:.2f}", 
                                       (int(x1), int(y1-10)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
@@ -263,7 +317,7 @@ class SemanticSLAMNode(Node):
         except Exception as e:
             self.get_logger().error(f"Error in image processing: {e}")
     
-    def add_object_to_map(self, class_name: str, bbox: Tuple, confidence: float, timestamp):
+    def add_object_to_map(self, class_name: str, bbox: Tuple, confidence: float, timestamp, mask=None):
         """Add detected object to semantic map with world coordinates using LiDAR fusion"""
         if self.current_pose is None:
             return
@@ -272,8 +326,8 @@ class SemanticSLAMNode(Node):
         center_x = (bbox[0] + bbox[2]) / 2
         center_y = (bbox[1] + bbox[3]) / 2
         
-        # Get accurate distance using LiDAR fusion
-        distance = self.estimate_object_distance_with_lidar(center_x, center_y, bbox)
+        # Get accurate distance using LiDAR fusion (Mask-Aware)
+        distance = self.estimate_object_distance_with_lidar(center_x, center_y, bbox, mask)
         
         # Calculate angle offset from camera center (assuming 640x480 resolution, 60° FOV)
         image_width = 640
@@ -294,8 +348,8 @@ class SemanticSLAMNode(Node):
         
         self.get_logger().info(f"🎯 Detected {class_name} at ({world_x:.2f}, {world_y:.2f}) distance: {distance:.2f}m - ID: {object_id}")
     
-    def estimate_object_distance_with_lidar(self, center_x: float, center_y: float, bbox: Tuple) -> float:
-        """Estimate object distance using LiDAR-camera fusion"""
+    def estimate_object_distance_with_lidar(self, center_x: float, center_y: float, bbox: Tuple, mask=None) -> float:
+        """Estimate object distance using LiDAR-camera fusion (Mask-Optimized)"""
         if self.current_scan is None:
             # Fallback to simplified estimate if no LiDAR data
             self.get_logger().warn("No LiDAR data available, using fallback distance estimate")
@@ -318,6 +372,50 @@ class SemanticSLAMNode(Node):
         lidar_angle = angle_offset
         
         # Find corresponding LiDAR ray index
+        if lidar_angle < angle_min or lidar_angle > angle_max:
+             return 2.0
+
+        # MASK-BASED DEPTH ESTIMATION (Solves "Chair Problem")
+        # If mask provided, select rays that truly intersect the object
+        if mask is not None and len(mask) > 0:
+             valid_ranges = []
+             image_width = 640
+             
+             # Convert mask contour points to x-coordinates
+             mask_xs = [p[0] for p in mask]
+             if not mask_xs: return 2.0
+             
+             min_x, max_x = min(mask_xs), max(mask_xs)
+             
+             # Convert pixel range to lidar angle range
+             angle_start = ((min_x - image_width/2) / (image_width/2)) * (horizontal_fov/2)
+             angle_end = ((max_x - image_width/2) / (image_width/2)) * (horizontal_fov/2)
+             
+             idx_start = int((angle_start - angle_min) / angle_increment)
+             idx_end = int((angle_end - angle_min) / angle_increment)
+             
+             idx_start = max(0, min(idx_start, len(self.current_scan.ranges)-1))
+             idx_end = max(0, min(idx_end, len(self.current_scan.ranges)-1))
+             
+             # Sample rays
+             for i in range(min(idx_start, idx_end), max(idx_start, idx_end)):
+                 r = self.current_scan.ranges[i]
+                 if self.current_scan.range_min < r < self.current_scan.range_max:
+                      valid_ranges.append(r)
+                      
+             if valid_ranges:
+                 # CRITICAL FIX: Use 10th percentile to catch the closest part of the object (e.g., chair legs)
+                 # and ignore the background seen through gaps.
+                 # Previously mean() would be skewed by the wall behind the chair.
+                 valid_ranges.sort()
+                 if len(valid_ranges) > 5:
+                     # Take the 10th percentile (robust minimum)
+                     idx = int(len(valid_ranges) * 0.1)
+                     return float(valid_ranges[idx])
+                 else:
+                     return float(min(valid_ranges))
+        
+        # Fallback to single ray or bbox average
         if lidar_angle < angle_min or lidar_angle > angle_max:
             # Angle outside LiDAR range, use fallback
             return 2.0
@@ -917,6 +1015,36 @@ class SemanticSLAMNode(Node):
             
         self.marker_pub.publish(marker_array)
         self.label_pub.publish(label_array)
+
+    def publish_system_status(self):
+        """Publish node status for the dashboard"""
+        status = {
+            "module": "vision",
+            "timestamp": self.get_clock().now().nanoseconds / 1e9,
+            "fps": 0.0, # Placeholder, could calculate real FPS
+            "device": "unknown",
+            "model_type": "unknown",
+            "cuda_available": False
+        }
+        
+        if self.yolo_model:
+            try:
+                # Infer status
+                status['model_type'] = self.yolo_model.task
+                status['device'] = str(getattr(self.yolo_model.predictor, 'device', 'unknown'))
+                
+                # Check for CUDA
+                import onnxruntime as ort
+                providers = ort.get_available_providers()
+                status['cuda_available'] = 'CUDAExecutionProvider' in providers
+                status['providers'] = providers
+            except:
+                pass
+                
+        # Serialize and publish
+        msg = String()
+        msg.data = json.dumps(status)
+        self.status_pub.publish(msg)
 
 def main(args=None):
     rclpy.init(args=args)

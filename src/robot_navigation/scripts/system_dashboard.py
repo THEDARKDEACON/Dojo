@@ -14,6 +14,7 @@ import sys
 import tf2_ros
 from rclpy.duration import Duration
 import math
+import json # For status parsing
 
 class SystemDashboard(Node):
     def __init__(self):
@@ -34,6 +35,8 @@ class SystemDashboard(Node):
         self.last_scan_time = time.time()
         self.tf_status = "Unknown"
         self.map_status = "Unknown"
+        self.vision_status = {}
+        self.log_history = []
         
         # Subscribers
         self.create_subscription(Odometry, '/rosbot_xl_base_controller/odom', self.odom_callback, 10)
@@ -44,6 +47,7 @@ class SystemDashboard(Node):
         self.create_subscription(PoseStamped, '/exploration_goal', self.goal_callback, 10)
         self.create_subscription(Log, '/rosout', self.log_callback, 10)
         self.create_subscription(LaserScan, '/scan', self.scan_callback, 10)
+        self.create_subscription(String, '/dojo/system_status', self.status_callback, 10)
         
         # TF Buffer
         self.tf_buffer = tf2_ros.Buffer()
@@ -63,9 +67,19 @@ class SystemDashboard(Node):
             self.tf_status = "FAIL"
 
     def log_callback(self, msg):
-        if msg.name == "autonomous_explorer":
+        # Filter relevant logs
+        if msg.name in ["autonomous_explorer", "semantic_slam_node", "nav2_planner"]:
+            log_entry = f"[{msg.name}] {msg.msg}"
             self.last_log = msg.msg
-            self.last_log_time = time.time()
+            self.log_history.append(log_entry)
+            if len(self.log_history) > 20:
+                self.log_history.pop(0)
+
+    def status_callback(self, msg):
+        try:
+            self.vision_status = json.loads(msg.data)
+        except:
+            pass
 
     def odom_callback(self, msg):
         self.robot_pose['x'] = msg.pose.pose.position.x
@@ -235,29 +249,50 @@ def draw_dashboard(stdscr, node):
             status_color = curses.color_pair(2) if "IDLE" in node.explorer_status else curses.color_pair(1)
             stdscr.addstr(8, 52, f"Action: {status_text}", status_color | curses.A_BOLD)
 
-            # === BOTTOM ROW: VELOCITY & LOGS ===
-            draw_box(stdscr, 13, 2, 8, 93, "VELOCITY MONITOR", curses.color_pair(4))
-            
-            # Velocity Bars
-            def draw_bar(y, x, label, value, max_val=0.5):
-                bars = int((abs(value) / max_val) * 20)
-                bars = min(bars, 20)
-                bar_str = "█" * bars
-                color = curses.color_pair(1) if value > 0 else curses.color_pair(3)
-                stdscr.addstr(y, x, f"{label}: {value:+.2f} ", curses.A_BOLD)
-                stdscr.addstr(y, x+15, f"[{bar_str:<20}]", color)
 
-            draw_bar(14, 4, "Nav2 Cmd", node.cmd_vel_nav['linear'])
-            draw_bar(15, 4, "Final Cmd", node.cmd_vel['linear'])
-            draw_bar(16, 4, "Actual Vel", node.odom_vel['linear'])
+            # === VISION & COMPUTE (Replacing Velocity Monitor for space or adding below) ===
+            # Let's squeeze Velocity Monitor and add Vision Panel
             
-            stdscr.addstr(14, 50, f"Ang: {node.cmd_vel_nav['angular']:+.2f} rad/s")
-            stdscr.addstr(15, 50, f"Ang: {node.cmd_vel['angular']:+.2f} rad/s")
-            stdscr.addstr(16, 50, f"Ang: {node.odom_vel['angular']:+.2f} rad/s")
+            # === VISION PANEL ===
+            draw_box(stdscr, 13, 2, 8, 45, "VISION SYSTEM", curses.color_pair(5))
+            
+            # Parse Status
+            v_status = node.vision_status
+            dev_str = v_status.get('device', 'Unknown')
+            cuda_avail = v_status.get('cuda_available', False)
+            model_type = v_status.get('model_type', 'Unknown')
+            
+            # Device Status
+            dev_color = curses.color_pair(1) if "cuda" in str(dev_str).lower() or cuda_avail else curses.color_pair(3) # Red if CPU
+            stdscr.addstr(14, 4, f"Device: {dev_str}", dev_color | curses.A_BOLD)
+            
+            # CUDA Check
+            cuda_color = curses.color_pair(1) if cuda_avail else curses.color_pair(3)
+            stdscr.addstr(15, 4, f"CUDA:   {'AVAILABLE' if cuda_avail else 'MISSING'}", cuda_color)
+            
+            # Model Info
+            stdscr.addstr(16, 4, f"Model:  {model_type.upper()}")
+            
+            # Providers
+            providers = str(v_status.get('providers', []))
+            if len(providers) > 35: providers = providers[:32] + "..."
+            stdscr.addstr(17, 4, f"Prov: {providers}", curses.A_DIM)
 
-            # === LOG WINDOW ===
-            stdscr.addstr(22, 2, "LATEST LOG:", curses.A_BOLD)
-            stdscr.addstr(22, 14, f"{node.last_log[:80]}", curses.color_pair(2))
+            # === VELOCITY MONITOR (Moved Right) ===
+            draw_box(stdscr, 13, 50, 8, 45, "VELOCITY", curses.color_pair(4))
+            stdscr.addstr(14, 52, f"Cmd: {node.cmd_vel['linear']:.2f} m/s")
+            stdscr.addstr(15, 52, f"Act: {node.odom_vel['linear']:.2f} m/s")
+            stdscr.addstr(16, 52, f"Ang: {node.odom_vel['angular']:.2f} rad/s")
+
+            # === LOG WINDOW (Expanded) ===
+            draw_box(stdscr, 21, 2, 8, 93, "SYSTEM LOGS", curses.color_pair(6))
+            for i, line in enumerate(reversed(node.log_history[-6:])):
+                 # Color code logs
+                 color = curses.color_pair(4)
+                 if "ERROR" in line or "FAIL" in line or "❌" in line: color = curses.color_pair(3)
+                 elif "WARN" in line or "⚠️" in line: color = curses.color_pair(2)
+                 
+                 stdscr.addstr(22+i, 4, f"{line[:88]}", color)
 
             # Footer
             stdscr.addstr(height - 1, 2, "Press Ctrl+C to exit", curses.A_DIM)

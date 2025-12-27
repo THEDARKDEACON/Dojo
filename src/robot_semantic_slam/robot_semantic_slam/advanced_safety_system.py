@@ -158,14 +158,14 @@ if PY_TREES_AVAILABLE:
                 if left_clearance > right_clearance:
                     # Turn left
                     safe_cmd.angular.z = 0.5
-                    self.safety_system.get_logger().info("⬅️ Evading left")
+                    self.safety_system.get_logger().warn("🚧 WOULD Evade LEFT (Actuation Disabled)")
                 else:
                     # Turn right
                     safe_cmd.angular.z = -0.5
-                    self.safety_system.get_logger().info("➡️ Evading right")
+                    self.safety_system.get_logger().warn("🚧 WOULD Evade RIGHT (Actuation Disabled)")
                 
-                safe_cmd.linear.x = 0.1  # Slow forward motion
-                self.safety_system.cmd_vel_safe_pub.publish(safe_cmd)
+                # safe_cmd.linear.x = 0.1  # Slow forward motion
+                # self.safety_system.cmd_vel_safe_pub.publish(safe_cmd)
                 return Status.SUCCESS
             return Status.FAILURE
     

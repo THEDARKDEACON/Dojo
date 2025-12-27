@@ -79,7 +79,7 @@ controller_server:
       
       # Critic parameters
       BaseObstacle.scale: 0.02
-      PathAlign.scale: 32.0
+      PathAlign.scale: 16.0  # Reduced from 32.0 to allow smoother tracking
       PathAlign.forward_point_distance: 0.1
       GoalAlign.scale: 24.0
       GoalAlign.forward_point_distance: 0.1
@@ -206,7 +206,7 @@ local_costmap:
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
         cost_scaling_factor: 5.0  # Smoother gradient (was 10.0)
-        inflation_radius: 0.25
+        inflation_radius: 0.30 # Optimized for office doors (0.30m buffer)
       voxel_layer:
         plugin: "nav2_costmap_2d::VoxelLayer"
         enabled: True
@@ -301,7 +301,7 @@ global_costmap:
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
         cost_scaling_factor: 5.0  # Smoother gradient (was 10.0)
-        inflation_radius: 0.25
+        inflation_radius: 0.30 # Optimized for office doors (0.30m buffer)
       always_send_full_costmap: True
 
 # Map Server

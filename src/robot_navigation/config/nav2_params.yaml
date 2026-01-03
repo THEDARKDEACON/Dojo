@@ -24,7 +24,7 @@ controller_server:
     use_sim_time: True
     controller_frequency: 10.0
     min_x_velocity_threshold: 0.001
-    min_y_velocity_threshold: 0.5
+    min_y_velocity_threshold: 0.01
     min_theta_velocity_threshold: 0.001
     failure_tolerance: 0.3
     progress_checker_plugin: "progress_checker"
@@ -49,18 +49,18 @@ controller_server:
       plugin: "dwb_core::DWBLocalPlanner"
       debug_trajectory_details: True
       min_vel_x: 0.0
-      min_vel_y: 0.0
-      max_vel_x: 0.26
-      max_vel_y: 0.0
+      min_vel_y: 0.0 # Will be overridden by controller bounds check? No, DWB usually treats min_vel_y as signed lower bound.
+      min_vel_y: -0.26 # Allow strafing left
+      max_vel_y: 0.26  # Allow strafing right
       max_vel_theta: 0.5
       min_speed_xy: 0.0
       max_speed_xy: 0.26
       min_speed_theta: 0.0
       acc_lim_x: 1.0
-      acc_lim_y: 0.0
+      acc_lim_y: 1.0
       acc_lim_theta: 0.8
       decel_lim_x: -1.0
-      decel_lim_y: 0.0
+      decel_lim_y: -1.0
       decel_lim_theta: -1.0
       vx_samples: 20
       vy_samples: 5
